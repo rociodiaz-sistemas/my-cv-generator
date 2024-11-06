@@ -6,12 +6,14 @@ import {
   Button,
   Box,
   Stack,
+  Input,
 } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { closeModal, resetForm } from "../store/uiSlice";
 
 const AddCVForm: React.FC = () => {
   const [formData, setFormData] = useState({
+    title: "",
     introduction: "",
     web4Realty: "",
     glofy: "",
@@ -56,6 +58,16 @@ const AddCVForm: React.FC = () => {
       </Typography>
       <form onSubmit={handleSubmit}>
         <Box mb={2}>
+          <Typography variant="h6">CV Title</Typography>
+          <Input
+            name="title"
+            onChange={handleChange}
+            value={formData.title}
+            placeholder="Enter CV Title"
+            fullWidth
+          />
+        </Box>
+        <Box mb={2}>
           <Typography variant="h6">Introduction</Typography>
           <TextField
             multiline
@@ -68,7 +80,6 @@ const AddCVForm: React.FC = () => {
             name="introduction"
           />
         </Box>
-
         <ExperienceTextField
           title="Lead React Typescript Developer - Web4Realty"
           date="Mar 2024 - May 2024 - US"
