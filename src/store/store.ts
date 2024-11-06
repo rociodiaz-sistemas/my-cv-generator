@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { UIReducer } from "./UiSlice";
+import { UIReducer } from "./uiSlice";
 
 export const store = configureStore({
   reducer: {

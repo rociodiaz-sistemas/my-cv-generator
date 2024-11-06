@@ -8,7 +8,7 @@ import {
   Stack,
 } from "@mui/material";
 import { useDispatch } from "react-redux";
-import { closeModal, resetForm } from "../store/UiSlice";
+import { closeModal, resetForm } from "../store/uiSlice";
 
 const AddCVForm: React.FC = () => {
   const [formData, setFormData] = useState({
