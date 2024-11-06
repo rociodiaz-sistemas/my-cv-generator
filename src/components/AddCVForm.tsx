@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import {
   Container,
   Typography,
@@ -26,15 +26,17 @@ const AddCVForm: React.FC = () => {
 
   const dispatch = useDispatch();
 
-  const handleChange = (
-    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-  ) => {
-    const { name, value } = event.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+  // Using useCallback to optimize handleChange function
+  const handleChange = useCallback(
+    (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+      const { name, value } = event.target;
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    },
+    []
+  );
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -46,37 +48,6 @@ const AddCVForm: React.FC = () => {
     dispatch(closeModal()); // Close the modal
     dispatch(resetForm()); // Reset the form submission state
   };
-
-  const ExperienceTextField = ({
-    title,
-    date,
-    name,
-    value,
-    onChange,
-  }: {
-    title: string;
-    date: string;
-    name: string;
-    value: string;
-    onChange: (
-      event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-    ) => void;
-  }) => (
-    <Box mb={2}>
-      <Typography variant="h6">{title}</Typography>
-      <Typography variant="subtitle1">{date}</Typography>
-      <TextField
-        multiline
-        rows={4}
-        fullWidth
-        variant="outlined"
-        value={value}
-        onChange={onChange}
-        placeholder="Describe your experience here..."
-        name={name}
-      />
-    </Box>
-  );
 
   return (
     <Container>
@@ -94,6 +65,7 @@ const AddCVForm: React.FC = () => {
             value={formData.introduction}
             onChange={handleChange}
             placeholder="Write your introduction here..."
+            name="introduction"
           />
         </Box>
 
@@ -179,6 +151,41 @@ const AddCVForm: React.FC = () => {
         </Stack>
       </form>
     </Container>
+  );
+};
+
+interface ExperienceTextFieldProps {
+  title: string;
+  date: string;
+  name: string;
+  value: string;
+  onChange: (
+    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ) => void;
+}
+
+const ExperienceTextField = ({
+  title,
+  date,
+  name,
+  value,
+  onChange,
+}: ExperienceTextFieldProps) => {
+  return (
+    <Box mb={2}>
+      <Typography variant="h6">{title}</Typography>
+      <Typography variant="subtitle1">{date}</Typography>
+      <TextField
+        multiline
+        rows={4}
+        fullWidth
+        variant="outlined"
+        value={value}
+        onChange={onChange}
+        placeholder="Describe your experience here..."
+        name={name}
+      />
+    </Box>
   );
 };
 
