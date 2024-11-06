@@ -176,6 +176,13 @@ const ExperienceTextField = ({
       <Typography variant="h6">{title}</Typography>
       <Typography variant="subtitle1">{date}</Typography>
       <TextField
+        sx={{
+          // Add scrolling behavior here
+          "& .MuiInputBase-root": {
+            maxHeight: 200, // Set max height to control the area size
+            overflowY: "auto", // Enable vertical scrolling
+          },
+        }}
         multiline
         rows={4}
         fullWidth
