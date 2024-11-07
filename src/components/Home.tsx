@@ -23,6 +23,7 @@ import { deleteCV, setCVs, selectCV, clearSelectedCV } from "../store/cvSlice";
 import PDFPreview from "./PDFPreview";
 import { pdf } from "@react-pdf/renderer";
 import CVTemplate from "./CVTemplate";
+import CVStepper from "./multistep/CVStepper";
 
 const Home: React.FC = () => {
   const dispatch = useDispatch();
@@ -132,7 +133,7 @@ const Home: React.FC = () => {
             p: 4,
           }}
         >
-          <AddCVForm />
+          <CVStepper />
         </Box>
       </Modal>
       {selectedCV && <PDFPreview />}

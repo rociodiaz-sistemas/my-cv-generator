@@ -3,11 +3,13 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 interface UIState {
   isModalOpen: boolean;
   isFormSubmitted: boolean;
+  activeStep: number;
 }
 
 const initialState: UIState = {
   isModalOpen: false, // Initially, the modal is closed
   isFormSubmitted: false, // Form is not submitted initially
+  activeStep: 0,
 };
 
 const uiSlice = createSlice({
@@ -26,10 +28,28 @@ const uiSlice = createSlice({
     resetForm: (state) => {
       state.isFormSubmitted = false; // Reset form submission state
     },
+    // Navigation actions for stepper
+    incrementStep: (state) => {
+      state.activeStep += 1; // Go to the next step
+    },
+    decrementStep: (state) => {
+      if (state.activeStep > 0) state.activeStep -= 1; // Go back a step
+    },
+    resetStep: (state) => {
+      state.activeStep = 0; // Reset to the first step
+    },
   },
 });
 
 // Exporting actions
-export const { openModal, closeModal, submitForm, resetForm } = uiSlice.actions;
+export const {
+  openModal,
+  closeModal,
+  submitForm,
+  resetForm,
+  incrementStep,
+  decrementStep,
+  resetStep,
+} = uiSlice.actions;
 
 export const UIReducer = uiSlice.reducer;

@@ -6,11 +6,26 @@ import { v4 as uuidv4 } from "uuid";
 interface CVState {
   cvs: CV[];
   selectedCV: CV | null;
+  formData: Omit<CV, "id" | "date">;
 }
 
 const initialState: CVState = {
   cvs: JSON.parse(localStorage.getItem("cvs") || "[]"),
   selectedCV: null,
+  formData: {
+    title: "",
+    introduction: "",
+    web4Realty: "",
+    glofy: "",
+    weDevelop1: "",
+    weDevelop2: "",
+    cfotech: "",
+    baufest1: "",
+    baufest2: "",
+    baufest3: "",
+    streamCoder: "",
+    skills: "",
+  },
 };
 
 // Create the slice to handle CV-related actions
@@ -18,11 +33,41 @@ const cvSlice = createSlice({
   name: "cv",
   initialState,
   reducers: {
-    addCV: (state, action: PayloadAction<Omit<CV, "id">>) => {
-      const newCV = { ...action.payload, id: uuidv4() }; // Generate unique ID for each new CV
+    addCV: (state) => {
+      const newCV: CV = {
+        ...state.formData,
+        id: uuidv4(),
+        date: new Date().toLocaleDateString(),
+      };
       state.cvs.push(newCV);
       localStorage.setItem("cvs", JSON.stringify(state.cvs));
     },
+
+    updateFormData: (
+      state,
+      action: PayloadAction<{ field: keyof CVState["formData"]; value: string }>
+    ) => {
+      const { field, value } = action.payload;
+      state.formData[field] = value;
+    },
+
+    clearFormData: (state) => {
+      state.formData = {
+        title: "",
+        introduction: "",
+        web4Realty: "",
+        glofy: "",
+        weDevelop1: "",
+        weDevelop2: "",
+        cfotech: "",
+        baufest1: "",
+        baufest2: "",
+        baufest3: "",
+        streamCoder: "",
+        skills: "",
+      };
+    },
+
     deleteCV: (state, action: PayloadAction<string>) => {
       state.cvs = state.cvs.filter((cv) => cv.title !== action.payload); // Delete CV by title
       localStorage.setItem("cvs", JSON.stringify(state.cvs)); // Update localStorage
@@ -41,8 +86,15 @@ const cvSlice = createSlice({
 });
 
 // Export actions
-export const { addCV, deleteCV, setCVs, selectCV, clearSelectedCV } =
-  cvSlice.actions;
+export const {
+  addCV,
+  updateFormData,
+  clearFormData,
+  deleteCV,
+  setCVs,
+  selectCV,
+  clearSelectedCV,
+} = cvSlice.actions;
 
 // Export the reducer
 export const CVReducer = cvSlice.reducer;
