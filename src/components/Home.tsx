@@ -75,75 +75,79 @@ const Home: React.FC = () => {
   };
 
   return (
-    <Container>
-      <Typography variant="h4" gutterBottom>
-        My CVs
-      </Typography>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={handleOpenModal}
-        sx={{ float: "right" }}
-      >
-        Add CV
-      </Button>
+    <>
+      <Container>
+        <Typography variant="h4" gutterBottom>
+          My CVs
+        </Typography>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleOpenModal}
+          sx={{ float: "right" }}
+        >
+          Add CV
+        </Button>
 
-      <TableContainer component={Paper} style={{ marginTop: "20px" }}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>CV Title</TableCell>
-              <TableCell>Date</TableCell>
-              <TableCell>Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {cvs.map((cv) => (
-              <TableRow
-                sx={{
-                  backgroundColor:
-                    selectedCV?.id === cv.id ? "#d1e3f4" : "inherit",
-                }}
-                key={cv.id}
-              >
-                <TableCell>{cv.title}</TableCell>
-                <TableCell>{cv.date}</TableCell>
-                <TableCell>
-                  <Button onClick={() => handleSelectCv(cv.id)}>
-                    {selectedCV?.id === cv.id ? (
-                      <VisibilityOff />
-                    ) : (
-                      <Visibility />
-                    )}
-                  </Button>
-                  <Button onClick={() => handleDownload}>
-                    <DownloadIcon />
-                  </Button>
-                  <Button onClick={() => handleDeleteCv(cv.title)}>
-                    <Delete />
-                  </Button>
-                </TableCell>
+        <TableContainer component={Paper} style={{ marginTop: "20px" }}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>CV Title</TableCell>
+                <TableCell>Date</TableCell>
+                <TableCell>Actions</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {cvs.map((cv) => (
+                <TableRow
+                  sx={{
+                    backgroundColor:
+                      selectedCV?.id === cv.id ? "#d1e3f4" : "inherit",
+                  }}
+                  key={cv.id}
+                >
+                  <TableCell>{cv.title}</TableCell>
+                  <TableCell>{cv.date}</TableCell>
+                  <TableCell>
+                    <Button onClick={() => handleSelectCv(cv.id)}>
+                      {selectedCV?.id === cv.id ? (
+                        <VisibilityOff />
+                      ) : (
+                        <Visibility />
+                      )}
+                    </Button>
+                    <Button onClick={() => handleDownload}>
+                      <DownloadIcon />
+                    </Button>
+                    <Button onClick={() => handleDeleteCv(cv.title)}>
+                      <Delete />
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
 
+        {selectedCV && <PDFPreview />}
+      </Container>
       <Modal open={isModalOpen} onClose={handleCloseModal}>
         <Box
           sx={{
             position: "absolute",
             top: "50%",
             left: "50%",
+            height: "70vh",
             transform: "translate(-50%, -50%)",
             width: "80vw",
             bgcolor: "background.paper",
             borderRadius: 2,
             boxShadow: 24,
-            maxHeight: "85vh",
+            maxHeight: "70vh",
+            maxWidth: "80vw",
             overflowY: "auto",
-            padding: 2,
-            p: 4,
+            padding: 10,
           }}
         >
           <IconButton sx={{ float: "right" }}>
@@ -152,8 +156,7 @@ const Home: React.FC = () => {
           <CVStepper />
         </Box>
       </Modal>
-      {selectedCV && <PDFPreview />}
-    </Container>
+    </>
   );
 };
 

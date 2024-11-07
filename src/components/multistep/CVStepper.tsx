@@ -38,7 +38,7 @@ const CVStepper: React.FC = () => {
   };
 
   return (
-    <Container sx={{ padding: 5 }}>
+    <Box sx={{ height: "100%" }}>
       <Stepper activeStep={activeStep} alternativeLabel>
         {formFields.map((field) => (
           <Step key={field}>
@@ -82,7 +82,7 @@ const CVStepper: React.FC = () => {
           )}
         </Box>
       </Box>
-    </Container>
+    </Box>
   );
 };
 

@@ -19,18 +19,32 @@ const CVStep: React.FC<CVStepProps> = ({ label, field }) => {
   };
 
   return (
-    <Box sx={{ width: "100%", mb: 2 }}>
+    <Box sx={{ width: "100%", mb: 2, height: "100%" }}>
       <Typography variant="h6" gutterBottom>
         {label}
       </Typography>
-      <TextField
-        label={label}
-        fullWidth
-        multiline
-        rows={10}
-        value={value || ""}
-        onChange={handleChange}
-      />
+      <Box sx={{ display: "flex", direction: "row", gap: 5 }}>
+        <Box sx={{ width: "50%" }}>
+          <TextField
+            label={"AI Prompt"}
+            fullWidth
+            multiline
+            rows={14}
+            value={value || ""}
+            onChange={handleChange}
+          />
+        </Box>
+        <Box sx={{ width: "50%" }}>
+          <TextField
+            label={`${label} Result`}
+            fullWidth
+            multiline
+            rows={14}
+            value={value || ""}
+            onChange={handleChange}
+          />
+        </Box>
+      </Box>
     </Box>
   );
 };
