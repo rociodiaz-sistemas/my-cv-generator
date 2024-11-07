@@ -10,6 +10,8 @@ import {
   Link,
 } from "@react-pdf/renderer";
 import CvImage from "../assets/images/cv-image.png";
+import { useSelector } from "react-redux";
+import { RootState } from "../store/store";
 
 Font.register({
   family: "Roboto",
@@ -117,6 +119,7 @@ const styles = StyleSheet.create({
 });
 
 const CVTemplate: React.FC = () => {
+  const { selectedCV } = useSelector((state: RootState) => state.cv);
   return (
     <Document>
       <Page size="A4" style={styles.page}>
@@ -146,41 +149,15 @@ const CVTemplate: React.FC = () => {
         <View style={styles.section}>
           <Text style={styles.subtitle}>Introduction</Text>
           <Text style={styles.content}>
-            Experienced React Developer with over six years in front-end
-            development and project migration. Skilled in leading transitions to
-            modern technologies, enhancing user interfaces, and optimizing
-            system performance. Strong advocate for design thinking, mentorship,
-            and cross-functional collaboration to deliver scalable, user-centric
-            products. Versatile in adapting to new tools and committed to
-            continuous learning.
+            {selectedCV?.introduction || "Introduction not provided."}
           </Text>
-          {/* <Text style={styles.content}>
-            <strong>Lead React Developer</strong> - Web4Realty (Mar 2024 - May
-            2024)
-            {"\n"}• Led frontend development for a real estate CMS, optimizing
-            load times by 80%.
-            {"\n"}• Migrated from PHP to ReactJS/Next, enhancing UI
-            responsiveness.
-          </Text>
-          <Text style={styles.content}>
-            <strong>React Developer</strong> - Glofy (Oct 2023 - Feb 2024)
-            {"\n"}• Managed Droprack’s migration from PHP to React TypeScript.
-            {"\n"}• Developed a React media player with Spotify API integration.
-          </Text> */}
         </View>
 
         {/* Skills Section */}
         <View style={styles.section}>
           <Text style={styles.subtitle}>Core Skills</Text>
           <Text style={styles.content}>
-            React (Hooks, Context API, Redux, Sagas), JavaScript, TypeScript,
-            HTML, CSS, SCSS, Jest, React Testing Library, API Integration
-            (Google Maps, Spotify), Webpack, Rollup, Storybook, Bootstrap,
-            Material UI, Chakra UI, Node.js, PHP, Git (GitHub, Bitbucket),
-            Agile, Scrum, Kanban.
-            {"\n"}Additional Skills: Docker, Next.js, Jenkins, Formik, Yup,
-            Canvas API, Fabric JS, Cordova, AWS, Azure, Figma, Adobe XD,
-            Bilingual (English/Spanish).
+            {selectedCV?.skills || "Skills not provided."}
           </Text>
         </View>
 
@@ -195,10 +172,11 @@ const CVTemplate: React.FC = () => {
               <Text style={styles.company}>Contract</Text>
             </View>
             <Text style={styles.content}>
-              • Led frontend development for a real estate CMS, optimizing load
-              times by 80%.
-              {"\n"}• Migrated from PHP to ReactJS/Next, enhancing UI
-              responsiveness.
+              {(selectedCV?.web4Realty || "").split("\n").map((line, index) => (
+                <Text key={index} style={styles.content}>
+                  • {line}
+                </Text>
+              ))}
             </Text>
           </View>
 
@@ -211,6 +189,11 @@ const CVTemplate: React.FC = () => {
               <Text style={styles.company}>Glofy</Text>
               <Text style={styles.content}> - </Text>
               <Text style={styles.company}>Contract</Text>
+              {(selectedCV?.glofy || "").split("\n").map((line, index) => (
+                <Text key={index} style={styles.content}>
+                  • {line}
+                </Text>
+              ))}
             </View>
           </View>
 
@@ -221,6 +204,11 @@ const CVTemplate: React.FC = () => {
               <Text style={styles.company}>WeDevelop</Text>
               <Text style={styles.content}> - </Text>
               <Text style={styles.company}>Contract</Text>
+              {(selectedCV?.weDevelop1 || "").split("\n").map((line, index) => (
+                <Text key={index} style={styles.content}>
+                  • {line}
+                </Text>
+              ))}
             </View>
           </View>
 
@@ -231,6 +219,11 @@ const CVTemplate: React.FC = () => {
               <Text style={styles.company}>CFOTech</Text>
               <Text style={styles.content}> - </Text>
               <Text style={styles.company}>Contract</Text>
+              {(selectedCV?.cfotech || "").split("\n").map((line, index) => (
+                <Text key={index} style={styles.content}>
+                  • {line}
+                </Text>
+              ))}
             </View>
           </View>
 
@@ -241,6 +234,11 @@ const CVTemplate: React.FC = () => {
               <Text style={styles.company}>Baufest</Text>
               <Text style={styles.content}> - </Text>
               <Text style={styles.company}>Employee</Text>
+              {(selectedCV?.baufest1 || "").split("\n").map((line, index) => (
+                <Text key={index} style={styles.content}>
+                  • {line}
+                </Text>
+              ))}
             </View>
           </View>
 
@@ -251,6 +249,11 @@ const CVTemplate: React.FC = () => {
               <Text style={styles.company}>Baufest</Text>
               <Text style={styles.content}> - </Text>
               <Text style={styles.company}>Employee</Text>
+              {(selectedCV?.baufest2 || "").split("\n").map((line, index) => (
+                <Text key={index} style={styles.content}>
+                  • {line}
+                </Text>
+              ))}
             </View>
           </View>
 
@@ -263,6 +266,11 @@ const CVTemplate: React.FC = () => {
               <Text style={styles.company}>Baufest</Text>
               <Text style={styles.content}> - </Text>
               <Text style={styles.company}>Employee</Text>
+              {(selectedCV?.baufest3 || "").split("\n").map((line, index) => (
+                <Text key={index} style={styles.content}>
+                  • {line}
+                </Text>
+              ))}
             </View>
           </View>
 
@@ -275,6 +283,13 @@ const CVTemplate: React.FC = () => {
               <Text style={styles.company}>StreamCoder</Text>
               <Text style={styles.content}> - </Text>
               <Text style={styles.company}>Self-employed</Text>
+              {(selectedCV?.streamCoder || "")
+                .split("\n")
+                .map((line, index) => (
+                  <Text key={index} style={styles.content}>
+                    • {line}
+                  </Text>
+                ))}
             </View>
           </View>
         </View>

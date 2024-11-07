@@ -10,6 +10,8 @@ import {
 } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { closeModal, resetForm } from "../store/uiSlice";
+import { addCV } from "../store/cvSlice";
+import { DEFAULT_SKILLS } from "../helpers";
 
 const AddCVForm: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -24,6 +26,7 @@ const AddCVForm: React.FC = () => {
     baufest2: "",
     baufest3: "",
     streamCoder: "",
+    skills: DEFAULT_SKILLS,
   });
 
   const dispatch = useDispatch();
@@ -42,8 +45,9 @@ const AddCVForm: React.FC = () => {
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    // Submit logic
-    console.log("Form submitted", formData);
+    const newCV = { ...formData, date: new Date().toLocaleDateString() };
+    dispatch(addCV(newCV));
+    dispatch(closeModal());
   };
 
   const handleClose = () => {
@@ -78,6 +82,19 @@ const AddCVForm: React.FC = () => {
             onChange={handleChange}
             placeholder="Write your introduction here..."
             name="introduction"
+          />
+        </Box>
+        <Box mb={2}>
+          <Typography variant="h6">Skills</Typography>
+          <TextField
+            multiline
+            rows={4}
+            fullWidth
+            variant="outlined"
+            value={formData.skills}
+            onChange={handleChange}
+            placeholder="Write your skills here..."
+            name="skills"
           />
         </Box>
         <ExperienceTextField

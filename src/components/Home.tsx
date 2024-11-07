@@ -1,6 +1,6 @@
 // src/components/Home.tsx
 
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Container,
   Typography,
@@ -21,30 +21,34 @@ import { useDispatch, useSelector } from "react-redux";
 import { openModal, closeModal } from "../store/uiSlice";
 import { RootState } from "../store/store";
 import { Delete } from "@mui/icons-material";
+import { deleteCV, setCVs, selectCV } from "../store/cvSlice";
 
 const Home: React.FC = () => {
   const dispatch = useDispatch();
   // Access the Redux state using useSelector, with RootState for type safety
   const isModalOpen = useSelector((state: RootState) => state.ui.isModalOpen);
+  const { cvs, selectedCV } = useSelector((state: RootState) => state.cv);
 
-  // Sample CVs data with dates (this could be fetched or stored from localStorage in the future)
-  const cvs = [
-    { id: 1, title: "CV for Job A", date: "2024-01-15" },
-    { id: 2, title: "CV for Job B", date: "2024-02-10" },
-    { id: 3, title: "CV for Job C", date: "2024-03-05" },
-  ];
+  const handleSelectCv = (id: string) => {
+    dispatch(selectCV(id));
+  };
 
   const handleOpenModal = () => {
     dispatch(openModal()); // Dispatch the openModal action
   };
 
-  const handleExportCv = (cvTitle: string) => {
-    // Logic to export the CV (could involve creating a PDF)
-    alert(`Exporting ${cvTitle}`);
-  };
-
   const handleCloseModal = () => {
     dispatch(closeModal()); // Dispatch the closeModal action
+  };
+
+  useEffect(() => {
+    const storedCVs = JSON.parse(localStorage.getItem("cvs") || "[]");
+    console.log(storedCVs, "storedCVS");
+    dispatch(setCVs(storedCVs));
+  }, [dispatch]);
+
+  const handleDeleteCv = (title: string) => {
+    dispatch(deleteCV(title));
   };
 
   return (
@@ -67,14 +71,23 @@ const Home: React.FC = () => {
           </TableHead>
           <TableBody>
             {cvs.map((cv) => (
-              <TableRow key={cv.id}>
+              <TableRow
+                sx={{
+                  cursor: "pointer",
+                  "&:hover": { backgroundColor: "#f5f5f5" },
+                  backgroundColor:
+                    selectedCV?.id === cv.id ? "#d1e3f4" : "inherit",
+                }}
+                key={cv.id}
+                onClick={() => handleSelectCv(cv.id)}
+              >
                 <TableCell>{cv.title}</TableCell>
                 <TableCell>{cv.date}</TableCell>
                 <TableCell>
                   <Button onClick={() => alert(`Exporting ${cv.title}`)}>
                     <DownloadIcon />
                   </Button>
-                  <Button onClick={() => handleExportCv(cv.title)}>
+                  <Button onClick={() => handleDeleteCv(cv.title)}>
                     <Delete />
                   </Button>
                 </TableCell>
