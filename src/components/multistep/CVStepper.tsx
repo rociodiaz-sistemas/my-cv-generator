@@ -20,6 +20,9 @@ const CVStepper: React.FC = () => {
   const formData = useSelector((state: RootState) => state.cv.formData);
   const formFields = Object.keys(formData) as Array<keyof typeof formData>;
 
+  const currentField = formFields[activeStep];
+  const currentFieldValue = formData[currentField];
+
   const handleNext = () => {
     dispatch(incrementStep());
   };
@@ -35,7 +38,7 @@ const CVStepper: React.FC = () => {
   };
 
   return (
-    <Container>
+    <Container sx={{ padding: 5 }}>
       <Stepper activeStep={activeStep} alternativeLabel>
         {formFields.map((field) => (
           <Step key={field}>
@@ -69,7 +72,11 @@ const CVStepper: React.FC = () => {
               Submit
             </Button>
           ) : (
-            <Button variant="contained" onClick={handleNext}>
+            <Button
+              variant="contained"
+              onClick={handleNext}
+              disabled={!currentFieldValue} // Disable if field is empty
+            >
               Next
             </Button>
           )}

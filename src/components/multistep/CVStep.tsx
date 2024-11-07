@@ -27,7 +27,7 @@ const CVStep: React.FC<CVStepProps> = ({ label, field }) => {
         label={label}
         fullWidth
         multiline
-        rows={6}
+        rows={10}
         value={value || ""}
         onChange={handleChange}
       />

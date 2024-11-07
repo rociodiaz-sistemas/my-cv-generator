@@ -12,14 +12,21 @@ import {
   Paper,
   Modal,
   Box,
+  IconButton,
 } from "@mui/material";
 import DownloadIcon from "@mui/icons-material/Download";
 import AddCVForm from "./AddCVForm";
 import { useDispatch, useSelector } from "react-redux";
 import { openModal, closeModal } from "../store/uiSlice";
 import { RootState } from "../store/store";
-import { Delete, Visibility, VisibilityOff } from "@mui/icons-material";
-import { deleteCV, setCVs, selectCV, clearSelectedCV } from "../store/cvSlice";
+import { Close, Delete, Visibility, VisibilityOff } from "@mui/icons-material";
+import {
+  deleteCV,
+  setCVs,
+  selectCV,
+  clearSelectedCV,
+  clearFormData,
+} from "../store/cvSlice";
 import PDFPreview from "./PDFPreview";
 import { pdf } from "@react-pdf/renderer";
 import CVTemplate from "./CVTemplate";
@@ -44,6 +51,7 @@ const Home: React.FC = () => {
 
   const handleCloseModal = () => {
     dispatch(closeModal());
+    dispatch(clearFormData());
   };
 
   useEffect(() => {
@@ -71,7 +79,12 @@ const Home: React.FC = () => {
       <Typography variant="h4" gutterBottom>
         My CVs
       </Typography>
-      <Button variant="contained" color="primary" onClick={handleOpenModal}>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handleOpenModal}
+        sx={{ float: "right" }}
+      >
         Add CV
       </Button>
 
@@ -133,6 +146,9 @@ const Home: React.FC = () => {
             p: 4,
           }}
         >
+          <IconButton sx={{ float: "right" }}>
+            <Close onClick={handleCloseModal} />
+          </IconButton>
           <CVStepper />
         </Box>
       </Modal>
