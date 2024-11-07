@@ -10,8 +10,7 @@ import {
   Link,
 } from "@react-pdf/renderer";
 import CvImage from "../assets/images/cv-image.png";
-import { useSelector } from "react-redux";
-import { RootState } from "../store/store";
+import { CV } from "../store/types";
 
 Font.register({
   family: "Roboto",
@@ -118,8 +117,11 @@ const styles = StyleSheet.create({
   },
 });
 
-const CVTemplate: React.FC = () => {
-  const { selectedCV } = useSelector((state: RootState) => state.cv);
+interface CVTemplateProps {
+  selectedCV: CV | null;
+}
+
+const CVTemplate: React.FC<CVTemplateProps> = ({ selectedCV }) => {
   return (
     <Document>
       <Page size="A4" style={styles.page}>
@@ -171,13 +173,11 @@ const CVTemplate: React.FC = () => {
               <Text style={styles.content}> - </Text>
               <Text style={styles.company}>Contract</Text>
             </View>
-            <Text style={styles.content}>
-              {(selectedCV?.web4Realty || "").split("\n").map((line, index) => (
-                <Text key={index} style={styles.content}>
-                  • {line}
-                </Text>
-              ))}
-            </Text>
+            {(selectedCV?.web4Realty || "").split("\n").map((line, index) => (
+              <Text key={index} style={styles.content}>
+                • {line}
+              </Text>
+            ))}
           </View>
 
           <View style={styles.experienceSection}>
@@ -189,12 +189,12 @@ const CVTemplate: React.FC = () => {
               <Text style={styles.company}>Glofy</Text>
               <Text style={styles.content}> - </Text>
               <Text style={styles.company}>Contract</Text>
-              {(selectedCV?.glofy || "").split("\n").map((line, index) => (
-                <Text key={index} style={styles.content}>
-                  • {line}
-                </Text>
-              ))}
             </View>
+            {(selectedCV?.glofy || "").split("\n").map((line, index) => (
+              <Text key={index} style={styles.content}>
+                • {line}
+              </Text>
+            ))}
           </View>
 
           <View style={styles.experienceSection}>
@@ -204,12 +204,12 @@ const CVTemplate: React.FC = () => {
               <Text style={styles.company}>WeDevelop</Text>
               <Text style={styles.content}> - </Text>
               <Text style={styles.company}>Contract</Text>
-              {(selectedCV?.weDevelop1 || "").split("\n").map((line, index) => (
-                <Text key={index} style={styles.content}>
-                  • {line}
-                </Text>
-              ))}
             </View>
+            {(selectedCV?.weDevelop1 || "").split("\n").map((line, index) => (
+              <Text key={index} style={styles.content}>
+                • {line}
+              </Text>
+            ))}
           </View>
 
           <View style={styles.experienceSection}>
@@ -219,12 +219,12 @@ const CVTemplate: React.FC = () => {
               <Text style={styles.company}>CFOTech</Text>
               <Text style={styles.content}> - </Text>
               <Text style={styles.company}>Contract</Text>
-              {(selectedCV?.cfotech || "").split("\n").map((line, index) => (
-                <Text key={index} style={styles.content}>
-                  • {line}
-                </Text>
-              ))}
             </View>
+            {(selectedCV?.cfotech || "").split("\n").map((line, index) => (
+              <Text key={index} style={styles.content}>
+                • {line}
+              </Text>
+            ))}
           </View>
 
           <View style={styles.experienceSection}>
@@ -234,12 +234,12 @@ const CVTemplate: React.FC = () => {
               <Text style={styles.company}>Baufest</Text>
               <Text style={styles.content}> - </Text>
               <Text style={styles.company}>Employee</Text>
-              {(selectedCV?.baufest1 || "").split("\n").map((line, index) => (
-                <Text key={index} style={styles.content}>
-                  • {line}
-                </Text>
-              ))}
             </View>
+            {(selectedCV?.baufest1 || "").split("\n").map((line, index) => (
+              <Text key={index} style={styles.content}>
+                • {line}
+              </Text>
+            ))}
           </View>
 
           <View style={styles.experienceSection}>
@@ -249,12 +249,12 @@ const CVTemplate: React.FC = () => {
               <Text style={styles.company}>Baufest</Text>
               <Text style={styles.content}> - </Text>
               <Text style={styles.company}>Employee</Text>
-              {(selectedCV?.baufest2 || "").split("\n").map((line, index) => (
-                <Text key={index} style={styles.content}>
-                  • {line}
-                </Text>
-              ))}
             </View>
+            {(selectedCV?.baufest2 || "").split("\n").map((line, index) => (
+              <Text key={index} style={styles.content}>
+                • {line}
+              </Text>
+            ))}
           </View>
 
           <View style={styles.experienceSection}>
@@ -266,12 +266,12 @@ const CVTemplate: React.FC = () => {
               <Text style={styles.company}>Baufest</Text>
               <Text style={styles.content}> - </Text>
               <Text style={styles.company}>Employee</Text>
-              {(selectedCV?.baufest3 || "").split("\n").map((line, index) => (
-                <Text key={index} style={styles.content}>
-                  • {line}
-                </Text>
-              ))}
             </View>
+            {(selectedCV?.baufest3 || "").split("\n").map((line, index) => (
+              <Text key={index} style={styles.content}>
+                • {line}
+              </Text>
+            ))}
           </View>
 
           <View style={styles.experienceSection}>
@@ -283,15 +283,13 @@ const CVTemplate: React.FC = () => {
               <Text style={styles.company}>StreamCoder</Text>
               <Text style={styles.content}> - </Text>
               <Text style={styles.company}>Self-employed</Text>
-              {(selectedCV?.streamCoder || "")
-                .split("\n")
-                .map((line, index) => (
-                  <Text key={index} style={styles.content}>
-                    • {line}
-                  </Text>
-                ))}
             </View>
           </View>
+          {(selectedCV?.streamCoder || "").split("\n").map((line, index) => (
+            <Text key={index} style={styles.content}>
+              • {line}
+            </Text>
+          ))}
         </View>
 
         {/* Additional Sections (Education, Certifications, etc.) */}

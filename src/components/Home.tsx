@@ -1,5 +1,3 @@
-// src/components/Home.tsx
-
 import React, { useEffect } from "react";
 import {
   Container,
@@ -20,25 +18,31 @@ import AddCVForm from "./AddCVForm";
 import { useDispatch, useSelector } from "react-redux";
 import { openModal, closeModal } from "../store/uiSlice";
 import { RootState } from "../store/store";
-import { Delete } from "@mui/icons-material";
-import { deleteCV, setCVs, selectCV } from "../store/cvSlice";
+import { Delete, Visibility, VisibilityOff } from "@mui/icons-material";
+import { deleteCV, setCVs, selectCV, clearSelectedCV } from "../store/cvSlice";
+import PDFPreview from "./PDFPreview";
+import { pdf } from "@react-pdf/renderer";
+import CVTemplate from "./CVTemplate";
 
 const Home: React.FC = () => {
   const dispatch = useDispatch();
-  // Access the Redux state using useSelector, with RootState for type safety
   const isModalOpen = useSelector((state: RootState) => state.ui.isModalOpen);
   const { cvs, selectedCV } = useSelector((state: RootState) => state.cv);
 
   const handleSelectCv = (id: string) => {
-    dispatch(selectCV(id));
+    if (!selectedCV) {
+      dispatch(selectCV(id));
+    } else {
+      dispatch(clearSelectedCV());
+    }
   };
 
   const handleOpenModal = () => {
-    dispatch(openModal()); // Dispatch the openModal action
+    dispatch(openModal());
   };
 
   const handleCloseModal = () => {
-    dispatch(closeModal()); // Dispatch the closeModal action
+    dispatch(closeModal());
   };
 
   useEffect(() => {
@@ -49,6 +53,16 @@ const Home: React.FC = () => {
 
   const handleDeleteCv = (title: string) => {
     dispatch(deleteCV(title));
+  };
+
+  const handleDownload = async () => {
+    const blob = await pdf(<CVTemplate selectedCV={selectedCV} />).toBlob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${selectedCV?.title}.pdf`;
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   return (
@@ -73,18 +87,22 @@ const Home: React.FC = () => {
             {cvs.map((cv) => (
               <TableRow
                 sx={{
-                  cursor: "pointer",
-                  "&:hover": { backgroundColor: "#f5f5f5" },
                   backgroundColor:
                     selectedCV?.id === cv.id ? "#d1e3f4" : "inherit",
                 }}
                 key={cv.id}
-                onClick={() => handleSelectCv(cv.id)}
               >
                 <TableCell>{cv.title}</TableCell>
                 <TableCell>{cv.date}</TableCell>
                 <TableCell>
-                  <Button onClick={() => alert(`Exporting ${cv.title}`)}>
+                  <Button onClick={() => handleSelectCv(cv.id)}>
+                    {selectedCV?.id === cv.id ? (
+                      <VisibilityOff />
+                    ) : (
+                      <Visibility />
+                    )}
+                  </Button>
+                  <Button onClick={() => handleDownload}>
                     <DownloadIcon />
                   </Button>
                   <Button onClick={() => handleDeleteCv(cv.title)}>
@@ -97,7 +115,6 @@ const Home: React.FC = () => {
         </Table>
       </TableContainer>
 
-      {/* Modal for AddCVForm */}
       <Modal open={isModalOpen} onClose={handleCloseModal}>
         <Box
           sx={{
@@ -109,8 +126,8 @@ const Home: React.FC = () => {
             bgcolor: "background.paper",
             borderRadius: 2,
             boxShadow: 24,
-            maxHeight: "85vh", // Prevents exceeding the viewport height
-            overflowY: "auto", // Enables scrolling if content exceeds maxHeight
+            maxHeight: "85vh",
+            overflowY: "auto",
             padding: 2,
             p: 4,
           }}
@@ -118,6 +135,7 @@ const Home: React.FC = () => {
           <AddCVForm />
         </Box>
       </Modal>
+      {selectedCV && <PDFPreview />}
     </Container>
   );
 };

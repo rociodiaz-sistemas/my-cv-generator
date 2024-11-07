@@ -41,7 +41,8 @@ const cvSlice = createSlice({
 });
 
 // Export actions
-export const { addCV, deleteCV, setCVs, selectCV } = cvSlice.actions;
+export const { addCV, deleteCV, setCVs, selectCV, clearSelectedCV } =
+  cvSlice.actions;
 
 // Export the reducer
 export const CVReducer = cvSlice.reducer;
