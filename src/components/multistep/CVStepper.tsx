@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import { incrementStep, decrementStep, resetStep } from "../../store/uiSlice";
 import { addCV, clearFormData } from "../../store/cvSlice";
-import CVStep from "./CVStep";
+import CVStep from "./CVStepAI";
 
 const CVStepper: React.FC = () => {
   const dispatch = useDispatch();
