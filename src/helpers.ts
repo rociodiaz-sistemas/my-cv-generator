@@ -1,16 +1,25 @@
 export const DEFAULT_SKILLS =
   "React (Hooks, Context API, Redux, Sagas, Lazy Loading, HOCs, Error Boundaries, React Query, React Router, Object-Oriented Programming, Storybook, Jest, React Testing Library, Enzyme), JavaScript, TypeScript, HTML, CSS, SCSS, Webpack, Rollup, Next.js, Phaser, Framer Motion, Tailwind CSS, Emotion, Styled-Components, Material UI, Chakra UI, Figma, PHP, Bilingual (English/Spanish),  ";
 
-export const INITIAL_PROMPT_EXPERIENCE = `Given the following job posting and the detailed job experience, carefully compare the two to select and tailor only the most relevant details from the job experience. Focus on emphasizing the skills and achievements that most directly align with the job requirements, while omitting unrelated or less relevant points. Specifically:
+export const INITIAL_PROMPT_EXPERIENCE = `Given the job posting and detailed job experience, compare the two to identify and highlight the most relevant details that align directly with the job requirements. Focus on the following:
 
-Highlight the core technologies and tools from the job experience that match the ones listed in the job posting (e.g., React.js, Redux, TypeScript, RESTful APIs).
-Emphasize key responsibilities and tasks that mirror those in the job posting (e.g., performance optimization, automated testing, collaboration with teams).
-Include specific outcomes or achievements only when they strongly demonstrate alignment with the job posting requirements.
-Avoid adding, inventing, or speculating on new information not present in the original job experience. If a detail is missing in the job experience, do not include it.
+Direct Match with Job Posting:
 
-Combine similar tasks and technologies into single bullet points to reduce redundancy. If multiple responsibilities involve the same tools or skills (e.g., React, Redux, performance optimization), group them into a concise, cohesive statement to maintain clarity.
+Prioritize highlighting core technologies, tools, and responsibilities that directly correspond to the job posting (e.g., React.js, Redux, TypeScript, RESTful APIs, performance optimization).
+Emphasize specific outcomes and measurable achievements when they align with the job's stated goals (e.g., improved performance, reduced load times).
+Keep it concise by only mentioning the most important tasks and achievements relevant to the job posting.
+Indirectly Relevant Skills:
 
-The goal is to make the job experience concise, focusing exclusively on the key technologies, tools, and outcomes that align with the job posting while omitting irrelevant details. The response should be formatted in bullet points only, without any additional human commentary.`;
+Mention any skills, tools, or responsibilities that are beneficial but not explicitly required by the job posting.
+Avoid repeating information from the "Direct Match" section unless necessary to emphasize full range of skills.
+Omit Unrelated Information:
+
+Exclude any job details, achievements, or skills that are irrelevant or do not add value to the job posting's requirements.
+Ensure no speculation is made about additional skills or information not present in the job experience.
+Output Format:
+
+Bullet points that directly match the job posting’s requirements, including the core technologies and tools used, along with key results and outcomes.
+If applicable, bullet points summarizing indirect but relevant skills and experiences that showcase strengths.`;
 
 export const INITIAL_PROMPT_INTRODUCTION = ``;
 
@@ -113,34 +122,64 @@ Integrated RESTful APIs and WebSocket connections, enabling real-time updates an
 Mentored junior developers on React best practices, helping the team standardize code quality through reusable components and consistent styling with CSS modules.
 Built and maintained automated CI/CD pipelines with Jenkins and GitHub Actions, reducing deployment time by 50% and increasing overall release frequency.`;
 
-export const INTRODUCTION_PROMPT = ``;
+export const aptitude_keywords = [
+  "Mentoring",
+  "result-oriented",
+  "creative",
+  "passionate",
+  "analytical",
+  "fast-paced",
+];
+
+export const INTRODUCTION_PROMPT = `Input:
+
+Job Experience: Brief description of relevant work experience (e.g., years of experience, key technologies for a react developer.).
+Dynamic Keywords: Dynamic aptitude keywords like ${aptitude_keywords}.
+Output:
+Generate a concise CV introduction (100-150 words) with these specific guidelines:
+
+Focus on Key Skills:
+
+Highlight core technical skills most relevant to the job description (e.g., React.js, Next.js, TypeScript, performance optimization, etc.).
+Mention only high-level accomplishments or contributions (e.g., improved user experience, optimized performance, led teams) but do not go into specifics like metrics or project names.
+Incorporate Soft Skills:
+
+Integrate dynamic aptitude keywords naturally ${aptitude_keywords}.
+
+Keep It Short & Focused:
+
+The introduction should be short and focused on key strengths, around 2-3 sentences.
+Avoid specifics such as company names, detailed metrics, and project names. Do not include phrases like "I look forward to discussing…" or overly detailed technical descriptions.
+Tone & Structure:
+
+Maintain a natural, professional, and confident tone. It should feel like a summary of the candidate's top strengths, not a letter or pitch.
+The structure should flow smoothly, and the focus should remain on the candidate's fit for the job in a clear, direct manner.
+Align with the Job Posting:
+
+Make sure to mention key skills and attributes that directly match the job posting but do not over-tailor. The goal is to align with the job description without making the introduction feel too customized.
+Avoid Unnecessary Details:
+
+Do not delve into detailed project descriptions, specific tools, or company names. The introduction should be high-level and results-driven.
+Example Output (Based on Refined Prompt):
+Input:
+
+Job Experience: "Senior Front-End Developer with 5+ years of experience in React.js, Next.js, TypeScript, and performance optimization."
+Job Posting: "Seeking a Senior Front-End Developer with expertise in React.js, performance optimization, and team collaboration."
+Dynamic Keywords: "result-oriented, creative, adaptable, collaborative, fast-paced"
+Generated CV Introduction:
+"As a Senior Front-End Developer with over five years of experience, I specialize in delivering high-performance, user-friendly web applications using React.js, Next.js, and TypeScript. I am passionate about performance optimization and have successfully enhanced user experiences through innovative solutions and efficient coding practices. Known for my strong collaboration skills, I thrive in fast-paced, Agile environments where I mentor teams and continuously improve software quality. My commitment to staying at the forefront of web technologies ensures that I deliver cutting-edge, high-impact results."
+`;
 
 export const DEFAULT_PROMPTS = {
-  introduction: ``,
-  web4Realty: ` ${INITIAL_PROMPT_EXPERIENCE} Job Experience for CV: React Developer at CodeVision LLC
-Position: Senior React Developer
-Company: CodeVision LLC
-Duration: May 2021 - Present
-Location: Remote
-
-Responsibilities & Achievements:
-
-Developed Scalable Web Applications: Led the development of a dynamic, scalable web application for a fintech client, using React.js, Redux, and TypeScript. The application supported over 500,000 active users daily and integrated with multiple third-party APIs for real-time financial data.
-State Management with Redux & Context API: Utilized Redux for global state management, ensuring smooth data flow across the application. Implemented React's Context API for simpler state management in non-critical components, reducing boilerplate code and improving maintainability.
-Optimized Performance: Improved the application’s performance by 40% by implementing lazy loading and code splitting strategies using React's Suspense and dynamic imports. Also optimized rendering with React.memo and useMemo to reduce unnecessary re-renders.
-Automated Testing with Jest & Cypress: Created a suite of automated unit tests for components using Jest and testing-library/react. Developed end-to-end tests using Cypress to ensure the stability of the web app. This resulted in a 30% reduction in manual testing time and improved test coverage by 50%.
-Collaborated with UX/UI Teams: Worked closely with designers to ensure the application met high usability standards and matched the design specifications. Incorporated Material UI for component libraries and custom themes, enhancing user experience and accessibility.
-API Integration: Integrated and consumed RESTful APIs to pull real-time data for the application. Managed async data flow with Redux middleware (redux-thunk) and handled complex state management for API responses, ensuring the application was responsive and real-time.
-CI/CD Implementation: Set up continuous integration and continuous deployment pipelines using GitHub Actions and Jenkins, which improved deployment frequency by 60%. Ensured the system was automated, reducing errors and manual intervention.
-Code Reviews & Mentorship: Conducted code reviews and mentored junior developers, promoting best practices in clean code, testing, and debugging techniques. Provided regular feedback on code performance and optimization.
-Agile Methodology: Participated in daily standups, sprint planning, and retrospectives as part of an Agile team. Ensured the timely delivery of features and bug fixes while maintaining a focus on high-quality, maintainable code.`,
-  glofy: "say hello!",
-  weDevelop1: "tell me a joke about javascript",
-  weDevelop2: "give me cute emojis",
-  cfotech: "what is a meme",
-  baufest1: "do you think it's dangerous to look for a job on election month?",
-  baufest2: "say something cool",
-  baufest3: "im testing this prompt for my project with AI prompts!",
-  streamCoder: "what is the best way to learn to code?",
-  skills: "how is it that you are free?",
+  introduction: `${INTRODUCTION_PROMPT} JOB EXPERIENCES: ${web4Realty_PROMPT} ${glofy_PROMPT} ${weDevelop1_PROMPT} ${weDevelop2_PROMPT} ${cfotech_PROMPT} ${baufest1_PROMPT} ${baufest2_PROMPT} ${baufest3_PROMPT} ${streamCoder_PROMPT}:`,
+  web4Realty: ` ${INITIAL_PROMPT_EXPERIENCE} ${web4Realty_PROMPT}`,
+  glofy: ` ${INITIAL_PROMPT_EXPERIENCE} ${glofy_PROMPT}`,
+  weDevelop1: ` ${INITIAL_PROMPT_EXPERIENCE} ${weDevelop1_PROMPT}`,
+  weDevelop2: ` ${INITIAL_PROMPT_EXPERIENCE} ${weDevelop2_PROMPT}`,
+  cfotech: ` ${INITIAL_PROMPT_EXPERIENCE} ${cfotech_PROMPT}`,
+  baufest1: ` ${INITIAL_PROMPT_EXPERIENCE} ${baufest1_PROMPT}`,
+  baufest2: ` ${INITIAL_PROMPT_EXPERIENCE} ${baufest2_PROMPT}`,
+  baufest3: ` ${INITIAL_PROMPT_EXPERIENCE} ${baufest3_PROMPT}`,
+  streamCoder: ` ${INITIAL_PROMPT_EXPERIENCE} ${streamCoder_PROMPT}`,
+  skills: ` ${INITIAL_PROMPT_INTRODUCTION}`,
 };

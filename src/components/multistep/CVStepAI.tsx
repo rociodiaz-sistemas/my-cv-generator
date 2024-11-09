@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Box, TextField, Typography } from "@mui/material";
+import { Box, TextField, Typography, Button } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import { updateFormData } from "../../store/cvSlice";
@@ -23,20 +23,26 @@ const CVStepAI: React.FC<CVStepProps> = ({
   const value = useSelector((state: RootState) => state.cv.formData[field]);
 
   // Use React Query to fetch the AI response for the prompt
-  const { data, isLoading, isError } = useQuery(
+  const { data, isLoading, isError, refetch } = useQuery(
     aiQueryOptions(prompt, jobPosting)
   );
 
   useEffect(() => {
-    // Once the AI response is fetched, update the form field with the result
-    if (data?.choices?.[0]?.message?.content && !value) {
+    // Check if new data exists and update the form field
+    if (data?.choices?.[0]?.message?.content) {
       const aiResponse = data.choices[0].message.content;
+      // Always update the field with the new AI response, regardless of current value
       dispatch(updateFormData({ field, value: aiResponse }));
     }
-  }, [data, value, dispatch, field]);
+  }, [data, dispatch, field]); // Trigger effect on data change
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(updateFormData({ field, value: event.target.value }));
+  };
+
+  // Handle the refresh action to refetch data
+  const handleRefresh = () => {
+    refetch(); // Manually trigger the refetch
   };
 
   if (isLoading) return <Typography>Loading...</Typography>;
@@ -68,6 +74,13 @@ const CVStepAI: React.FC<CVStepProps> = ({
             onChange={handleChange}
           />
         </Box>
+      </Box>
+
+      {/* Add a button to refresh the prompt */}
+      <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
+        <Button variant="outlined" onClick={handleRefresh}>
+          Refresh Prompt
+        </Button>
       </Box>
     </Box>
   );
