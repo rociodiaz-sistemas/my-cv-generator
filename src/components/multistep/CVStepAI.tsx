@@ -10,14 +10,22 @@ interface CVStepProps {
   label: string;
   field: keyof RootState["cv"]["formData"];
   prompt: string; // AI prompt for the query
+  jobPosting: string;
 }
 
-const CVStepAI: React.FC<CVStepProps> = ({ label, field, prompt }) => {
+const CVStepAI: React.FC<CVStepProps> = ({
+  label,
+  field,
+  prompt,
+  jobPosting,
+}) => {
   const dispatch = useDispatch();
   const value = useSelector((state: RootState) => state.cv.formData[field]);
 
   // Use React Query to fetch the AI response for the prompt
-  const { data, isLoading, isError } = useQuery(aiQueryOptions(prompt));
+  const { data, isLoading, isError } = useQuery(
+    aiQueryOptions(prompt, jobPosting)
+  );
 
   useEffect(() => {
     // Once the AI response is fetched, update the form field with the result

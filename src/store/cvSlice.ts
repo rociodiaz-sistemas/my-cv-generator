@@ -9,6 +9,7 @@ interface CVState {
   selectedCV: CV | null;
   formData: Omit<CV, "id" | "date">;
   prompts: Prompts;
+  jobPosting: string;
 }
 
 const initialState: CVState = {
@@ -28,6 +29,7 @@ const initialState: CVState = {
     streamCoder: "",
     skills: "",
   },
+  jobPosting: "",
   prompts: DEFAULT_PROMPTS,
 };
 
@@ -88,6 +90,9 @@ const cvSlice = createSlice({
     setFormData: (state, action: PayloadAction<Partial<CV>>) => {
       state.formData = { ...state.formData, ...action.payload };
     },
+    setJobPosting: (state, action) => {
+      state.jobPosting = action.payload;
+    },
   },
 });
 
@@ -101,6 +106,7 @@ export const {
   selectCV,
   clearSelectedCV,
   setFormData,
+  setJobPosting,
 } = cvSlice.actions;
 
 // Export the reducer

@@ -2,12 +2,13 @@ import { queryOptions } from "@tanstack/react-query";
 import axios from "axios";
 
 // Define the AI query fetch function
-const fetchAIResponse = async (prompt: string) => {
+const fetchAIResponse = async (prompt: string, jobPosting: string) => {
+  const combinedPrompt = `${prompt} Job Posting: ${jobPosting}\n\n`;
   const response = await axios.post(
     "https://openrouter.ai/api/v1/chat/completions",
     JSON.stringify({
       model: "liquid/lfm-40b:free",
-      messages: [{ role: "user", content: prompt }],
+      messages: [{ role: "user", content: combinedPrompt }],
       max_tokens: 200, // Adjust according to the expected response length
       temperature: 1.0, // Balanced temperature for creativity and coherence
       top_p: 1.0, // Allowing full range of token choices
@@ -28,10 +29,10 @@ const fetchAIResponse = async (prompt: string) => {
 };
 
 // Use queryOptions helper to get the query configuration
-export const aiQueryOptions = (prompt: string) => {
+export const aiQueryOptions = (prompt: string, jobPosting: string) => {
   return queryOptions({
     queryKey: ["ai-response", prompt],
-    queryFn: () => fetchAIResponse(prompt),
+    queryFn: () => fetchAIResponse(prompt, jobPosting),
     staleTime: 60 * 1000, // Cache for 1 minute
     retry: 3, // Retry up to 3 times
     refetchOnWindowFocus: false, // Prevent refetch on window focus

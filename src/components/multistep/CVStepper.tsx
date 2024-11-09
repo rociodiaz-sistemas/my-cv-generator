@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import {
   Box,
   Button,
@@ -19,6 +19,9 @@ const CVStepper: React.FC = () => {
   const formData = useSelector((state: RootState) => state.cv.formData);
   const formFields = Object.keys(formData) as Array<keyof typeof formData>;
 
+  // Local state to store job posting
+  const [jobPosting, setJobPosting] = useState<string>("");
+
   // Define the prompts for each step
   const prompts = useSelector((state: RootState) => state.cv.prompts);
 
@@ -32,6 +35,9 @@ const CVStepper: React.FC = () => {
   return (
     <Box sx={{ height: "100%" }}>
       <Stepper activeStep={activeStep} alternativeLabel>
+        <Step key="1">
+          <StepLabel></StepLabel>
+        </Step>
         {formFields.map((field) => (
           <Step key={field}>
             <StepLabel>{field}</StepLabel>
@@ -40,29 +46,44 @@ const CVStepper: React.FC = () => {
       </Stepper>
 
       <Box sx={{ padding: 2 }}>
-        {formFields.map((field, index) =>
-          activeStep === index ? (
-            // Skip AI step for fields that don't require AI, like "title"
-            field !== "title" ? (
-              <CVStepAI
-                key={field}
-                label={field}
-                field={field}
-                prompt={prompts[field]}
-              />
-            ) : (
-              <Box key={field} sx={{ width: "100%" }}>
-                <TextField
-                  label={`${field}`}
-                  fullWidth
-                  value={formData[field]}
-                  onChange={(e) =>
-                    dispatch(setFormData({ [field]: e.target.value }))
-                  }
+        {/* Step 1: Job Posting Input */}
+        {activeStep === 0 ? (
+          <Box sx={{ width: "100%" }}>
+            <TextField
+              label="Job Posting"
+              fullWidth
+              multiline
+              rows={6}
+              value={jobPosting}
+              onChange={(e) => setJobPosting(e.target.value)}
+            />
+          </Box>
+        ) : (
+          // Conditionally render AI steps or regular fields
+          formFields.map((field, index) =>
+            activeStep === index ? (
+              field !== "title" ? (
+                <CVStepAI
+                  key={field}
+                  label={field}
+                  field={field}
+                  prompt={prompts[field]}
+                  jobPosting={jobPosting} // Pass the job posting to the AI step
                 />
-              </Box>
-            )
-          ) : null
+              ) : (
+                <Box key={field} sx={{ width: "100%" }}>
+                  <TextField
+                    label={field}
+                    fullWidth
+                    value={formData[field]}
+                    onChange={(e) =>
+                      dispatch(setFormData({ [field]: e.target.value }))
+                    }
+                  />
+                </Box>
+              )
+            ) : null
+          )
         )}
 
         <Box
@@ -87,7 +108,10 @@ const CVStepper: React.FC = () => {
             <Button
               variant="contained"
               onClick={() => dispatch(incrementStep())}
-              disabled={!formData[formFields[activeStep]]} // Disable if current field is empty
+              disabled={
+                !formData[formFields[activeStep]] ||
+                (activeStep == 0 && !jobPosting)
+              } // Disable if current field is empty
             >
               Next
             </Button>
