@@ -1,18 +1,17 @@
-// CVStepper.tsx
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Box,
   Button,
   Stepper,
   Step,
   StepLabel,
-  Container,
+  TextField,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import { incrementStep, decrementStep, resetStep } from "../../store/uiSlice";
-import { addCV, clearFormData } from "../../store/cvSlice";
-import CVStep from "./CVStepAI";
+import { addCV, clearFormData, setFormData } from "../../store/cvSlice";
+import CVStepAI from "./CVStepAI";
 
 const CVStepper: React.FC = () => {
   const dispatch = useDispatch();
@@ -20,17 +19,10 @@ const CVStepper: React.FC = () => {
   const formData = useSelector((state: RootState) => state.cv.formData);
   const formFields = Object.keys(formData) as Array<keyof typeof formData>;
 
-  const currentField = formFields[activeStep];
-  const currentFieldValue = formData[currentField];
+  // Define the prompts for each step
+  const prompts = useSelector((state: RootState) => state.cv.prompts);
 
-  const handleNext = () => {
-    dispatch(incrementStep());
-  };
-
-  const handleBack = () => {
-    dispatch(decrementStep());
-  };
-
+  // Handle form submission
   const handleSubmit = () => {
     dispatch(addCV());
     dispatch(resetStep());
@@ -50,9 +42,29 @@ const CVStepper: React.FC = () => {
       <Box sx={{ padding: 2 }}>
         {formFields.map((field, index) =>
           activeStep === index ? (
-            <CVStep key={field} label={field} field={field} />
+            // Skip AI step for fields that don't require AI, like "title"
+            field !== "title" ? (
+              <CVStepAI
+                key={field}
+                label={field}
+                field={field}
+                prompt={prompts[field]}
+              />
+            ) : (
+              <Box key={field} sx={{ width: "100%" }}>
+                <TextField
+                  label={`${field}`}
+                  fullWidth
+                  value={formData[field]}
+                  onChange={(e) =>
+                    dispatch(setFormData({ [field]: e.target.value }))
+                  }
+                />
+              </Box>
+            )
           ) : null
         )}
+
         <Box
           sx={{
             display: "flex",
@@ -62,7 +74,7 @@ const CVStepper: React.FC = () => {
         >
           <Button
             variant="outlined"
-            onClick={handleBack}
+            onClick={() => dispatch(decrementStep())}
             disabled={activeStep === 0}
           >
             Back
@@ -74,8 +86,8 @@ const CVStepper: React.FC = () => {
           ) : (
             <Button
               variant="contained"
-              onClick={handleNext}
-              disabled={!currentFieldValue} // Disable if field is empty
+              onClick={() => dispatch(incrementStep())}
+              disabled={!formData[formFields[activeStep]]} // Disable if current field is empty
             >
               Next
             </Button>

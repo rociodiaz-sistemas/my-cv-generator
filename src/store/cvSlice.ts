@@ -1,12 +1,14 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { CV } from "./types";
+import { CV, Prompts } from "./types";
 import { v4 as uuidv4 } from "uuid";
+import { DEFAULT_PROMPTS } from "../helpers";
 
 // Define the initial state for CVs
 interface CVState {
   cvs: CV[];
   selectedCV: CV | null;
   formData: Omit<CV, "id" | "date">;
+  prompts: Prompts;
 }
 
 const initialState: CVState = {
@@ -26,6 +28,7 @@ const initialState: CVState = {
     streamCoder: "",
     skills: "",
   },
+  prompts: DEFAULT_PROMPTS,
 };
 
 // Create the slice to handle CV-related actions
@@ -82,6 +85,9 @@ const cvSlice = createSlice({
     clearSelectedCV: (state) => {
       state.selectedCV = null; // Clear selected CV
     },
+    setFormData: (state, action: PayloadAction<Partial<CV>>) => {
+      state.formData = { ...state.formData, ...action.payload };
+    },
   },
 });
 
@@ -94,6 +100,7 @@ export const {
   setCVs,
   selectCV,
   clearSelectedCV,
+  setFormData,
 } = cvSlice.actions;
 
 // Export the reducer
