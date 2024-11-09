@@ -19,13 +19,13 @@ const CVStepper: React.FC = () => {
   const formData = useSelector((state: RootState) => state.cv.formData);
   const formFields = Object.keys(formData) as Array<keyof typeof formData>;
 
-  // Local state to store job posting
+  // Local state for job posting (non-CV data)
   const [jobPosting, setJobPosting] = useState<string>("");
 
-  // Define the prompts for each step
+  // Define prompts for AI steps
   const prompts = useSelector((state: RootState) => state.cv.prompts);
 
-  // Handle form submission
+  // Handle form submission (excluding jobPosting)
   const handleSubmit = () => {
     dispatch(addCV());
     dispatch(resetStep());
@@ -35,8 +35,9 @@ const CVStepper: React.FC = () => {
   return (
     <Box sx={{ height: "100%" }}>
       <Stepper activeStep={activeStep} alternativeLabel>
-        <Step key="1">
-          <StepLabel></StepLabel>
+        {/* Step for non-CV field like Job Posting */}
+        <Step key="jobPosting">
+          <StepLabel>Job Posting</StepLabel>
         </Step>
         {formFields.map((field) => (
           <Step key={field}>
@@ -46,7 +47,7 @@ const CVStepper: React.FC = () => {
       </Stepper>
 
       <Box sx={{ padding: 2 }}>
-        {/* Step 1: Job Posting Input */}
+        {/* Step 0: Non-CV field - Job Posting */}
         {activeStep === 0 ? (
           <Box sx={{ width: "100%" }}>
             <TextField
@@ -59,16 +60,16 @@ const CVStepper: React.FC = () => {
             />
           </Box>
         ) : (
-          // Conditionally render AI steps or regular fields
+          // Conditionally render AI or regular fields based on activeStep
           formFields.map((field, index) =>
-            activeStep === index ? (
+            activeStep === index + 1 ? ( // Offset index for job posting step
               field !== "title" ? (
                 <CVStepAI
                   key={field}
                   label={field}
                   field={field}
                   prompt={prompts[field]}
-                  jobPosting={jobPosting} // Pass the job posting to the AI step
+                  jobPosting={jobPosting} // Pass jobPosting to AI step
                 />
               ) : (
                 <Box key={field} sx={{ width: "100%" }}>
@@ -86,6 +87,7 @@ const CVStepper: React.FC = () => {
           )
         )}
 
+        {/* Navigation Buttons */}
         <Box
           sx={{
             display: "flex",
@@ -100,7 +102,7 @@ const CVStepper: React.FC = () => {
           >
             Back
           </Button>
-          {activeStep === formFields.length - 1 ? (
+          {activeStep === formFields.length ? (
             <Button variant="contained" onClick={handleSubmit}>
               Submit
             </Button>
@@ -109,9 +111,10 @@ const CVStepper: React.FC = () => {
               variant="contained"
               onClick={() => dispatch(incrementStep())}
               disabled={
-                !formData[formFields[activeStep]] ||
-                (activeStep == 0 && !jobPosting)
-              } // Disable if current field is empty
+                activeStep === 0
+                  ? !jobPosting
+                  : !formData[formFields[activeStep - 1]]
+              } // Validate based on jobPosting or CV field
             >
               Next
             </Button>
