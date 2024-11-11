@@ -4,12 +4,14 @@ interface UIState {
   isModalOpen: boolean;
   isFormSubmitted: boolean;
   activeStep: number;
+  selectedExperiences: number[];
 }
 
 const initialState: UIState = {
   isModalOpen: false, // Initially, the modal is closed
   isFormSubmitted: false, // Form is not submitted initially
   activeStep: 0,
+  selectedExperiences: [],
 };
 
 const uiSlice = createSlice({
@@ -38,6 +40,9 @@ const uiSlice = createSlice({
     resetStep: (state) => {
       state.activeStep = 0; // Reset to the first step
     },
+    setSelectedExperiences: (state, action: PayloadAction<number[]>) => {
+      state.selectedExperiences = action.payload;
+    },
   },
 });
 
@@ -50,6 +55,7 @@ export const {
   incrementStep,
   decrementStep,
   resetStep,
+  setSelectedExperiences,
 } = uiSlice.actions;
 
 export const UIReducer = uiSlice.reducer;

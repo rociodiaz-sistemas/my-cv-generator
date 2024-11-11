@@ -1,11 +1,15 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { UIReducer } from "./uiSlice";
-import { CVReducer } from "./cvSlice";
+import { profileReducer } from "./profileSlice";
+import { cvReducer } from "./cvSlice";
+import { formReducer } from "./formSlice";
 
 export const store = configureStore({
   reducer: {
     ui: UIReducer, // This will hold our modal and form submission states
-    cv: CVReducer, // This will hold our CV data
+    cv: cvReducer, // This will hold our CV data
+    profile: profileReducer, // This will hold our profile data
+    formData: formReducer,
   },
 });
 

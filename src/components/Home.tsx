@@ -11,10 +11,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { openModal, closeModal } from "../store/uiSlice";
 import { RootState } from "../store/store";
 import { Close } from "@mui/icons-material";
-import { clearFormData } from "../store/cvSlice";
 import PDFPreview from "./PDFPreview";
 import CVStepper from "./multistep/CVStepper";
 import CVTable from "./CVTable";
+import { clearForm } from "../store/formSlice";
 
 const Home: React.FC = () => {
   const dispatch = useDispatch();
@@ -27,7 +27,7 @@ const Home: React.FC = () => {
 
   const handleCloseModal = () => {
     dispatch(closeModal());
-    dispatch(clearFormData());
+    dispatch(clearForm());
   };
 
   return (

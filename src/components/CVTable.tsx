@@ -51,7 +51,6 @@ const CVTable: React.FC = () => {
 
   useEffect(() => {
     const storedCVs = JSON.parse(localStorage.getItem("cvs") || "[]");
-    console.log(storedCVs, "storedCVS");
     dispatch(setCVs(storedCVs));
   }, [dispatch]);
 
