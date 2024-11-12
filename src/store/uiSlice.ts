@@ -43,6 +43,9 @@ const uiSlice = createSlice({
     setSelectedExperiences: (state, action: PayloadAction<number[]>) => {
       state.selectedExperiences = action.payload;
     },
+    setActiveStep: (state, action: PayloadAction<number>) => {
+      state.activeStep = action.payload;
+    },
   },
 });
 
@@ -56,6 +59,7 @@ export const {
   decrementStep,
   resetStep,
   setSelectedExperiences,
+  setActiveStep,
 } = uiSlice.actions;
 
 export const UIReducer = uiSlice.reducer;

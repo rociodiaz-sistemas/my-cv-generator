@@ -4,7 +4,7 @@ import { Experience } from "./types";
 interface ProfileState {
   jobTitle: string;
   skills: string[];
-  allExperiences: Experience[];
+  profileExperiences: Experience[];
   defaultCheckedExperiences: number[];
 }
 
@@ -12,7 +12,7 @@ const initialState: ProfileState = {
   jobTitle: "Job Title",
   skills: ["Skill 1", "Skill 2", "Skill 3"],
   defaultCheckedExperiences: [1, 2],
-  allExperiences: [
+  profileExperiences: [
     {
       id: 1,
       label: "Experience 1",

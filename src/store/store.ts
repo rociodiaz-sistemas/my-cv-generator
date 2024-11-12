@@ -3,6 +3,7 @@ import { UIReducer } from "./uiSlice";
 import { profileReducer } from "./profileSlice";
 import { cvReducer } from "./cvSlice";
 import { formReducer } from "./formSlice";
+import { stepReducer } from "./stepSlice";
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     cv: cvReducer, // This will hold our CV data
     profile: profileReducer, // This will hold our profile data
     formData: formReducer,
+    step: stepReducer,
   },
 });
 

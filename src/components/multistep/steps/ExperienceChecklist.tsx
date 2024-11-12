@@ -13,8 +13,8 @@ const ExperienceChecklist: React.FC = () => {
   );
 
   // Get all available experiences from the profile
-  const allExperiences = useSelector(
-    (state: RootState) => state.profile.allExperiences
+  const profileExperiences = useSelector(
+    (state: RootState) => state.profile.profileExperiences
   );
 
   // Get the default checked experiences from profile (these are initially selected)
@@ -39,7 +39,7 @@ const ExperienceChecklist: React.FC = () => {
 
   return (
     <Box>
-      {allExperiences.map((exp) => (
+      {profileExperiences.map((exp) => (
         <FormControlLabel
           key={exp.id}
           control={

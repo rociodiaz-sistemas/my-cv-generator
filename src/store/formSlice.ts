@@ -6,7 +6,7 @@ interface FormState {
   title: string;
   introduction: string;
   skills: string[];
-  experiences: Experience[];
+  formExperiences: Experience[];
 }
 
 const initialState: FormState = {
@@ -14,7 +14,7 @@ const initialState: FormState = {
   title: "",
   introduction: "",
   skills: [],
-  experiences: [],
+  formExperiences: [],
 };
 
 const formSlice = createSlice({
@@ -33,8 +33,8 @@ const formSlice = createSlice({
       if (Array.isArray(value)) {
         if (field === "skills") {
           state.skills = value as string[]; // Skills should be a string array
-        } else if (field === "experiences") {
-          state.experiences = value as Experience[]; // Experiences should be an array of Experience objects
+        } else if (field === "formExperiences") {
+          state.formExperiences = value as Experience[]; // Experiences should be an array of Experience objects
         }
       } else {
         if (field === "title") {
@@ -52,7 +52,7 @@ const formSlice = createSlice({
       state.skills = action.payload;
     },
     setExperiences: (state, action: PayloadAction<Experience[]>) => {
-      state.experiences = action.payload;
+      state.formExperiences = action.payload;
     },
     addSkill: (state, action: PayloadAction<string>) => {
       if (!state.skills.includes(action.payload)) {
@@ -63,10 +63,10 @@ const formSlice = createSlice({
       state.skills = state.skills.filter((skill) => skill !== action.payload);
     },
     addExperience: (state, action: PayloadAction<Experience>) => {
-      state.experiences.push(action.payload);
+      state.formExperiences.push(action.payload);
     },
     removeExperience: (state, action: PayloadAction<number>) => {
-      state.experiences = state.experiences.filter(
+      state.formExperiences = state.formExperiences.filter(
         (exp) => exp.id !== action.payload
       );
     },

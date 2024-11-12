@@ -31,7 +31,7 @@ export interface StepConfig {
 }
 
 export interface Profile {
-  allExperiences: Experience[];
+  profileExperiences: Experience[];
   skills: string[];
   jobTitle: string;
 }
