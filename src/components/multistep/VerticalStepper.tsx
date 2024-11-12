@@ -5,19 +5,12 @@ import {
   Step,
   StepLabel,
   Accordion,
-  AccordionSummary,
   AccordionDetails,
   Typography,
 } from "@mui/material";
-import { ExpandMore } from "@mui/icons-material";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store/store";
-import {
-  nextStep,
-  previousStep,
-  setActiveMainStep,
-  setActiveSubstepIndex,
-} from "../../store/stepSlice";
+import { setActiveSubstepIndex } from "../../store/stepSlice";
 
 const VerticalStepper: React.FC = () => {
   const dispatch = useDispatch();
