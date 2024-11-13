@@ -11,6 +11,7 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store/store";
 import { setActiveSubstepIndex } from "../../store/stepSlice";
+import { getAlphabetLabel } from "../../helpers";
 
 const VerticalStepper: React.FC = () => {
   const dispatch = useDispatch();
@@ -45,27 +46,36 @@ const VerticalStepper: React.FC = () => {
             {activeMainStep === mainStep && steps[mainStep]?.length > 0 && (
               <Accordion expanded={true} square elevation={0}>
                 <AccordionDetails>
-                  <Box sx={{ ml: 2 }}>
+                  <Stepper
+                    orientation="vertical"
+                    activeStep={activeSubstepIndex}
+                    connector={null}
+                    sx={{ pl: 1 }}
+                  >
                     {steps[mainStep].map((substep, substepIndex) => (
-                      <Typography
+                      <Step
                         key={substep}
-                        variant="body1"
-                        sx={{
-                          fontWeight:
-                            activeSubstepIndex === substepIndex
-                              ? "bold"
-                              : "normal",
-                          cursor: "pointer",
-                          padding: 0.5,
-                        }}
                         onClick={() =>
                           dispatch(setActiveSubstepIndex(substepIndex))
                         }
                       >
-                        {substep}
-                      </Typography>
+                        <StepLabel icon={getAlphabetLabel(substepIndex)}>
+                          <Typography
+                            variant="body2"
+                            sx={{
+                              fontWeight:
+                                activeSubstepIndex === substepIndex
+                                  ? "bold"
+                                  : "normal",
+                              cursor: "pointer",
+                            }}
+                          >
+                            {substep}
+                          </Typography>
+                        </StepLabel>
+                      </Step>
                     ))}
-                  </Box>
+                  </Stepper>
                 </AccordionDetails>
               </Accordion>
             )}

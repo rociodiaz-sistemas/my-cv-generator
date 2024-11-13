@@ -183,3 +183,6 @@ export const DEFAULT_PROMPTS = {
   streamCoder: ` ${INITIAL_PROMPT_EXPERIENCE} ${streamCoder_PROMPT}`,
   skills: ` ${INITIAL_PROMPT_INTRODUCTION}`,
 };
+
+export const getAlphabetLabel = (index: number) =>
+  String.fromCharCode(65 + index); // 65 is "A" in ASCII

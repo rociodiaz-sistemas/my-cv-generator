@@ -35,3 +35,9 @@ export interface Profile {
   skills: string[];
   jobTitle: string;
 }
+
+export interface KeyAttributes {
+  technicalSkills: string[];
+  concepts: string[];
+  interpersonalSkills: string[];
+}

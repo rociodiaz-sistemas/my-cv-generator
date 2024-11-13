@@ -7,10 +7,12 @@ interface FormState {
   introduction: string;
   skills: string[];
   formExperiences: Experience[];
+  jobTitle: string;
 }
 
 const initialState: FormState = {
   jobPosting: "",
+  jobTitle: "",
   title: "",
   introduction: "",
   skills: [],
@@ -43,6 +45,8 @@ const formSlice = createSlice({
           state.introduction = value as string; // Introduction is a string
         } else if (field === "jobPosting") {
           state.jobPosting = value as string;
+        } else if (field === "jobTitle") {
+          state.jobTitle = value as string;
         }
       }
     },

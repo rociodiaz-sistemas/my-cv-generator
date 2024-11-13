@@ -1,9 +1,9 @@
-import { queryOptions } from "@tanstack/react-query";
+import { queryOptions, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
 // Define the AI query fetch function
-const fetchAIResponse = async (prompt: string, jobPosting: string) => {
-  const combinedPrompt = `${prompt} Job Posting: ${jobPosting}`;
+const fetchAIResponse = async (prompt: string) => {
+  const combinedPrompt = `${prompt}`;
   console.log(import.meta.env.VITE_OPENROUTER_API_KEY);
   const response = await axios.post(
     "https://openrouter.ai/api/v1/chat/completions",
@@ -28,12 +28,17 @@ const fetchAIResponse = async (prompt: string, jobPosting: string) => {
 };
 
 // Use queryOptions helper to get the query configuration
-export const aiQueryOptions = (prompt: string, jobPosting: string) => {
+export const aiQueryOptions = (prompt: string) => {
   return queryOptions({
     queryKey: ["ai-response", prompt],
-    queryFn: () => fetchAIResponse(prompt, jobPosting),
+    queryFn: () => fetchAIResponse(prompt),
     staleTime: 60 * 1000, // Cache for 1 minute
     retry: 3, // Retry up to 3 times
     refetchOnWindowFocus: false, // Prevent refetch on window focus
+    enabled: true,
   });
+};
+
+export const useAIResponse = (prompt: string) => {
+  return useQuery(aiQueryOptions(prompt));
 };
