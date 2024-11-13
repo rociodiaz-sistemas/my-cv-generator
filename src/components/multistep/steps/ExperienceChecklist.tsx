@@ -40,21 +40,28 @@ const ExperienceChecklist: React.FC = () => {
   return (
     <Box>
       {profileExperiences.map((exp) => (
-        <FormControlLabel
-          key={exp.id}
-          control={
-            <Checkbox
-              checked={selectedExperiences.includes(exp.id)} // Check if the ID is in selectedExperiences
-              onChange={(e) => handleCheckboxChange(exp.id, e.target.checked)} // Handle checkbox change
-              color="primary"
-            />
-          }
-          label={exp.label}
-        />
+        <>
+          <FormControlLabel
+            sx={{ display: "block" }}
+            key={exp.id}
+            control={
+              <Checkbox
+                checked={selectedExperiences.includes(exp.id)} // Check if the ID is in selectedExperiences
+                onChange={(e) => handleCheckboxChange(exp.id, e.target.checked)} // Handle checkbox change
+                color="primary"
+              />
+            }
+            label={`${exp.title} ${exp.company} ${exp.date}`}
+          />
+          <Typography variant="body2">
+            <ul>
+              {exp.bulletPoints?.map((bullet) => (
+                <li key={bullet}>{bullet}</li>
+              ))}
+            </ul>
+          </Typography>
+        </>
       ))}
-      <Typography>
-        Experience 2 suggested because of keywords: blabla
-      </Typography>
     </Box>
   );
 };

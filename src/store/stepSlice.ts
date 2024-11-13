@@ -12,7 +12,7 @@ interface StepState {
 const initialState: StepState = {
   mainSteps: ["setup", "experience", "overview"],
   steps: {
-    setup: ["details", "job posting", "experience checklist"],
+    setup: ["job posting", "details", "experience checklist", "skills"],
     experience: [], // To be dynamically populated
     overview: [], // No substeps
   },

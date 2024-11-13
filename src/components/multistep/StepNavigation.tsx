@@ -19,7 +19,7 @@ const StepNavigation: React.FC = () => {
   const isFirstMainStep = activeMainStep === mainSteps[0];
 
   return (
-    <Box display="flex" justifyContent="space-between" mt={3}>
+    <Box display="flex" justifyContent="flex-end" mt={3} gap={5}>
       {/* Previous Button */}
       <Button
         onClick={() => dispatch(previousStep())}
