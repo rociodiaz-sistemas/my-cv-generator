@@ -21,10 +21,11 @@ const SetupStep: React.FC = () => {
   // Update field directly with formatted company name if data is available
   if (data) {
     const responseContent = data.choices?.[0]?.message?.content;
-    const [companyName] = responseContent.split(";"); // Extract company name
-    const formattedCompanyName = `${companyName}`; // Format company name
+    const [companyName, jobTitle] = responseContent.split(";"); // Extract company name
+    const formattedCompanyName = companyName.replace(/\s+/g, "-").trim(); // Format company name
+    const formattedJobTitle = `${jobTitle}`; // Format job title
     // Dispatch update action to Redux store directly
-    dispatch(updateField({ field: "jobTitle", value: formattedCompanyName }));
+    dispatch(updateField({ field: "jobTitle", value: formattedJobTitle }));
     dispatch(updateField({ field: "title", value: formattedCompanyName }));
   }
 
