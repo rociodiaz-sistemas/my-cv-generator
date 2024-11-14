@@ -51,7 +51,7 @@ const SwapInput: React.FC<SwapInputProps> = ({
         </IconButton>
 
         <Typography variant="body2" sx={{ color: "text.secondary" }}>
-          {isValueADefault ? "Switch to default" : "Switch to suggestedswap "}
+          {isValueADefault ? "Switch to default" : "Switch to suggested "}
         </Typography>
       </Box>
     </Box>
