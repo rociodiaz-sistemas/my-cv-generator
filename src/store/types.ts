@@ -41,3 +41,8 @@ export interface KeyAttributes {
   concepts: string[];
   interpersonalSkills: string[];
 }
+
+export interface ExperiencesSuggestions {
+  id: Experience["id"];
+  reason: string;
+}

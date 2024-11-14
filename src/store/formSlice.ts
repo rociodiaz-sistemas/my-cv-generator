@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Experience, KeyAttributes } from "./types";
+import { Experience } from "./types";
 
 interface FormState {
   jobPosting: string;
@@ -8,7 +8,6 @@ interface FormState {
   skills: string[];
   formExperiences: Experience[];
   jobTitle: string;
-  KeyAttributes: KeyAttributes;
 }
 
 const initialState: FormState = {
@@ -18,31 +17,6 @@ const initialState: FormState = {
   introduction: "",
   skills: [],
   formExperiences: [],
-  KeyAttributes: {
-    technicalSkills: [
-      "React",
-      "TypeScript",
-      "Redux",
-      "Node.js",
-      "Express",
-      "MongoDB",
-      "PostgreSQL",
-    ],
-    concepts: [
-      "RESTful APIs",
-      "CRUD operations",
-      "Database design",
-      "State management",
-      "Authentication",
-    ],
-    interpersonalSkills: [
-      " Communication",
-      "Teamwork",
-      "Problem-solving",
-      "Time management",
-      "Adaptability",
-    ],
-  },
 };
 
 const formSlice = createSlice({
@@ -83,11 +57,6 @@ const formSlice = createSlice({
         state.skills = value as string[];
       } else if (field === "formExperiences") {
         state.formExperiences = value as Experience[];
-      } else if (field.startsWith("KeyAttributes.")) {
-        const nestedField = field.split(".")[1] as keyof KeyAttributes;
-        if (nestedField) {
-          state.KeyAttributes[nestedField] = value as string[];
-        }
       }
     },
 

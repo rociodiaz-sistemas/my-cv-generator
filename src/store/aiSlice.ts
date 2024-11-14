@@ -1,21 +1,45 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import { Experience } from "./types";
+import { ExperiencesSuggestions, KeyAttributes } from "./types";
 
 // Define state for suggestions
 interface SuggestionsState {
   skillsSuggestions: string[];
-  experiencesSuggestions: Experience[];
-  titleSuggestions: string[];
+  experiencesSuggestions: ExperiencesSuggestions[];
   loading: boolean;
   error: string | null;
+  KeyAttributes: KeyAttributes;
 }
 
 const initialState: SuggestionsState = {
-  skillsSuggestions: ["ReactJS", "NodeJS", "TypeScript"],
-  experiencesSuggestions: [],
-  titleSuggestions: [],
+  skillsSuggestions: ["ReactJS", "NodeJS", "TypeScript", "React"],
+  experiencesSuggestions: [{ id: 1, reason: "Found concept: migration" }],
   loading: false,
   error: null,
+  KeyAttributes: {
+    technicalSkills: [
+      "React",
+      "TypeScript",
+      "Redux",
+      "Node.js",
+      "Express",
+      "MongoDB",
+      "PostgreSQL",
+    ],
+    concepts: [
+      "RESTful APIs",
+      "CRUD operations",
+      "Database design",
+      "State management",
+      "Authentication",
+    ],
+    interpersonalSkills: [
+      " Communication",
+      "Teamwork",
+      "Problem-solving",
+      "Time management",
+      "Adaptability",
+    ],
+  },
 };
 
 // Async thunk to fetch suggestions (based on profile and job posting)
@@ -89,7 +113,7 @@ const suggestionsSlice = createSlice({
       })
       .addCase(
         fetchExperiencesSuggestions.fulfilled,
-        (state, action: PayloadAction<Experience[]>) => {
+        (state, action: PayloadAction<ExperiencesSuggestions[]>) => {
           state.loading = false;
           state.experiencesSuggestions = action.payload;
         }

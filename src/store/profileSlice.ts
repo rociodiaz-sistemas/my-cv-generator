@@ -10,7 +10,7 @@ interface ProfileState {
 
 const initialState: ProfileState = {
   jobTitle: "Job Title",
-  skills: ["Skill 1", "Skill 2", "Skill 3"],
+  skills: ["React", "TypeScript", "Express"],
   defaultCheckedExperiences: [1, 2],
   profileExperiences: [
     {
