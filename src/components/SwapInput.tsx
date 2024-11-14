@@ -1,5 +1,5 @@
-import React, { useMemo, useState } from "react";
-import { TextField, IconButton, Tooltip, Box, Typography } from "@mui/material";
+import React, { useMemo } from "react";
+import { TextField, IconButton, Box, Typography } from "@mui/material";
 import SwapHorizIcon from "@mui/icons-material/SwapHoriz";
 
 interface SwapInputProps {
@@ -51,7 +51,9 @@ const SwapInput: React.FC<SwapInputProps> = ({
         </IconButton>
 
         <Typography variant="body2" sx={{ color: "text.secondary" }}>
-          {isValueADefault ? "Switch to default" : "Switch to suggested "}
+          {isValueADefault
+            ? `Switch to default: ${valueB}`
+            : `Switch to suggested: ${valueA}`}
         </Typography>
       </Box>
     </Box>

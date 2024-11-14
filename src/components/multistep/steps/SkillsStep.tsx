@@ -9,19 +9,10 @@ const SkillsStep: React.FC = () => {
   const dispatch = useDispatch();
 
   // Get the current skills from Redux store or state
-  const skills = useSelector((state: RootState) => state.profile.skills);
-
-  // Suggested skills (can be static or dynamic from a source)
-  const suggestedSkills = [
-    "JavaScript",
-    "TypeScript",
-    "React",
-    "Node.js",
-    "Python",
-    "CSS",
-    "HTML",
-    "GraphQL",
-  ];
+  const skills = useSelector((state: RootState) => state.profile.profileSkills);
+  const suggestedSkills = useSelector(
+    (state: RootState) => state.suggestions.skillsSuggestions
+  );
 
   // Handle adding a suggested skill to the list
   const handleAddSkill = (skill: string) => {

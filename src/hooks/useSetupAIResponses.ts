@@ -47,8 +47,6 @@ export const useSetupAIResponses = (jobPosting: string) => {
           interpersonalSkills,
         ] = responses;
 
-        console.log(responses);
-
         // // Dispatching the results to Redux
         // const [formattedTitle, formattedJobTitle] = titleAndJobTitle.split(";");
         // dispatch(
