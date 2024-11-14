@@ -47,14 +47,14 @@ const SwapInput: React.FC<SwapInputProps> = ({
       />
       <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
         <Tooltip
-          title={isValueADefault ? "Switch to suggested" : "Switch to default"}
+          title={isValueADefault ? "Switch to default" : "Switch to suggested"}
         >
           <IconButton color="primary" onClick={handleToggle}>
             <SwapHorizIcon />
           </IconButton>
         </Tooltip>
         <Typography variant="body2" sx={{ color: "text.secondary" }}>
-          {isValueADefault ? "Default Active" : "Suggested Active"}
+          {isValueADefault ? "Suggested Active" : "Default Active"}
         </Typography>
       </Box>
     </Box>

@@ -49,7 +49,7 @@ const SetupStep: React.FC = () => {
         <SwapInput
           label="Job Title"
           helperTextA="Using the AI-suggested title"
-          helperTextB="Using your default title"
+          helperTextB="Using your profile title"
           valueA={jobTitleSuggestion} // jobTitleSuggestion is the default title
           valueB={profileJobTitle} // profileJobTitle is the suggested title
           selectedValue={formJobTitle} // Controlled value is formJobTitle
