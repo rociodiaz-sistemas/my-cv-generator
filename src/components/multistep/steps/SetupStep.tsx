@@ -1,40 +1,31 @@
+// components/SetupStep.tsx
 import { Box, TextField, Typography } from "@mui/material";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../../store/store";
-import { updateField } from "../../../store/formSlice";
-import { useAIResponse } from "../../../hooks/useAIResponses";
+import { updateStringField } from "../../../store/formSlice";
 import Loading from "../../Loading";
-import { SETUP_TITLE_POSITION_PROMPT } from "../../../prompts";
+import { useSetupAIResponses } from "../../../hooks/useSetupAIResponses";
+import { RootState } from "../../../store/store";
 
 const SetupStep: React.FC = () => {
   const dispatch = useDispatch();
-  const { jobTitle, title, jobPosting } = useSelector(
+  const { title, jobTitle, KeyAttributes, jobPosting } = useSelector(
     (state: RootState) => state.formData
   );
-  const prompt = `${SETUP_TITLE_POSITION_PROMPT} ${jobPosting}`;
-  const { data, error, isLoading } = useAIResponse(prompt);
 
+  // Use the custom hook to handle AI responses, Redux dispatch, etc.
+  const { isLoading, error } = useSetupAIResponses(jobPosting);
+
+  // Handle loading and error states
   if (isLoading) return <Loading />;
-  if (error) return <div>Error: {error.message}</div>;
+  if (error) return <div>Error occurred while fetching data!</div>;
 
-  // Update field directly with formatted company name if data is available
-  if (data) {
-    const responseContent = data.choices?.[0]?.message?.content;
-    const [companyName, jobTitle] = responseContent.split(";"); // Extract company name
-    const formattedCompanyName = companyName.replace(/\s+/g, "-").trim(); // Format company name
-    const formattedJobTitle = `${jobTitle}`; // Format job title
-    // Dispatch update action to Redux store directly
-    dispatch(updateField({ field: "jobTitle", value: formattedJobTitle }));
-    dispatch(updateField({ field: "title", value: formattedCompanyName }));
-  }
-
-  // Handler to update each field in the store
+  // Handle input field changes
   const handleFieldChange =
     (field: keyof RootState["formData"]) =>
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const value = event.target.value;
-      dispatch(updateField({ field, value })); // Dispatch update action
+      dispatch(updateStringField({ field, value }));
     };
 
   return (
@@ -53,7 +44,9 @@ const SetupStep: React.FC = () => {
           onChange={handleFieldChange("jobTitle")}
           fullWidth
         />
-        <Typography>Found Keywords</Typography>
+        {/* Optionally render KeyAttributes values like technicalSkills, etc., */}
+        {/* Example: */}
+        {/* KeyAttributes.technicalSkills.map(skill => <Typography>{skill}</Typography>) */}
       </Box>
     </>
   );

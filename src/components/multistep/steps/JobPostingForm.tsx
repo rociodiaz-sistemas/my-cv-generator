@@ -2,7 +2,7 @@ import { TextField, Typography } from "@mui/material";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store/store";
-import { updateField } from "../../../store/formSlice";
+import { updateStringField } from "../../../store/formSlice";
 
 const JobPostingForm: React.FC = () => {
   const dispatch = useDispatch();
@@ -14,7 +14,9 @@ const JobPostingForm: React.FC = () => {
       <TextField
         value={jobPosting}
         onChange={(e) =>
-          dispatch(updateField({ field: "jobPosting", value: e.target.value }))
+          dispatch(
+            updateStringField({ field: "jobPosting", value: e.target.value })
+          )
         }
         variant="outlined"
         multiline

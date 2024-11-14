@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Experience } from "./types";
+import { Experience, KeyAttributes } from "./types";
 
 interface FormState {
   jobPosting: string;
@@ -8,6 +8,7 @@ interface FormState {
   skills: string[];
   formExperiences: Experience[];
   jobTitle: string;
+  KeyAttributes: KeyAttributes;
 }
 
 const initialState: FormState = {
@@ -17,47 +18,88 @@ const initialState: FormState = {
   introduction: "",
   skills: [],
   formExperiences: [],
+  KeyAttributes: {
+    technicalSkills: [
+      "React",
+      "TypeScript",
+      "Redux",
+      "Node.js",
+      "Express",
+      "MongoDB",
+      "PostgreSQL",
+    ],
+    concepts: [
+      "RESTful APIs",
+      "CRUD operations",
+      "Database design",
+      "State management",
+      "Authentication",
+    ],
+    interpersonalSkills: [
+      " Communication",
+      "Teamwork",
+      "Problem-solving",
+      "Time management",
+      "Adaptability",
+    ],
+  },
 };
 
 const formSlice = createSlice({
   name: "form",
   initialState,
   reducers: {
-    // Update field dynamically, but with type safety
-    updateField: (
+    // Update string fields
+    updateStringField: (
       state,
-      action: PayloadAction<{
-        field: keyof FormState;
-        value: string | string[] | Experience[];
-      }>
+      action: PayloadAction<{ field: keyof FormState; value: string }>
     ) => {
       const { field, value } = action.payload;
-      if (Array.isArray(value)) {
-        if (field === "skills") {
-          state.skills = value as string[]; // Skills should be a string array
-        } else if (field === "formExperiences") {
-          state.formExperiences = value as Experience[]; // Experiences should be an array of Experience objects
-        }
-      } else {
-        if (field === "title") {
-          state.title = value as string; // Title is a string
-        } else if (field === "introduction") {
-          state.introduction = value as string; // Introduction is a string
-        } else if (field === "jobPosting") {
-          state.jobPosting = value as string;
-        } else if (field === "jobTitle") {
-          state.jobTitle = value as string;
+      switch (field) {
+        case "title":
+          state.title = value;
+          break;
+        case "introduction":
+          state.introduction = value;
+          break;
+        case "jobPosting":
+          state.jobPosting = value;
+          break;
+        case "jobTitle":
+          state.jobTitle = value;
+          break;
+        default:
+          break;
+      }
+    },
+
+    // Update array fields (skills, experiences, KeyAttributes)
+    updateArrayField: (
+      state,
+      action: PayloadAction<{ field: string; value: string[] | Experience[] }>
+    ) => {
+      const { field, value } = action.payload;
+      if (field === "skills") {
+        state.skills = value as string[];
+      } else if (field === "formExperiences") {
+        state.formExperiences = value as Experience[];
+      } else if (field.startsWith("KeyAttributes.")) {
+        const nestedField = field.split(".")[1] as keyof KeyAttributes;
+        if (nestedField) {
+          state.KeyAttributes[nestedField] = value as string[];
         }
       }
     },
 
-    // Explicit Setters for Complex Fields (if needed)
+    // Setters for specific fields
     setSkills: (state, action: PayloadAction<string[]>) => {
       state.skills = action.payload;
     },
     setExperiences: (state, action: PayloadAction<Experience[]>) => {
       state.formExperiences = action.payload;
     },
+
+    // Adding/removing items from array fields
     addSkill: (state, action: PayloadAction<string>) => {
       if (!state.skills.includes(action.payload)) {
         state.skills.push(action.payload);
@@ -74,12 +116,15 @@ const formSlice = createSlice({
         (exp) => exp.id !== action.payload
       );
     },
+
+    // Clear form (reset to initial state)
     clearForm: () => initialState,
   },
 });
 
 export const {
-  updateField,
+  updateStringField,
+  updateArrayField,
   setSkills,
   setExperiences,
   addSkill,

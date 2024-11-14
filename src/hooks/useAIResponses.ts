@@ -1,4 +1,4 @@
-import { queryOptions, useQuery } from "@tanstack/react-query";
+import { queryOptions, useQueries, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
 // Define the AI query fetch function
@@ -10,12 +10,15 @@ const fetchAIResponse = async (prompt: string) => {
     JSON.stringify({
       model: "liquid/lfm-40b:free",
       messages: [{ role: "user", content: combinedPrompt }],
-      temperature: 1.0, // Balanced temperature for creativity and coherence
-      top_p: 1.0, // Allowing full range of token choices
-      repetition_penalty: 1.0, // Prevent repetition
-      frequency_penalty: 0.0, // No bias against frequent tokens
-      presence_penalty: 0.0, // No bias against repetitive tokens
+      temperature: 0.0,
+      presence_penalty: 0.0,
+      frequency_penalty: 0.0,
+      repetition_penalty: 1.0,
+      min_p: 0.0,
+      top_k: 0.0,
+      top_p: 1.0,
       transforms: ["remove_redundancy", "group_similar_tasks"],
+      maxTokens: 300,
     }),
     {
       headers: {
@@ -42,3 +45,33 @@ export const aiQueryOptions = (prompt: string) => {
 export const useAIResponse = (prompt: string) => {
   return useQuery(aiQueryOptions(prompt));
 };
+
+// Custom hook to handle multiple AI calls
+export const useMultipleAIResponses = (prompts: string[]) => {
+  const queryResults = useQueries({
+    queries: prompts.map((prompt) => aiQueryOptions(prompt)),
+  });
+
+  return queryResults;
+};
+
+// Max Tokens
+// 0
+// Chat Memory
+// 8
+// Temperature
+// 1.000
+// Top P
+// 1.000
+// Top K
+// 0.000
+// Frequency Penalty
+// 0.000
+// Presence Penalty
+// 0.000
+// Repetition Penalty
+// 1.000
+// Min P
+// 0.000
+// Top A
+// 0.000
