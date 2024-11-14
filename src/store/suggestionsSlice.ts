@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { ExperiencesSuggestions, KeyAttributes } from "./types";
 
-// Define state for suggestions
 interface SuggestionsState {
   skillsSuggestions: string[];
   experiencesSuggestions: ExperiencesSuggestions[];
@@ -12,7 +11,7 @@ interface SuggestionsState {
 
 const initialState: SuggestionsState = {
   skillsSuggestions: ["ReactJS", "NodeJS", "TypeScript", "React"],
-  experiencesSuggestions: [{ id: 1, reason: "Found concept: migration" }],
+  experiencesSuggestions: [{ id: 1, reason: "Migration" }],
   loading: false,
   error: null,
   KeyAttributes: {

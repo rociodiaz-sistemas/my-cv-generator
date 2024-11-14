@@ -6,12 +6,20 @@ interface ProfileState {
   skills: string[];
   profileExperiences: Experience[];
   defaultCheckedExperiences: number[];
+  knownFor: string[];
 }
 
 const initialState: ProfileState = {
-  jobTitle: "Job Title",
+  jobTitle: "React Typescript Developer",
   skills: ["React", "TypeScript", "Express"],
   defaultCheckedExperiences: [1, 2],
+  knownFor: [
+    "Creative",
+    "Innovative",
+    "Problem-solver",
+    "Team player",
+    "Adaptable",
+  ],
   profileExperiences: [
     {
       id: 1,
