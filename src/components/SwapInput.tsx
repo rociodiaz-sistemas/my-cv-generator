@@ -46,15 +46,12 @@ const SwapInput: React.FC<SwapInputProps> = ({
         helperText={isValueADefault ? helperTextA : helperTextB}
       />
       <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-        <Tooltip
-          title={isValueADefault ? "Switch to default" : "Switch to suggested"}
-        >
-          <IconButton color="primary" onClick={handleToggle}>
-            <SwapHorizIcon />
-          </IconButton>
-        </Tooltip>
+        <IconButton color="primary" onClick={handleToggle}>
+          <SwapHorizIcon />
+        </IconButton>
+
         <Typography variant="body2" sx={{ color: "text.secondary" }}>
-          {isValueADefault ? "Suggested Active" : "Default Active"}
+          {isValueADefault ? "Switch to default" : "Switch to suggestedswap "}
         </Typography>
       </Box>
     </Box>
