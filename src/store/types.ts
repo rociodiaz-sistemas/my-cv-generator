@@ -5,6 +5,7 @@ export interface CV {
   date: string;
   skills: [];
   experiences: Experience[];
+  cvPDFName: string;
 }
 
 export interface Experience {

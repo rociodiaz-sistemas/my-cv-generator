@@ -3,19 +3,19 @@ import { Experience } from "./types";
 
 interface FormState {
   jobPosting: string;
-  title: string;
-  introduction: string;
-  skills: string[];
+  formTitle: string;
+  formIntroduction: string;
+  formSkills: string[];
   formExperiences: Experience[];
-  jobTitle: string;
+  formJobTitle: string;
 }
 
 const initialState: FormState = {
   jobPosting: "",
-  jobTitle: "",
-  title: "",
-  introduction: "",
-  skills: [],
+  formJobTitle: "",
+  formTitle: "",
+  formIntroduction: "",
+  formSkills: [],
   formExperiences: [],
 };
 
@@ -30,17 +30,17 @@ const formSlice = createSlice({
     ) => {
       const { field, value } = action.payload;
       switch (field) {
-        case "title":
-          state.title = value;
+        case "formTitle":
+          state.formTitle = value;
           break;
-        case "introduction":
-          state.introduction = value;
+        case "formIntroduction":
+          state.formIntroduction = value;
           break;
         case "jobPosting":
           state.jobPosting = value;
           break;
-        case "jobTitle":
-          state.jobTitle = value;
+        case "formJobTitle":
+          state.formJobTitle = value;
           break;
         default:
           break;
@@ -54,7 +54,7 @@ const formSlice = createSlice({
     ) => {
       const { field, value } = action.payload;
       if (field === "skills") {
-        state.skills = value as string[];
+        state.formSkills = value as string[];
       } else if (field === "formExperiences") {
         state.formExperiences = value as Experience[];
       }
@@ -62,7 +62,7 @@ const formSlice = createSlice({
 
     // Setters for specific fields
     setSkills: (state, action: PayloadAction<string[]>) => {
-      state.skills = action.payload;
+      state.formSkills = action.payload;
     },
     setExperiences: (state, action: PayloadAction<Experience[]>) => {
       state.formExperiences = action.payload;
@@ -70,12 +70,14 @@ const formSlice = createSlice({
 
     // Adding/removing items from array fields
     addSkill: (state, action: PayloadAction<string>) => {
-      if (!state.skills.includes(action.payload)) {
-        state.skills.push(action.payload);
+      if (!state.formSkills.includes(action.payload)) {
+        state.formSkills.push(action.payload);
       }
     },
     removeSkill: (state, action: PayloadAction<string>) => {
-      state.skills = state.skills.filter((skill) => skill !== action.payload);
+      state.formSkills = state.formSkills.filter(
+        (skill) => skill !== action.payload
+      );
     },
     addExperience: (state, action: PayloadAction<Experience>) => {
       state.formExperiences.push(action.payload);

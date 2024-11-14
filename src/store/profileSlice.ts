@@ -2,16 +2,16 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Experience } from "./types";
 
 interface ProfileState {
-  jobTitle: string;
-  skills: string[];
+  profileJobTitle: string;
+  profileSkills: string[];
   profileExperiences: Experience[];
   defaultCheckedExperiences: number[];
   knownFor: string[];
 }
 
 const initialState: ProfileState = {
-  jobTitle: "React Typescript Developer",
-  skills: ["React", "TypeScript", "Express"],
+  profileJobTitle: "React Typescript Developer",
+  profileSkills: ["React", "TypeScript", "Express"],
   defaultCheckedExperiences: [1, 2],
   knownFor: [
     "Creative",

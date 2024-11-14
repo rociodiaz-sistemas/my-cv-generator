@@ -7,9 +7,13 @@ interface SuggestionsState {
   loading: boolean;
   error: string | null;
   KeyAttributes: KeyAttributes;
+  company: string;
+  jobTitleSuggestion: string;
 }
 
 const initialState: SuggestionsState = {
+  company: "Spark Innovations",
+  jobTitleSuggestion: "React Developer",
   skillsSuggestions: ["ReactJS", "NodeJS", "TypeScript", "React"],
   experiencesSuggestions: [{ id: 1, reason: "Migration" }],
   loading: false,

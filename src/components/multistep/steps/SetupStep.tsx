@@ -1,24 +1,32 @@
-// components/SetupStep.tsx
 import { Box, TextField, Typography } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updateStringField } from "../../../store/formSlice";
-import Loading from "../../Loading";
-import { useSetupAIResponses } from "../../../hooks/useSetupAIResponses";
 import { RootState } from "../../../store/store";
+import SwapInput from "../../SwapInput";
 
 const SetupStep: React.FC = () => {
   const dispatch = useDispatch();
-  const { title, jobTitle, KeyAttributes, jobPosting } = useSelector(
+  const { formTitle, formJobTitle } = useSelector(
     (state: RootState) => state.formData
   );
+  const { profileJobTitle } = useSelector((state: RootState) => state.profile);
 
-  // Use the custom hook to handle AI responses, Redux dispatch, etc.
-  const { isLoading, error } = useSetupAIResponses(jobPosting);
+  const { jobTitleSuggestion, company } = useSelector(
+    (state: RootState) => state.suggestions
+  );
 
-  // Handle loading and error states
-  if (isLoading) return <Loading />;
-  if (error) return <div>Error occurred while fetching data!</div>;
+  // If formJobTitle is empty, initialize it with the jobTitleSuggestion
+  useEffect(() => {
+    if (!formJobTitle && jobTitleSuggestion) {
+      dispatch(
+        updateStringField({ field: "formJobTitle", value: jobTitleSuggestion })
+      );
+    }
+    if (!formTitle && company) {
+      dispatch(updateStringField({ field: "formTitle", value: company }));
+    }
+  }, [jobTitleSuggestion, formJobTitle, company, formTitle, dispatch]);
 
   // Handle input field changes
   const handleFieldChange =
@@ -34,19 +42,23 @@ const SetupStep: React.FC = () => {
       <Box sx={{ display: "flex", flexDirection: "column", gap: 3, mt: 5 }}>
         <TextField
           label="CV Name"
-          value={title}
-          onChange={handleFieldChange("title")}
+          value={formTitle}
+          onChange={handleFieldChange("formTitle")}
           fullWidth
         />
-        <TextField
+        <SwapInput
           label="Job Title"
-          value={jobTitle}
-          onChange={handleFieldChange("jobTitle")}
-          fullWidth
+          helperTextA="Using the AI-suggested title"
+          helperTextB="Using your default title"
+          valueA={jobTitleSuggestion} // jobTitleSuggestion is the default title
+          valueB={profileJobTitle} // profileJobTitle is the suggested title
+          selectedValue={formJobTitle} // Controlled value is formJobTitle
+          onChange={(newValue: string) => {
+            dispatch(
+              updateStringField({ field: "formJobTitle", value: newValue })
+            );
+          }} // Update formJobTitle in Redux on change
         />
-        {/* Optionally render KeyAttributes values like technicalSkills, etc., */}
-        {/* Example: */}
-        {/* KeyAttributes.technicalSkills.map(skill => <Typography>{skill}</Typography>) */}
       </Box>
     </>
   );
