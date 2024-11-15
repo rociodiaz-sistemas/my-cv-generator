@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "./store";
 import { setExperienceSteps } from "./stepSlice";
+import { Experience } from "./types";
 
 interface UIState {
   isModalOpen: boolean;
@@ -18,20 +19,23 @@ const initialState: UIState = {
 
 export const setExperiencesAndSteps = createAsyncThunk<
   void,
-  number[],
+  Experience[],
   { state: RootState }
->("experience/setExperiencesAndSteps", async (experienceIds, { dispatch }) => {
-  // Dispatch the first action to update selected experiences
-  dispatch(setSelectedExperiences(experienceIds));
+>(
+  "experience/setExperiencesAndSteps",
+  async (selectedExperiences, { dispatch }) => {
+    // Dispatch the first action to update selected experiences
 
-  // Generate experience steps based on selected experience IDs
-  const experienceSteps = experienceIds.map(
-    (id, index) => `experience ${index + 1}`
-  );
+    dispatch(setSelectedExperiences(selectedExperiences.map((exp) => exp.id)));
+    // Generate experience steps based on selected experience IDs
+    const experienceSteps = selectedExperiences.map(
+      (experience) => `${experience.company}`
+    );
 
-  // Dispatch the second action to update the steps
-  dispatch(setExperienceSteps(experienceSteps));
-});
+    // Dispatch the second action to update the steps
+    dispatch(setExperienceSteps(experienceSteps));
+  }
+);
 
 const uiSlice = createSlice({
   name: "ui",

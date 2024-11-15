@@ -2,10 +2,7 @@ import React, { useEffect } from "react";
 import { Box, Checkbox, FormControlLabel, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store/store";
-import {
-  setExperiencesAndSteps,
-  setSelectedExperiences,
-} from "../../../store/uiSlice"; // Action to update selected experiences
+import { setExperiencesAndSteps } from "../../../store/uiSlice"; // Action to update selected experiences
 import { useAppDispatch } from "../../../hooks/useAppDispatch";
 
 const ExperienceChecklist: React.FC = () => {
@@ -29,16 +26,27 @@ const ExperienceChecklist: React.FC = () => {
   useEffect(() => {
     // When the component mounts, we want to set the selected experiences to the defaultCheckedExperiences
     if (selectedExperiences.length === 0) {
-      dispatch(setExperiencesAndSteps(defaultCheckedExperiences));
+      const selectedExperiencesList = profileExperiences.filter((exp) =>
+        defaultCheckedExperiences.includes(exp.id)
+      );
+      dispatch(setExperiencesAndSteps(selectedExperiencesList));
     }
-  }, [dispatch, selectedExperiences, defaultCheckedExperiences]);
+  }, [
+    dispatch,
+    selectedExperiences,
+    defaultCheckedExperiences,
+    profileExperiences,
+  ]);
 
   const handleCheckboxChange = (id: number, checked: boolean) => {
-    const updatedSelectedExperiences = checked
+    const updatedSelectedExperiencesId = checked
       ? [...selectedExperiences, id]
       : selectedExperiences.filter((item) => item !== id);
 
-    dispatch(setExperiencesAndSteps(updatedSelectedExperiences)); // Update selected experiences in Redux
+    const updatedSelectedExperiences = profileExperiences.filter((exp) =>
+      updatedSelectedExperiencesId.includes(exp.id)
+    );
+    dispatch(setExperiencesAndSteps(updatedSelectedExperiences));
   };
 
   return (

@@ -62,9 +62,7 @@ const stepSlice = createSlice({
 
     // Dynamically set experience steps based on user selections
     setExperienceSteps: (state, action: PayloadAction<string[]>) => {
-      state.steps.experience = action.payload.map(
-        (exp, index) => `experience ${index + 1}`
-      );
+      state.steps.experience = action.payload.map((exp, index) => `${exp}`);
     },
 
     // Set a specific active main step (e.g., for initial setup or debugging)

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Chip, Grid, Typography } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,57 +8,125 @@ import { setSkills } from "../../../store/formSlice";
 const SkillsStep: React.FC = () => {
   const dispatch = useDispatch();
 
-  // Get the current skills from Redux store or state
-  const skills = useSelector((state: RootState) => state.profile.profileSkills);
-  const suggestedSkills = useSelector(
+  const [currentSuggestedSkills, setCurrentSuggestedSkills] = useState<
+    string[]
+  >([]);
+
+  // Redux state selectors
+  const profileSkills = useSelector(
+    (state: RootState) => state.profile.profileSkills
+  );
+  const skillsSuggestions = useSelector(
     (state: RootState) => state.suggestions.skillsSuggestions
   );
+  const formSkills = useSelector(
+    (state: RootState) => state.formData.formSkills
+  );
 
-  // Handle adding a suggested skill to the list
-  const handleAddSkill = (skill: string) => {
-    if (!skills.includes(skill)) {
-      dispatch(setSkills([...skills, skill])); // Add skill to Redux state
+  useEffect(() => {
+    // Initialize form skills with profile skills if not already populated
+    if (formSkills.length === 0) {
+      dispatch(setSkills(profileSkills));
+    }
+
+    // Remove duplicates between profile skills and suggestions
+    const filteredSuggestions = skillsSuggestions.filter(
+      (skill) => !profileSkills.includes(skill) && !formSkills.includes(skill)
+    );
+    setCurrentSuggestedSkills(filteredSuggestions);
+  }, [profileSkills, formSkills, skillsSuggestions, dispatch]);
+
+  // Handle toggling a profile skill (enable/disable)
+  const handleToggleProfileSkill = (skill: string) => {
+    if (formSkills.includes(skill)) {
+      // Disable (remove from formSkills)
+      dispatch(setSkills(formSkills.filter((s) => s !== skill)));
+    } else {
+      // Enable (add to formSkills)
+      dispatch(setSkills([...formSkills, skill]));
     }
   };
 
-  // Handle removing a skill from the list
-  const handleRemoveSkill = (skill: string) => {
-    const updatedSkills = skills.filter((item) => item !== skill);
-    dispatch(setSkills(updatedSkills)); // Remove skill from Redux state
+  // Handle adding a suggested skill to formSkills
+  const handleAddSuggestedSkill = (skill: string) => {
+    if (!formSkills.includes(skill)) {
+      dispatch(setSkills([...formSkills, skill]));
+      setCurrentSuggestedSkills(
+        currentSuggestedSkills.filter((s) => s !== skill)
+      );
+    }
+  };
+
+  // Handle removing a suggested skill from formSkills
+  const handleRemoveSuggestedSkill = (skill: string) => {
+    dispatch(setSkills(formSkills.filter((s) => s !== skill))); // Remove from formSkills
+    setCurrentSuggestedSkills([...currentSuggestedSkills, skill]); // Return to suggestions
   };
 
   return (
     <Box>
-      <Typography variant="h6">Select Your Skills</Typography>
-
-      {/* Display currently selected skills as chips */}
-      <Box mb={2}>
-        <Typography variant="subtitle1">Your Skills:</Typography>
+      {/* Pool: Selected Skills */}
+      <Box mb={2} mt={2}>
+        <Typography variant="subtitle1">Selected Skills:</Typography>
         <Grid container spacing={1}>
-          {skills.map((skill) => (
+          {/* Profile Skills */}
+          {profileSkills.map((skill) => (
             <Grid item key={skill}>
               <Chip
                 label={skill}
-                onDelete={() => handleRemoveSkill(skill)}
-                color="primary"
-                variant="outlined"
+                sx={{
+                  backgroundColor: formSkills.includes(skill)
+                    ? "primary.main"
+                    : "grey.200", // Light grey background when disabled
+                  color: formSkills.includes(skill) ? "white" : "text.primary", // Keep text visible, just a little faded when disabled
+                  borderColor: formSkills.includes(skill)
+                    ? "primary.main"
+                    : "grey.400", // Grey border when disabled
+                  opacity: formSkills.includes(skill) ? 1 : 0.8, // Slightly faded opacity for disabled state, not too transparent
+                }}
+                icon={
+                  !formSkills.includes(skill) ? (
+                    <AddIcon sx={{ color: "primary.main", fontSize: 24 }} /> // Always primary color for the Add icon
+                  ) : undefined
+                }
+                onDelete={
+                  formSkills.includes(skill)
+                    ? () => handleToggleProfileSkill(skill)
+                    : undefined
+                }
+                onClick={() => handleToggleProfileSkill(skill)}
+                variant={formSkills.includes(skill) ? "filled" : "outlined"}
               />
             </Grid>
           ))}
+
+          {/* Suggested Skills added to formSkills */}
+          {formSkills
+            .filter((skill) => !profileSkills.includes(skill))
+            .map((skill) => (
+              <Grid item key={skill}>
+                <Chip
+                  label={skill}
+                  color="secondary"
+                  onDelete={() => handleRemoveSuggestedSkill(skill)}
+                  variant="outlined"
+                />
+              </Grid>
+            ))}
         </Grid>
       </Box>
 
-      {/* Display suggested skills as chips with an add icon */}
+      {/* Pool: Suggested Skills */}
       <Box>
         <Typography variant="subtitle1">Suggested Skills:</Typography>
         <Grid container spacing={1}>
-          {suggestedSkills.map((skill) => (
+          {currentSuggestedSkills.map((skill) => (
             <Grid item key={skill}>
               <Chip
                 label={skill}
                 color="secondary"
                 icon={<AddIcon />}
-                onClick={() => handleAddSkill(skill)}
+                onClick={() => handleAddSuggestedSkill(skill)}
                 variant="outlined"
               />
             </Grid>

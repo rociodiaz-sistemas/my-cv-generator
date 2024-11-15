@@ -10,7 +10,6 @@ const JobPostingForm: React.FC = () => {
 
   return (
     <>
-      <Typography variant="h5">Post a job description</Typography>
       <TextField
         value={jobPosting}
         onChange={(e) =>
