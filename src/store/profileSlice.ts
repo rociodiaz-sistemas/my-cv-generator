@@ -7,11 +7,14 @@ interface ProfileState {
   profileExperiences: Experience[];
   defaultCheckedExperiences: number[];
   knownFor: string[];
+  profileIntroduction: string;
 }
 
 const initialState: ProfileState = {
   profileJobTitle: "React Typescript Developer",
   profileSkills: ["React", "TypeScript", "Express"],
+  profileIntroduction:
+    "I am a React Typescript Developer with 5 years of experience. I have worked on over 5 major proyects and migrations. I am passionate about creativity and innovation",
   defaultCheckedExperiences: [1, 2],
   knownFor: [
     "Creative",

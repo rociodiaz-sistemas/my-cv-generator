@@ -10,6 +10,7 @@ import SkillsStep from "./steps/SkillsStep";
 import JobPostingForm from "./steps/JobPostingForm";
 import SectionWrapper from "./SectionWrapper";
 import { Experience } from "../../store/types";
+import IntroductionStep from "./steps/IntroductionStep";
 
 const FormContent: React.FC = () => {
   const { activeMainStep, activeSubstepIndex, steps } = useSelector(
@@ -47,11 +48,17 @@ const FormContent: React.FC = () => {
       );
     if (activeSubstepIndex === 2)
       return (
+        <SectionWrapper title="Write your introduction">
+          <IntroductionStep />
+        </SectionWrapper>
+      );
+    if (activeSubstepIndex === 3)
+      return (
         <SectionWrapper title="Select your experiences">
           <ExperienceChecklist />
         </SectionWrapper>
       );
-    if (activeSubstepIndex === 3)
+    if (activeSubstepIndex === 4)
       return (
         <SectionWrapper title="Select your skills">
           <SkillsStep />
