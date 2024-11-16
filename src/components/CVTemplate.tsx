@@ -10,7 +10,8 @@ import {
   Link,
 } from "@react-pdf/renderer";
 import CvImage from "../assets/images/cv-image.png";
-import { CV } from "../store/types";
+import { PreviewCV } from "../store/types";
+import { link } from "fs";
 
 Font.register({
   family: "Roboto",
@@ -73,8 +74,8 @@ const styles = StyleSheet.create({
   },
   section: {
     marginBottom: 10,
-    borderBottom: "1px solid #73808D", // Optional: adds a separator line for sections
-    paddingBottom: 5, // Spacing before the next section
+    borderBottom: "1px solid #73808D",
+    paddingBottom: 5,
   },
   image: {
     width: 77,
@@ -94,9 +95,9 @@ const styles = StyleSheet.create({
     fontSize: 9,
     color: "#73808D",
   },
-  experienceTitleContainer: {
-    flexDirection: "row",
-    gap: 5,
+  experienceSection: {
+    flexDirection: "column",
+    marginBottom: 10,
   },
   positionTitle: {
     fontSize: 11,
@@ -106,19 +107,19 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontStyle: "italic",
   },
-  experienceSection: {
-    flexDirection: "column",
-    gap: 5,
-    paddingBottom: 10,
+  bulletPoint: {
+    fontSize: 11,
+    lineHeight: 1.5,
+    marginBottom: 2,
   },
   link: {
-    color: "blue",
-    textDecoration: "underline",
+    fontSize: 11,
+    color: "#0077B5",
   },
 });
 
 interface CVTemplateProps {
-  selectedCV: CV | null;
+  selectedCV: PreviewCV;
 }
 
 const CVTemplate: React.FC<CVTemplateProps> = ({ selectedCV }) => {
@@ -129,7 +130,7 @@ const CVTemplate: React.FC<CVTemplateProps> = ({ selectedCV }) => {
         <View style={styles.header}>
           <View>
             <Text style={styles.name}>Rocío Díaz</Text>
-            <Text style={styles.title}>React Frontend Developer</Text>
+            <Text style={styles.title}>{selectedCV.jobTitle}</Text>
           </View>
           <View style={styles.contactContainer}>
             <View style={styles.contactDetails}>
@@ -147,160 +148,57 @@ const CVTemplate: React.FC<CVTemplateProps> = ({ selectedCV }) => {
           </View>
         </View>
 
-        {/* Experience Section */}
+        {/* Introduction Section */}
         <View style={styles.section}>
           <Text style={styles.subtitle}>Introduction</Text>
           <Text style={styles.content}>
-            {selectedCV?.introduction || "Introduction not provided."}
+            {selectedCV.introduction || "Introduction not provided."}
           </Text>
         </View>
 
         {/* Skills Section */}
         <View style={styles.section}>
           <Text style={styles.subtitle}>Core Skills</Text>
-          <Text style={styles.content}>
-            {selectedCV?.skills || "Skills not provided."}
-          </Text>
+          {selectedCV.skills.length > 0 ? (
+            <Text style={styles.content}>{selectedCV.skills.join(", ")}</Text>
+          ) : (
+            <Text style={styles.content}>Skills not provided.</Text>
+          )}
         </View>
 
+        {/* Experience Section */}
         <View style={styles.section}>
           <Text style={styles.subtitle}>Experience</Text>
-          <View style={styles.experienceSection}>
-            <View style={styles.experienceTitleContainer}>
-              <Text style={styles.positionTitle}>Lead React Developer</Text>
-              <Text style={styles.content}> - </Text>
-              <Text style={styles.company}>Web4Realty</Text>
-              <Text style={styles.content}> - </Text>
-              <Text style={styles.company}>Contract</Text>
-            </View>
-            {(selectedCV?.web4Realty || "").split("\n").map((line, index) => (
-              <Text key={index} style={styles.content}>
-                • {line}
-              </Text>
-            ))}
-          </View>
-
-          <View style={styles.experienceSection}>
-            <View style={styles.experienceTitleContainer}>
+          {selectedCV.experiences.map((experience) => (
+            <View key={experience.id} style={styles.experienceSection}>
+              {/* Title, Company, and Date */}
               <Text style={styles.positionTitle}>
-                React Typescript Developer
+                {experience.title} - {experience.company}
               </Text>
-              <Text style={styles.content}> - </Text>
-              <Text style={styles.company}>Glofy</Text>
-              <Text style={styles.content}> - </Text>
-              <Text style={styles.company}>Contract</Text>
-            </View>
-            {(selectedCV?.glofy || "").split("\n").map((line, index) => (
-              <Text key={index} style={styles.content}>
-                • {line}
-              </Text>
-            ))}
-          </View>
+              <Text style={styles.date}>{experience.date}</Text>
 
-          <View style={styles.experienceSection}>
-            <View style={styles.experienceTitleContainer}>
-              <Text style={styles.positionTitle}>React Developer</Text>
-              <Text style={styles.content}> - </Text>
-              <Text style={styles.company}>WeDevelop</Text>
-              <Text style={styles.content}> - </Text>
-              <Text style={styles.company}>Contract</Text>
-            </View>
-            {(selectedCV?.weDevelop1 || "").split("\n").map((line, index) => (
-              <Text key={index} style={styles.content}>
-                • {line}
-              </Text>
-            ))}
-          </View>
+              {/* Project (if available) */}
+              {experience.project && (
+                <Text style={styles.content}>
+                  Project: {experience.project}
+                </Text>
+              )}
 
-          <View style={styles.experienceSection}>
-            <View style={styles.experienceTitleContainer}>
-              <Text style={styles.positionTitle}>Lead React Developer</Text>
-              <Text style={styles.content}> - </Text>
-              <Text style={styles.company}>CFOTech</Text>
-              <Text style={styles.content}> - </Text>
-              <Text style={styles.company}>Contract</Text>
+              {/* Bullet Points (if available) */}
+              {experience.bulletPoints?.length ? (
+                experience.bulletPoints.map((point, index) => (
+                  <Text key={index} style={styles.bulletPoint}>
+                    • {point}
+                  </Text>
+                ))
+              ) : (
+                <Text style={styles.content}>
+                  {experience.prompt || "No additional details provided."}
+                </Text>
+              )}
             </View>
-            {(selectedCV?.cfotech || "").split("\n").map((line, index) => (
-              <Text key={index} style={styles.content}>
-                • {line}
-              </Text>
-            ))}
-          </View>
-
-          <View style={styles.experienceSection}>
-            <View style={styles.experienceTitleContainer}>
-              <Text style={styles.positionTitle}>React Developer</Text>
-              <Text style={styles.content}> - </Text>
-              <Text style={styles.company}>Baufest</Text>
-              <Text style={styles.content}> - </Text>
-              <Text style={styles.company}>Employee</Text>
-            </View>
-            {(selectedCV?.baufest1 || "").split("\n").map((line, index) => (
-              <Text key={index} style={styles.content}>
-                • {line}
-              </Text>
-            ))}
-          </View>
-
-          <View style={styles.experienceSection}>
-            <View style={styles.experienceTitleContainer}>
-              <Text style={styles.positionTitle}>React Developer</Text>
-              <Text style={styles.content}> - </Text>
-              <Text style={styles.company}>Baufest</Text>
-              <Text style={styles.content}> - </Text>
-              <Text style={styles.company}>Employee</Text>
-            </View>
-            {(selectedCV?.baufest2 || "").split("\n").map((line, index) => (
-              <Text key={index} style={styles.content}>
-                • {line}
-              </Text>
-            ))}
-          </View>
-
-          <View style={styles.experienceSection}>
-            <View style={styles.experienceTitleContainer}>
-              <Text style={styles.positionTitle}>
-                Full Stack Developer .NET | Angular
-              </Text>
-              <Text style={styles.content}> - </Text>
-              <Text style={styles.company}>Baufest</Text>
-              <Text style={styles.content}> - </Text>
-              <Text style={styles.company}>Employee</Text>
-            </View>
-            {(selectedCV?.baufest3 || "").split("\n").map((line, index) => (
-              <Text key={index} style={styles.content}>
-                • {line}
-              </Text>
-            ))}
-          </View>
-
-          <View style={styles.experienceSection}>
-            <View style={styles.experienceTitleContainer}>
-              <Text style={styles.positionTitle}>
-                Frontend Engineer / Project Manager / UX Designer
-              </Text>
-              <Text style={styles.content}> - </Text>
-              <Text style={styles.company}>StreamCoder</Text>
-              <Text style={styles.content}> - </Text>
-              <Text style={styles.company}>Self-employed</Text>
-            </View>
-          </View>
-          {(selectedCV?.streamCoder || "").split("\n").map((line, index) => (
-            <Text key={index} style={styles.content}>
-              • {line}
-            </Text>
           ))}
         </View>
-
-        {/* Additional Sections (Education, Certifications, etc.) */}
-        <View style={styles.section}>
-          <Text style={styles.subtitle}>Education</Text>
-          <Text style={styles.content}>
-            Systems Analyst - Escuela Da Vinci (2017) - Argentina
-          </Text>
-        </View>
-
-        {/* You can add more sections as needed */}
       </Page>
     </Document>
   );

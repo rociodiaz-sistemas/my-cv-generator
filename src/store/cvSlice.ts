@@ -6,11 +6,18 @@ import { v4 as uuidv4 } from "uuid";
 interface CVState {
   cvs: CV[];
   selectedCV: CV | null;
+  previewCV: Omit<CV, "id" | "cvPDFName" | "date" | "title">;
 }
 
 const initialState: CVState = {
   cvs: JSON.parse(localStorage.getItem("cvs") || "[]"),
   selectedCV: null,
+  previewCV: {
+    jobTitle: "",
+    introduction: "",
+    skills: [],
+    experiences: [],
+  },
 };
 
 const cvSlice = createSlice({

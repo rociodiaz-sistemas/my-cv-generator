@@ -9,6 +9,7 @@ interface UIState {
   isFormSubmitted: boolean;
   activeStep: number;
   selectedExperiences: number[];
+  isHelperExpanded: boolean;
 }
 
 const initialState: UIState = {
@@ -16,6 +17,7 @@ const initialState: UIState = {
   isFormSubmitted: false, // Form is not submitted initially
   activeStep: 0,
   selectedExperiences: [],
+  isHelperExpanded: false,
 };
 
 export const setExperiencesAndSteps = createAsyncThunk<
@@ -71,6 +73,9 @@ const uiSlice = createSlice({
     setActiveStep: (state, action: PayloadAction<number>) => {
       state.activeStep = action.payload;
     },
+    setIsHelperExpanded: (state, action: PayloadAction<boolean>) => {
+      state.isHelperExpanded = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(setExperiencesAndSteps.fulfilled, (state) => {});
@@ -88,6 +93,7 @@ export const {
   resetStep,
   setSelectedExperiences,
   setActiveStep,
+  setIsHelperExpanded,
 } = uiSlice.actions;
 
 export const UIReducer = uiSlice.reducer;

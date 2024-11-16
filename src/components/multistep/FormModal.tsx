@@ -10,7 +10,7 @@ import {
 import { ArrowForward, ArrowBack } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/store";
-import { closeModal } from "../../store/uiSlice";
+import { closeModal, setIsHelperExpanded } from "../../store/uiSlice";
 import { clearForm } from "../../store/formSlice";
 import VerticalStepper from "./VerticalStepper";
 import StepNavigation from "./StepNavigation";
@@ -18,17 +18,13 @@ import FormContent from "./FormContent";
 import ExpandableHelper from "../ExpandableHelper";
 
 const FormModal: React.FC = () => {
-  const isModalOpen = useSelector((state: RootState) => state.ui.isModalOpen);
+  const { isModalOpen, isHelperExpanded } = useSelector(
+    (state: RootState) => state.ui
+  );
   const jobPosting = useSelector(
     (state: RootState) => state.formData.jobPosting
   );
   const dispatch = useDispatch();
-  const keyAttributes = useSelector(
-    (state: RootState) => state.suggestions.KeyAttributes
-  );
-
-  // State to handle expansion of the right section
-  const [isExpanded, setIsExpanded] = useState(false);
 
   const handleCloseModal = () => {
     dispatch(closeModal());
@@ -36,7 +32,7 @@ const FormModal: React.FC = () => {
   };
 
   const toggleExpand = () => {
-    setIsExpanded(!isExpanded); // Toggle the expansion state
+    dispatch(setIsHelperExpanded(!isHelperExpanded));
   };
 
   return (
@@ -100,14 +96,14 @@ const FormModal: React.FC = () => {
         </Grid>
 
         {/* Expandable Section */}
-        {isExpanded && jobPosting && (
-          <ExpandableHelper isExpanded={isExpanded} />
+        {isHelperExpanded && jobPosting && (
+          <ExpandableHelper isExpanded={isHelperExpanded} />
         )}
         {/* Button to toggle expansion */}
         {jobPosting && (
           <Box sx={{ position: "absolute", top: "50%", right: "5px" }}>
             <IconButton onClick={toggleExpand}>
-              {isExpanded ? (
+              {isHelperExpanded ? (
                 <ArrowForward fontSize="large" />
               ) : (
                 <ArrowBack fontSize="large" />

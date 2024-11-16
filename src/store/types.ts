@@ -1,9 +1,10 @@
 export interface CV {
   id: string;
   title: string;
+  jobTitle: string;
   introduction: string;
   date: string;
-  skills: [];
+  skills: string[];
   experiences: Experience[];
   cvPDFName: string;
 }
@@ -13,6 +14,7 @@ export interface Experience {
   label: string;
   title: string;
   company: string;
+  project?: string;
   date: string;
   prompt: string;
   bulletPoints?: string[];
@@ -47,3 +49,5 @@ export interface ExperiencesSuggestions {
   id: Experience["id"];
   reason: string;
 }
+
+export type PreviewCV = Omit<CV, "id" | "cvPDFName" | "date" | "title">;
