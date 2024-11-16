@@ -64,7 +64,7 @@ const formSlice = createSlice({
     setSkills: (state, action: PayloadAction<string[]>) => {
       state.formSkills = action.payload;
     },
-    setExperiences: (state, action: PayloadAction<Experience[]>) => {
+    setFormExperiences: (state, action: PayloadAction<Experience[]>) => {
       state.formExperiences = action.payload;
     },
 
@@ -78,6 +78,17 @@ const formSlice = createSlice({
       state.formSkills = state.formSkills.filter(
         (skill) => skill !== action.payload
       );
+    },
+    updateExperienceBulletpoints: (
+      state,
+      action: PayloadAction<{ id: number; bulletPoints: string[] }>
+    ) => {
+      const { id, bulletPoints } = action.payload;
+      const experience = state.formExperiences.find((exp) => exp.id === id);
+
+      if (experience) {
+        experience.bulletPoints = bulletPoints;
+      }
     },
     addExperience: (state, action: PayloadAction<Experience>) => {
       state.formExperiences.push(action.payload);
@@ -97,12 +108,13 @@ export const {
   updateStringField,
   updateArrayField,
   setSkills,
-  setExperiences,
   addSkill,
   removeSkill,
   addExperience,
   removeExperience,
   clearForm,
+  setFormExperiences,
+  updateExperienceBulletpoints,
 } = formSlice.actions;
 
 export const formReducer = formSlice.reducer;

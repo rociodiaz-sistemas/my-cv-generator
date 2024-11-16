@@ -46,6 +46,7 @@ const ExperienceChecklist: React.FC = () => {
     const updatedSelectedExperiences = profileExperiences.filter((exp) =>
       updatedSelectedExperiencesId.includes(exp.id)
     );
+
     dispatch(setExperiencesAndSteps(updatedSelectedExperiences));
   };
 

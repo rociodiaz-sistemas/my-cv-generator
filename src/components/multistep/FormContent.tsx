@@ -9,7 +9,6 @@ import OverviewStep from "./steps/OverviewStep";
 import SkillsStep from "./steps/SkillsStep";
 import JobPostingForm from "./steps/JobPostingForm";
 import SectionWrapper from "./SectionWrapper";
-import { Experience } from "../../store/types";
 import IntroductionStep from "./steps/IntroductionStep";
 
 const FormContent: React.FC = () => {
@@ -17,20 +16,9 @@ const FormContent: React.FC = () => {
     (state: RootState) => state.step
   );
 
-  const selectedExperiencesUI = useSelector(
-    (state: RootState) => state.ui.selectedExperiences
+  const formExperiences = useSelector(
+    (state: RootState) => state.formData.formExperiences
   );
-
-  const profileExperiences = useSelector(
-    (state: RootState) => state.profile.profileExperiences
-  );
-
-  const selectedExperiences = selectedExperiencesUI
-    .map((id) => {
-      if (id === 0) return profileExperiences[0];
-      return profileExperiences.find((exp) => exp.id === id);
-    })
-    .filter((exp): exp is Experience => exp !== undefined);
 
   // Logic to determine which component to render based on current step
   if (activeMainStep === "setup") {
@@ -71,11 +59,8 @@ const FormContent: React.FC = () => {
       <>
         {steps.experience.map((_, index) =>
           index === activeSubstepIndex ? (
-            <SectionWrapper
-              title={selectedExperiences[index].company}
-              key={index}
-            >
-              <ExperienceStep experience={selectedExperiences[index]} />
+            <SectionWrapper title={formExperiences[index].company} key={index}>
+              <ExperienceStep experience={formExperiences[index]} />
             </SectionWrapper>
           ) : null
         )}
