@@ -1,6 +1,13 @@
-import React from "react";
-import { Modal, Box, IconButton, Button, Container } from "@mui/material";
-import { Close } from "@mui/icons-material";
+import React, { useState } from "react";
+import {
+  Modal,
+  Box,
+  IconButton,
+  Container,
+  Typography,
+  Grid,
+} from "@mui/material";
+import { ArrowForward, ArrowBack } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import { closeModal } from "../../store/uiSlice";
@@ -8,14 +15,28 @@ import { clearForm } from "../../store/formSlice";
 import VerticalStepper from "./VerticalStepper";
 import StepNavigation from "./StepNavigation";
 import FormContent from "./FormContent";
+import ExpandableHelper from "../ExpandableHelper";
 
 const FormModal: React.FC = () => {
   const isModalOpen = useSelector((state: RootState) => state.ui.isModalOpen);
+  const jobPosting = useSelector(
+    (state: RootState) => state.formData.jobPosting
+  );
   const dispatch = useDispatch();
+  const keyAttributes = useSelector(
+    (state: RootState) => state.suggestions.KeyAttributes
+  );
+
+  // State to handle expansion of the right section
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const handleCloseModal = () => {
     dispatch(closeModal());
     dispatch(clearForm());
+  };
+
+  const toggleExpand = () => {
+    setIsExpanded(!isExpanded); // Toggle the expansion state
   };
 
   return (
@@ -25,53 +46,75 @@ const FormModal: React.FC = () => {
           position: "absolute",
           top: "50%",
           left: "50%",
-          height: "75vh",
+          height: "85vh",
           transform: "translate(-50%, -50%)",
-          width: "80vw",
+          width: "90vw",
           bgcolor: "background.paper",
           borderRadius: 2,
           boxShadow: 24,
           maxHeight: "80vh",
-          maxWidth: "75vw",
+          maxWidth: "85vw",
           overflowY: "hidden",
-          padding: 10,
+          paddingTop: 10,
+          paddingLeft: 5,
+          paddingRight: 10,
           paddingBottom: "20px",
+          display: "flex",
+          flexDirection: "row",
         }}
       >
-        <IconButton sx={{ float: "right" }} onClick={handleCloseModal}>
-          <Close />
-        </IconButton>
+        {/* <IconButton sx={{ float: "right" }} onClick={handleCloseModal}>
+          <Close fontSize="small" />
+        </IconButton> */}
 
-        <Box
-          sx={{
-            display: "flex",
-            height: "100%",
-            width: "100%%",
-            overflow: "hidden",
-          }}
-        >
+        <Grid container sx={{ height: "100%" }}>
           {/* Left: Stepper */}
-          <Box sx={{ width: "25%" }}>
+          <Grid item xs={12} sm={4} md={2} sx={{ paddingRight: 2 }}>
             <VerticalStepper />
-          </Box>
-          {/* Right: Form content */}
-          <Box sx={{ width: "75%", paddingLeft: 2 }}>
-            {/* <DynamicForm /> */}
+          </Grid>
+
+          {/* Right: Form content with expandable section */}
+          <Grid
+            item
+            xs={12}
+            sm={8}
+            md={10} // Change size based on expansion state
+            sx={{
+              transition: "all 0.3s ease",
+              paddingLeft: 2,
+            }}
+          >
             <Container
               sx={{
                 width: "100%",
                 height: "80%",
                 maxHeight: "90%",
                 overflow: "auto",
+                paddingLeft: 2,
               }}
             >
-              {" "}
               <FormContent />
             </Container>
-
             <StepNavigation />
+          </Grid>
+        </Grid>
+
+        {/* Expandable Section */}
+        {isExpanded && jobPosting && (
+          <ExpandableHelper isExpanded={isExpanded} />
+        )}
+        {/* Button to toggle expansion */}
+        {jobPosting && (
+          <Box sx={{ position: "absolute", top: "50%", right: "5px" }}>
+            <IconButton onClick={toggleExpand}>
+              {isExpanded ? (
+                <ArrowForward fontSize="large" />
+              ) : (
+                <ArrowBack fontSize="large" />
+              )}
+            </IconButton>
           </Box>
-        </Box>
+        )}
       </Box>
     </Modal>
   );

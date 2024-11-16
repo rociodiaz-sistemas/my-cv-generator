@@ -10,9 +10,11 @@ interface SuggestionsState {
   company: string;
   jobTitleSuggestion: string;
   introductionSuggestion: string;
+  jobPostingTips: string;
 }
 
 const initialState: SuggestionsState = {
+  jobPostingTips: "React Developer",
   company: "Spark Innovations",
   jobTitleSuggestion: "React Developer",
   skillsSuggestions: ["ReactJS", "NodeJS", "TypeScript", "React"],
@@ -39,7 +41,7 @@ const initialState: SuggestionsState = {
       "Authentication",
     ],
     interpersonalSkills: [
-      " Communication",
+      "Communication",
       "Teamwork",
       "Problem-solving",
       "Time management",

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   Box,
   TextField,
@@ -33,11 +33,6 @@ const ExperienceStep: React.FC<ExperienceStepProps> = ({ experience }) => {
   // Refs to store the text input elements
   const bulletPointRefs = useRef<(HTMLTextAreaElement | null)[]>([]);
 
-  // Handler to add a new bullet point
-  const handleAddBulletPoint = () => {
-    setBulletPoints((prev) => [...prev, ""]); // Add a new empty string for a new bullet point
-  };
-
   // Handler for changes in a bullet point input
   const handleBulletPointChange = (index: number, value: string) => {
     const updatedBulletPoints = [...bulletPoints];
@@ -53,6 +48,21 @@ const ExperienceStep: React.FC<ExperienceStepProps> = ({ experience }) => {
       })
     );
   };
+
+  useEffect(() => {
+    const filteredBulletPoints = bulletPoints.filter(
+      (point) => point.trim() !== ""
+    );
+    setBulletPoints(filteredBulletPoints);
+
+    // Dispatch updated bullet points to Redux
+    dispatch(
+      updateExperienceBulletpoints({
+        id: experience.id,
+        bulletPoints: filteredBulletPoints,
+      })
+    );
+  }, []); // Empty dependency array to run only on mount
 
   // Handler to add a suggestion as a bullet point
   const handleAddSuggestion = (suggestion: string) => {
