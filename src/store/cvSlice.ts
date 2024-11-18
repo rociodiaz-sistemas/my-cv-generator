@@ -1,7 +1,8 @@
 // cvSlice.ts
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 import { CV } from "./types";
 import { v4 as uuidv4 } from "uuid";
+import { RootState } from "./store";
 
 interface CVState {
   cvs: CV[];
@@ -29,6 +30,7 @@ const cvSlice = createSlice({
         ...action.payload,
         id: uuidv4(),
         date: new Date().toLocaleDateString(),
+        cvPDFName: `${action.payload.title}`,
       };
       state.cvs.push(newCV);
       localStorage.setItem("cvs", JSON.stringify(state.cvs));
