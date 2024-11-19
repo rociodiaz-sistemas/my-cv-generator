@@ -1,3 +1,6 @@
+import { CVFormData } from "./store/types";
+import { v4 as uuidv4 } from "uuid";
+
 export const DEFAULT_SKILLS =
   "React (Hooks, Context API, Redux, Sagas, Lazy Loading, HOCs, Error Boundaries, React Query, React Router, Object-Oriented Programming, Storybook, Jest, React Testing Library, Enzyme), JavaScript, TypeScript, HTML, CSS, SCSS, Webpack, Rollup, Next.js, Phaser, Framer Motion, Tailwind CSS, Emotion, Styled-Components, Material UI, Chakra UI, Figma, PHP, Bilingual (English/Spanish),  ";
 
@@ -197,4 +200,13 @@ export const transformToArray = (value: string): string[] => {
 export const arraysEqual = (a: string[], b: string[]) => {
   if (a.length !== b.length) return false;
   return a.every((val, index) => val === b[index]);
+};
+
+export const createCV = (cvData: CVFormData) => {
+  return {
+    ...cvData,
+    id: uuidv4(),
+    date: new Date().toLocaleDateString(),
+    cvPDFName: `${cvData.title.replace(/\s+/g, "-")}`, // Replace spaces with dashes
+  };
 };

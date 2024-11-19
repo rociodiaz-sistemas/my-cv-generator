@@ -24,18 +24,14 @@ const cvSlice = createSlice({
   name: "cv",
   initialState,
   reducers: {
-    addCV: (state, action: PayloadAction<CVFormData>) => {
-      const newCV = {
-        ...action.payload,
-        id: uuidv4(),
-        date: new Date().toLocaleDateString(),
-        cvPDFName: `${action.payload.title.replace(/\s+/g, "-")}`,
-      };
-      state.cvs.push(newCV);
+    addCV: (state, action: PayloadAction<CV>) => {
+      state.cvs.push(action.payload);
       localStorage.setItem("cvs", JSON.stringify(state.cvs));
     },
     deleteCV: (state, action: PayloadAction<string>) => {
       state.cvs = state.cvs.filter((cv) => cv.id === action.payload);
+      console.log(state.cvs);
+      console.log(action.payload);
       localStorage.setItem("cvs", JSON.stringify(state.cvs));
     },
     selectCV: (state, action: PayloadAction<string>) => {

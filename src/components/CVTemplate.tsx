@@ -10,7 +10,7 @@ import {
   Link,
 } from "@react-pdf/renderer";
 import CvImage from "../assets/images/cv-image.png";
-import { PreviewCV } from "../store/types";
+import { CV, CVFormData, PreviewCV } from "../store/types";
 import { link } from "fs";
 
 Font.register({
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
 });
 
 interface CVTemplateProps {
-  selectedCV: PreviewCV;
+  selectedCV: PreviewCV | CV | CVFormData;
 }
 
 const CVTemplate: React.FC<CVTemplateProps> = ({ selectedCV }) => {

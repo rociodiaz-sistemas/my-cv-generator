@@ -1,9 +1,10 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "./store";
 import { resetSteps, setExperienceSteps } from "./stepSlice";
-import { CVFormData, Experience } from "./types";
+import { CV, CVFormData, Experience, PreviewCV } from "./types";
 import { clearForm, setFormExperiences } from "./formSlice";
 import { addCV } from "./cvSlice";
+import { createCV } from "../helpers";
 
 interface UIState {
   isModalOpen: boolean;
@@ -42,7 +43,7 @@ export const setExperiencesAndSteps = createAsyncThunk<
   }
 );
 
-export const submitForm = createAsyncThunk<void, void, { state: RootState }>(
+export const submitForm = createAsyncThunk<CV, void, { state: RootState }>(
   "form/submitForm",
   async (_, { dispatch, getState }) => {
     const state = getState(); // Access the entire Redux state
@@ -59,11 +60,13 @@ export const submitForm = createAsyncThunk<void, void, { state: RootState }>(
       title: formState.formTitle,
     };
 
-    // Dispatch actions
-    dispatch(addCV(cvData)); // Add CV to cvSlice
-    dispatch(resetSteps()); // Reset stepSlice state
-    dispatch(clearForm()); // Clear formSlice state
-    dispatch(closeModal()); // Close modal, if applicable
+    const newCV = createCV(cvData);
+
+    dispatch(addCV(newCV));
+    dispatch(resetSteps());
+    dispatch(clearForm());
+    dispatch(closeModal());
+    return newCV;
   }
 );
 

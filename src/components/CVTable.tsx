@@ -24,10 +24,8 @@ import {
 const CVTable: React.FC = () => {
   const dispatch = useDispatch();
   const { cvs, selectedCV } = useSelector((state: RootState) => state.cv);
-  console.log(selectedCV);
 
   const handleSelectCv = (id: string) => {
-    console.log(selectedCV);
     if (!selectedCV || selectedCV.id !== id) {
       dispatch(selectCV(id));
     } else {
@@ -39,21 +37,20 @@ const CVTable: React.FC = () => {
     dispatch(deleteCV(id));
   };
 
-  const handleDownload = async () => {
-    if (selectedCV) {
-      const blob = await pdf(<CVTemplate selectedCV={selectedCV} />).toBlob();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `${selectedCV.title}.pdf`;
-      a.click();
-      URL.revokeObjectURL(url);
-    }
+  const handleDownload = async (id: string) => {
+    const selectedCV = cvs.find((cv) => cv.id === id);
+    if (!selectedCV) return;
+    const blob = await pdf(<CVTemplate selectedCV={selectedCV} />).toBlob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${selectedCV.title}.pdf`;
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   useEffect(() => {
     const storedCVs = JSON.parse(localStorage.getItem("cvs") || "[]");
-    console.log(storedCVs);
     dispatch(setCVs(storedCVs));
   }, [dispatch]);
 
@@ -77,7 +74,7 @@ const CVTable: React.FC = () => {
               key={cv.id}
             >
               <TableCell onClick={() => handleSelectCv(cv.id)}>
-                {cv.cvPDFName}
+                {cv.title}
               </TableCell>
               <TableCell onClick={() => handleSelectCv(cv.id)}>
                 {cv.date}
@@ -90,10 +87,10 @@ const CVTable: React.FC = () => {
                     <Visibility />
                   )}
                 </Button>
-                <Button onClick={handleDownload}>
+                <Button onClick={() => handleDownload(cv.id)}>
                   <DownloadIcon />
                 </Button>
-                <Button onClick={() => handleDeleteCv(cv.title)}>
+                <Button onClick={() => handleDeleteCv(cv.id)}>
                   <Delete />
                 </Button>
               </TableCell>
