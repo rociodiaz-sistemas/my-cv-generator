@@ -31,7 +31,7 @@ const Home: React.FC = () => {
         </Button>
         <CVTable />
         <FormModal />
-        {selectedCV && <PDFPreview />}
+        {selectedCV && <PDFPreview selectedCV={selectedCV} />}
       </Container>
     </>
   );

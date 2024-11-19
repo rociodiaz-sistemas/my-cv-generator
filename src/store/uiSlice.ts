@@ -1,8 +1,9 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "./store";
-import { setExperienceSteps } from "./stepSlice";
-import { Experience } from "./types";
-import { setFormExperiences } from "./formSlice";
+import { resetSteps, setExperienceSteps } from "./stepSlice";
+import { CVFormData, Experience } from "./types";
+import { clearForm, setFormExperiences } from "./formSlice";
+import { addCV } from "./cvSlice";
 
 interface UIState {
   isModalOpen: boolean;
@@ -41,6 +42,31 @@ export const setExperiencesAndSteps = createAsyncThunk<
   }
 );
 
+export const submitForm = createAsyncThunk<void, void, { state: RootState }>(
+  "form/submitForm",
+  async (_, { dispatch, getState }) => {
+    const state = getState(); // Access the entire Redux state
+
+    // Extract the form state from the formSlice
+    const formState = state.formData;
+
+    // Construct the CV data from the form state
+    const cvData = {
+      jobTitle: formState.formJobTitle,
+      introduction: formState.formIntroduction,
+      skills: formState.formSkills,
+      experiences: formState.formExperiences,
+      title: formState.formTitle,
+    };
+
+    // Dispatch actions
+    dispatch(addCV(cvData)); // Add CV to cvSlice
+    dispatch(resetSteps()); // Reset stepSlice state
+    dispatch(clearForm()); // Clear formSlice state
+    dispatch(closeModal()); // Close modal, if applicable
+  }
+);
+
 const uiSlice = createSlice({
   name: "ui",
   initialState,
@@ -50,9 +76,6 @@ const uiSlice = createSlice({
     },
     closeModal: (state) => {
       state.isModalOpen = false; // Close the modal
-    },
-    submitForm: (state) => {
-      state.isFormSubmitted = true; // Form is submitted
     },
     resetForm: (state) => {
       state.isFormSubmitted = false; // Reset form submission state
@@ -79,6 +102,9 @@ const uiSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(setExperiencesAndSteps.fulfilled, (state) => {});
+    builder.addCase(submitForm.fulfilled, (state) => {
+      state.isFormSubmitted = true;
+    });
   },
 });
 
@@ -86,7 +112,6 @@ const uiSlice = createSlice({
 export const {
   openModal,
   closeModal,
-  submitForm,
   resetForm,
   incrementStep,
   decrementStep,

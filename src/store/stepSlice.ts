@@ -86,6 +86,12 @@ const stepSlice = createSlice({
         state.activeSubstepIndex = action.payload;
       }
     },
+    resetSteps: (state) => {
+      state.activeMainStep = initialState.mainSteps[0]; // Reset to the first main step
+      state.activeSubstepIndex = 0; // Reset substep index
+      state.steps.experience = []; // Clear dynamic substeps, if needed
+      state.steps.overview = []; // Clear overview substeps, if applicable
+    },
   },
 });
 
@@ -95,6 +101,7 @@ export const {
   setExperienceSteps,
   setActiveMainStep,
   setActiveSubstepIndex,
+  resetSteps,
 } = stepSlice.actions;
 
 export const stepReducer = stepSlice.reducer;

@@ -1,13 +1,12 @@
 // cvSlice.ts
-import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
-import { CV } from "./types";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { CV, CVFormData, PreviewCV } from "./types";
 import { v4 as uuidv4 } from "uuid";
-import { RootState } from "./store";
 
 interface CVState {
   cvs: CV[];
   selectedCV: CV | null;
-  previewCV: Omit<CV, "id" | "cvPDFName" | "date" | "title">;
+  previewCV: PreviewCV;
 }
 
 const initialState: CVState = {
@@ -25,21 +24,22 @@ const cvSlice = createSlice({
   name: "cv",
   initialState,
   reducers: {
-    addCV: (state, action: PayloadAction<CV>) => {
+    addCV: (state, action: PayloadAction<CVFormData>) => {
       const newCV = {
         ...action.payload,
         id: uuidv4(),
         date: new Date().toLocaleDateString(),
-        cvPDFName: `${action.payload.title}`,
+        cvPDFName: `${action.payload.title.replace(/\s+/g, "-")}`,
       };
       state.cvs.push(newCV);
       localStorage.setItem("cvs", JSON.stringify(state.cvs));
     },
     deleteCV: (state, action: PayloadAction<string>) => {
-      state.cvs = state.cvs.filter((cv) => cv.id !== action.payload);
+      state.cvs = state.cvs.filter((cv) => cv.id === action.payload);
       localStorage.setItem("cvs", JSON.stringify(state.cvs));
     },
     selectCV: (state, action: PayloadAction<string>) => {
+      console.log(state.cvs.find((cv) => cv.id === action.payload));
       state.selectedCV =
         state.cvs.find((cv) => cv.id === action.payload) || null;
     },
@@ -48,6 +48,14 @@ const cvSlice = createSlice({
     },
     setCVs: (state, action: PayloadAction<CV[]>) => {
       state.cvs = action.payload;
+    },
+    resetPreviewCV: (state) => {
+      state.previewCV = {
+        jobTitle: "",
+        introduction: "",
+        skills: [],
+        experiences: [],
+      };
     },
   },
 });

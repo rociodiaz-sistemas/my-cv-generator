@@ -1,12 +1,5 @@
-import React, { useState } from "react";
-import {
-  Modal,
-  Box,
-  IconButton,
-  Container,
-  Typography,
-  Grid,
-} from "@mui/material";
+import React from "react";
+import { Modal, Box, IconButton, Container, Grid } from "@mui/material";
 import { ArrowForward, ArrowBack } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/store";

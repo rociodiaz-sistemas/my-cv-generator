@@ -1,27 +1,29 @@
 import React from "react";
 import { Button, Box } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../store/store";
+import { AppDispatch, RootState } from "../../store/store";
 import { nextStep, previousStep } from "../../store/stepSlice";
-import { addCV } from "../../store/cvSlice";
+import { submitForm } from "../../store/uiSlice";
 
 const StepNavigation: React.FC = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
+  const [loadingAddCV, setLoadingAddCV] = React.useState(false);
 
   // Select the current step state from Redux
-  const { activeMainStep, activeSubstepIndex, mainSteps, steps } = useSelector(
+  const { activeMainStep, activeSubstepIndex, mainSteps } = useSelector(
     (state: RootState) => state.step
   );
 
   // Check if we're on the last substep of the last main step
   const isLastMainStep = activeMainStep === mainSteps[mainSteps.length - 1];
-  const isLastSubstep = activeSubstepIndex === steps[activeMainStep].length - 1;
   const isFirstSubstep = activeSubstepIndex === 0;
   const isFirstMainStep = activeMainStep === mainSteps[0];
 
   const handleSubmit = () => {
-    // Dispatch the addCV action to save the CV to the database
-    dispatch(addCV());
+    // Dispatch the submitForm action to save the CV to the database
+    setLoadingAddCV(true);
+    dispatch(submitForm());
+    setLoadingAddCV(false);
   };
 
   return (
@@ -36,18 +38,20 @@ const StepNavigation: React.FC = () => {
       </Button>
 
       {/* Next/Submit Button */}
-      <Button
-        onClick={
-          isLastMainStep && isLastSubstep
-            ? handleSubmit
-            : () => dispatch(nextStep())
-        }
-        variant="contained"
-        color="primary"
-        disabled={isLastMainStep && isLastSubstep && false} // Always enable submit if it's the last step
-      >
-        {isLastMainStep && isLastSubstep ? "Submit" : "Next"}
-      </Button>
+      {!isLastMainStep ? (
+        <Button onClick={() => dispatch(nextStep())} variant="contained">
+          Next
+        </Button>
+      ) : (
+        <Button
+          onClick={handleSubmit}
+          variant="contained"
+          color="primary"
+          disabled={loadingAddCV}
+        >
+          {loadingAddCV ? "Adding CV..." : "Add CV"}
+        </Button>
+      )}
     </Box>
   );
 };

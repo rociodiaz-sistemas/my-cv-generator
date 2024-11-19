@@ -24,8 +24,10 @@ import {
 const CVTable: React.FC = () => {
   const dispatch = useDispatch();
   const { cvs, selectedCV } = useSelector((state: RootState) => state.cv);
+  console.log(selectedCV);
 
   const handleSelectCv = (id: string) => {
+    console.log(selectedCV);
     if (!selectedCV || selectedCV.id !== id) {
       dispatch(selectCV(id));
     } else {
@@ -33,8 +35,8 @@ const CVTable: React.FC = () => {
     }
   };
 
-  const handleDeleteCv = (title: string) => {
-    dispatch(deleteCV(title));
+  const handleDeleteCv = (id: string) => {
+    dispatch(deleteCV(id));
   };
 
   const handleDownload = async () => {
@@ -51,6 +53,7 @@ const CVTable: React.FC = () => {
 
   useEffect(() => {
     const storedCVs = JSON.parse(localStorage.getItem("cvs") || "[]");
+    console.log(storedCVs);
     dispatch(setCVs(storedCVs));
   }, [dispatch]);
 
@@ -73,8 +76,12 @@ const CVTable: React.FC = () => {
               }}
               key={cv.id}
             >
-              <TableCell>{cv.title}</TableCell>
-              <TableCell>{cv.date}</TableCell>
+              <TableCell onClick={() => handleSelectCv(cv.id)}>
+                {cv.cvPDFName}
+              </TableCell>
+              <TableCell onClick={() => handleSelectCv(cv.id)}>
+                {cv.date}
+              </TableCell>
               <TableCell>
                 <Button onClick={() => handleSelectCv(cv.id)}>
                   {selectedCV?.id === cv.id ? (

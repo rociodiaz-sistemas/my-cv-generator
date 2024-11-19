@@ -51,3 +51,5 @@ export interface ExperiencesSuggestions {
 }
 
 export type PreviewCV = Omit<CV, "id" | "cvPDFName" | "date" | "title">;
+
+export type CVFormData = Omit<CV, "id" | "cvPDFName" | "date">;
