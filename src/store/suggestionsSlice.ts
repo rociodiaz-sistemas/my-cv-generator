@@ -11,6 +11,7 @@ interface SuggestionsState {
   jobTitleSuggestion: string;
   introductionSuggestion: string;
   jobPostingTips: string;
+  currentKnownFor: string[];
 }
 
 const initialState: SuggestionsState = {
@@ -23,6 +24,7 @@ const initialState: SuggestionsState = {
     "I am a React Developer with 3 years of experience. I have worked on multiple projects using React, Node.js, and TypeScript. I am passionate about building scalable web applications and solving complex problems.",
   loading: false,
   error: null,
+  currentKnownFor: [],
   KeyAttributes: {
     technicalSkills: [
       "React",
@@ -97,6 +99,17 @@ const suggestionsSlice = createSlice({
       state.loading = false;
       state.error = null;
     },
+    addCurrentKnownFor: (state, action: PayloadAction<string>) => {
+      // Prevent duplicates
+      if (!state.currentKnownFor.includes(action.payload)) {
+        state.currentKnownFor.push(action.payload);
+      }
+    },
+    removeCurrentKnownFor: (state, action: PayloadAction<string>) => {
+      state.currentKnownFor = state.currentKnownFor.filter(
+        (item) => item !== action.payload
+      );
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -133,6 +146,7 @@ const suggestionsSlice = createSlice({
   },
 });
 
-export const { clearSuggestions } = suggestionsSlice.actions;
+export const { clearSuggestions, addCurrentKnownFor, removeCurrentKnownFor } =
+  suggestionsSlice.actions;
 
 export const suggestionsReducer = suggestionsSlice.reducer;

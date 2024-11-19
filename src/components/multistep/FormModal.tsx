@@ -9,6 +9,7 @@ import VerticalStepper from "./VerticalStepper";
 import StepNavigation from "./StepNavigation";
 import FormContent from "./FormContent";
 import ExpandableHelper from "../ExpandableHelper";
+import { resetSteps } from "../../store/stepSlice";
 
 const FormModal: React.FC = () => {
   const { isModalOpen, isHelperExpanded } = useSelector(
@@ -21,6 +22,7 @@ const FormModal: React.FC = () => {
 
   const handleCloseModal = () => {
     dispatch(closeModal());
+    dispatch(resetSteps());
     dispatch(clearForm());
   };
 
@@ -52,10 +54,6 @@ const FormModal: React.FC = () => {
           flexDirection: "row",
         }}
       >
-        {/* <IconButton sx={{ float: "right" }} onClick={handleCloseModal}>
-          <Close fontSize="small" />
-        </IconButton> */}
-
         <Grid container sx={{ height: "100%" }}>
           {/* Left: Stepper */}
           <Grid item xs={12} sm={4} md={2} sx={{ paddingRight: 2 }}>
