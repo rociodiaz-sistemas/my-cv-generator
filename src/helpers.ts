@@ -210,3 +210,5 @@ export const createCV = (cvData: CVFormData) => {
     cvPDFName: `${cvData.title.replace(/\s+/g, "-")}`, // Replace spaces with dashes
   };
 };
+
+export const YEARS_OF_EXPERIENCE = 6;

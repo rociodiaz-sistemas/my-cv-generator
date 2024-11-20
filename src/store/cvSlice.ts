@@ -1,7 +1,6 @@
 // cvSlice.ts
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { CV, CVFormData, PreviewCV } from "./types";
-import { v4 as uuidv4 } from "uuid";
+import { CV, PreviewCV } from "./types";
 
 interface CVState {
   cvs: CV[];

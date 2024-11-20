@@ -29,7 +29,7 @@ const PDFPreview: React.FC<PDFPreviewProps> = ({ selectedCV }) => {
   useEffect(() => {
     const resizeObserver = new ResizeObserver(() => {
       if (iframeRef.current && containerRef.current) {
-        iframeRef.current.style.height = `${containerRef.current.offsetHeight}px`;
+        // iframeRef.current.style.height = `${containerRef.current.offsetHeight}px`;
         iframeRef.current.style.width = "100%"; // Ensure full width
       }
     });

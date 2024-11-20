@@ -12,10 +12,13 @@ interface SuggestionsState {
   introductionSuggestion: string;
   jobPostingTips: string;
   currentKnownFor: string[];
+  formattedJobPosting: string;
+  toneOfJobPosting: string;
 }
 
 const initialState: SuggestionsState = {
   jobPostingTips: "React Developer",
+  toneOfJobPosting: "",
   company: "Spark Innovations",
   jobTitleSuggestion: "React Developer",
   skillsSuggestions: ["ReactJS", "NodeJS", "TypeScript", "React"],
@@ -24,6 +27,7 @@ const initialState: SuggestionsState = {
     "I am a React Developer with 3 years of experience. I have worked on multiple projects using React, Node.js, and TypeScript. I am passionate about building scalable web applications and solving complex problems.",
   loading: false,
   error: null,
+  formattedJobPosting: "",
   currentKnownFor: [],
   KeyAttributes: {
     technicalSkills: [

@@ -15,9 +15,11 @@ export interface Experience {
   title: string;
   company: string;
   project?: string;
-  date: string;
   prompt: string;
   bulletPoints?: string[];
+  projectName?: string;
+  dateFrom?: string;
+  dateTo?: string;
 }
 
 export interface StepConfig {

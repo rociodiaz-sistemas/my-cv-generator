@@ -91,12 +91,14 @@ const SetupStep: React.FC = () => {
           direction="row"
           alignItems="center"
         >
+          <Typography variant="body1">
+            What you'd like employers to know about you
+          </Typography>
           <Tooltip title="These keywords have been selected by you and are used to create your introduction">
             <IconButton size="small">
               <HelpOutline fontSize="small" />
             </IconButton>
           </Tooltip>
-          <Typography variant="body1">Known For:</Typography>
         </Stack>
         <Stack direction="row" flexWrap="wrap" spacing={0} gap={1}>
           {knownFor.map((keyword) => (

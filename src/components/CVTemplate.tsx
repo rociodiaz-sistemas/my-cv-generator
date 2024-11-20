@@ -35,86 +35,97 @@ const styles = StyleSheet.create({
   page: {
     padding: 20,
     fontFamily: "Roboto",
+    backgroundColor: "#f5f7fa",
+    color: "#1a202c",
   },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "center",
+    paddingBottom: 20,
+    borderBottom: "2px solid #2d3748",
     marginBottom: 20,
   },
+  nameTitle: {
+    flex: 1,
+  },
   name: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: "bold",
-    width: "60%",
+    color: "#2d3748",
   },
   title: {
-    fontSize: 18,
-    marginBottom: 10,
+    fontSize: 16,
+    color: "#718096",
     marginTop: 5,
-    width: "60%",
-  },
-  subtitle: {
-    fontSize: 7,
-    color: "#73808D",
-    letterSpacing: 2,
-    textTransform: "uppercase",
-    paddingBottom: 10,
   },
   contactContainer: {
-    flexDirection: "row",
-    justifyContent: "flex-end",
-    gap: 5,
-    alignItems: "center",
-  },
-  contactDetails: {
-    textAlign: "left",
-    width: "40%",
-    fontSize: 11,
     flexDirection: "column",
-    gap: 5,
+    alignItems: "flex-end",
   },
-  section: {
-    marginBottom: 10,
-    borderBottom: "1px solid #73808D",
-    paddingBottom: 5,
+  contactItem: {
+    fontSize: 10,
+    marginBottom: 2,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
   },
   image: {
-    width: 77,
-    height: 77,
+    width: 80,
+    height: 80,
+    borderRadius: 40,
     marginBottom: 10,
+    border: "2px solid #2d3748",
   },
-  subHeader: {
-    fontSize: 18,
-    marginBottom: 5,
-    textDecoration: "underline",
+  section: {
+    marginBottom: 20,
+    padding: 15,
+    borderRadius: 8,
+    backgroundColor: "#ffffff",
+    boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+  },
+  sectionHeader: {
+    fontSize: 14,
+    fontWeight: "bold",
+    borderBottom: "1px solid #e2e8f0",
+    paddingBottom: 5,
+    marginBottom: 10,
+    color: "#2d3748",
   },
   content: {
     fontSize: 11,
     lineHeight: 1.6,
   },
-  date: {
-    fontSize: 9,
-    color: "#73808D",
+  skills: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 5,
   },
-  experienceSection: {
-    flexDirection: "column",
+  skillChip: {
+    backgroundColor: "#edf2f7",
+    color: "#2d3748",
+    paddingVertical: 2,
+    paddingHorizontal: 8,
+    borderRadius: 12,
+    fontSize: 10,
+  },
+  experience: {
     marginBottom: 10,
   },
-  positionTitle: {
-    fontSize: 11,
+  experienceTitle: {
+    fontSize: 12,
     fontWeight: "bold",
   },
-  company: {
-    fontSize: 11,
+  experienceCompany: {
+    fontSize: 10,
+    color: "#718096",
+    marginTop: 2,
     fontStyle: "italic",
   },
   bulletPoint: {
-    fontSize: 11,
-    lineHeight: 1.5,
-    marginBottom: 2,
-  },
-  link: {
-    fontSize: 11,
-    color: "#0077B5",
+    fontSize: 10,
+    marginLeft: 10,
+    marginBottom: 3,
   },
 });
 
@@ -128,29 +139,33 @@ const CVTemplate: React.FC<CVTemplateProps> = ({ selectedCV }) => {
       <Page size="A4" style={styles.page}>
         {/* Header Section */}
         <View style={styles.header}>
-          <View>
+          <View style={styles.nameTitle}>
             <Text style={styles.name}>Rocío Díaz</Text>
             <Text style={styles.title}>{selectedCV.jobTitle}</Text>
           </View>
           <View style={styles.contactContainer}>
-            <View style={styles.contactDetails}>
-              <Text>rory.d.dev@gmail.com</Text>
-              <Text>+1 408-757-0660</Text>
-              <Text>Campbell, CA</Text>
-              <Link
-                style={styles.link}
-                src="https://www.linkedin.com/in/rory-diaz/"
-              >
+            <Image style={styles.image} src={CvImage} />
+            <View style={styles.contactItem}>
+              📧 <Text>rory.d.dev@gmail.com</Text>
+            </View>
+            <View style={styles.contactItem}>
+              📞 <Text>+1 408-757-0660</Text>
+            </View>
+            <View style={styles.contactItem}>
+              📍 <Text>Campbell, CA</Text>
+            </View>
+            <View style={styles.contactItem}>
+              🔗{" "}
+              <Link src="https://www.linkedin.com/in/rory-diaz/">
                 in/rory-diaz/
               </Link>
             </View>
-            <Image style={styles.image} src={CvImage} />
           </View>
         </View>
 
         {/* Introduction Section */}
         <View style={styles.section}>
-          <Text style={styles.subtitle}>Introduction</Text>
+          <Text style={styles.sectionHeader}>Introduction</Text>
           <Text style={styles.content}>
             {selectedCV.introduction || "Introduction not provided."}
           </Text>
@@ -158,9 +173,15 @@ const CVTemplate: React.FC<CVTemplateProps> = ({ selectedCV }) => {
 
         {/* Skills Section */}
         <View style={styles.section}>
-          <Text style={styles.subtitle}>Core Skills</Text>
+          <Text style={styles.sectionHeader}>Core Skills</Text>
           {selectedCV.skills.length > 0 ? (
-            <Text style={styles.content}>{selectedCV.skills.join(", ")}</Text>
+            <View style={styles.skills}>
+              {selectedCV.skills.map((skill, index) => (
+                <Text key={index} style={styles.skillChip}>
+                  {skill}
+                </Text>
+              ))}
+            </View>
           ) : (
             <Text style={styles.content}>Skills not provided.</Text>
           )}
@@ -168,23 +189,15 @@ const CVTemplate: React.FC<CVTemplateProps> = ({ selectedCV }) => {
 
         {/* Experience Section */}
         <View style={styles.section}>
-          <Text style={styles.subtitle}>Experience</Text>
+          <Text style={styles.sectionHeader}>Experience</Text>
           {selectedCV.experiences.map((experience) => (
-            <View key={experience.id} style={styles.experienceSection}>
-              {/* Title, Company, and Date */}
-              <Text style={styles.positionTitle}>
+            <View key={experience.id} style={styles.experience}>
+              <Text style={styles.experienceTitle}>
                 {experience.title} - {experience.company}
               </Text>
-              <Text style={styles.date}>{experience.date}</Text>
-
-              {/* Project (if available) */}
-              {experience.project && (
-                <Text style={styles.content}>
-                  Project: {experience.project}
-                </Text>
-              )}
-
-              {/* Bullet Points (if available) */}
+              <Text style={styles.experienceCompany}>
+                {experience.dateFrom}
+              </Text>
               {experience.bulletPoints?.length ? (
                 experience.bulletPoints.map((point, index) => (
                   <Text key={index} style={styles.bulletPoint}>

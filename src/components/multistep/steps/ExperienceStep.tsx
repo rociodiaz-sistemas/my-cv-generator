@@ -158,7 +158,7 @@ const ExperienceStep: React.FC<ExperienceStepProps> = ({ experience }) => {
       {/* Header with title and date */}
       <Stack direction="row" spacing={2} sx={{ marginBottom: 2 }}>
         <Typography variant="body2">{experience.title} - </Typography>
-        <Typography variant="body2">{experience.date}</Typography>
+        <Typography variant="body2">{experience.dateFrom}</Typography>
       </Stack>
 
       {/* Render each bullet point as an individual input */}

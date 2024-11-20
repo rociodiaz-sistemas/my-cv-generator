@@ -1,6 +1,7 @@
 import {
   Button,
   Chip,
+  Icon,
   IconButton,
   Link,
   Stack,
@@ -11,7 +12,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store/store";
 import { updateStringField } from "../../../store/formSlice";
-import { AutoFixHigh } from "@mui/icons-material";
+import { AutoFixHigh, Refresh } from "@mui/icons-material";
 
 const IntroductionStep: React.FC = () => {
   const dispatch = useDispatch();
@@ -93,7 +94,19 @@ const IntroductionStep: React.FC = () => {
           <AutoFixHigh />
           <Typography variant="body2">Use Suggested Introduction:</Typography>
         </Link>
-        <Typography variant="body1">{introductionSuggestion}</Typography>
+        <Stack
+          justifyItems="flex-start"
+          direction="row"
+          alignItems="center"
+          gap={1}
+        >
+          <Typography sx={{ width: "70%" }} variant="body1">
+            {introductionSuggestion}
+          </Typography>
+          <IconButton onClick={handleUseSuggestedIntroduction}>
+            <Refresh color="primary" fontSize="large" />
+          </IconButton>
+        </Stack>
       </Stack>
     </>
   );

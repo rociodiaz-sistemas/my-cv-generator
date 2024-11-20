@@ -31,7 +31,9 @@ const Home: React.FC = () => {
         </Button>
         <CVTable />
         <FormModal />
-        {selectedCV && <PDFPreview selectedCV={selectedCV} />}
+        <div style={{ height: "100vh" }}>
+          {selectedCV && <PDFPreview selectedCV={selectedCV} />}
+        </div>
       </Container>
     </>
   );

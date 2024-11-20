@@ -64,7 +64,7 @@ const ExperienceChecklist: React.FC = () => {
                 color="primary"
               />
             }
-            label={`${exp.title} ${exp.company} ${exp.date}`}
+            label={`${exp.title} ${exp.company} ${exp.dateFrom}`}
           />
           <Typography variant="body2">
             <ul>

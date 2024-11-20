@@ -6,7 +6,7 @@ export const experiences: Experience[] = [
     label: "Web4Realty Experience",
     title: "Frontend Developer",
     company: "Web4Realty",
-    date: "2019 - 2021",
+    dateFrom: "2019 - 2021",
     bulletPoints: [
       "Developed and maintained the front-end of real estate web applications.",
       "Collaborated with backend developers to integrate APIs and improve user experience.",
@@ -20,7 +20,7 @@ export const experiences: Experience[] = [
     label: "Glofy Experience",
     title: "Software Engineer",
     company: "Glofy",
-    date: "2021 - Present",
+    dateFrom: "2021 - Present",
     bulletPoints: [
       "Worked on building scalable web applications using React and TypeScript.",
       "Collaborated with designers to implement user-friendly interfaces.",
