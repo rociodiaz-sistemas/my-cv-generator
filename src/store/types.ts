@@ -20,6 +20,8 @@ export interface Experience {
   projectName?: string;
   dateFrom?: string;
   dateTo?: string;
+  hireType?: string;
+  location?: string;
 }
 
 export interface StepConfig {

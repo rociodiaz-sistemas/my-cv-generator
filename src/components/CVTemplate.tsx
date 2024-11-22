@@ -11,7 +11,8 @@ import {
 } from "@react-pdf/renderer";
 import CvImage from "../assets/images/cv-image.png";
 import { CV, CVFormData, PreviewCV } from "../store/types";
-import { link } from "fs";
+import { renderToStaticMarkup } from "react-dom/server";
+import { Email } from "@mui/icons-material";
 
 Font.register({
   family: "Roboto",
@@ -30,6 +31,49 @@ Font.register({
     },
   ],
 });
+
+Font.register({
+  family: "Segoe UI",
+  fonts: [
+    {
+      src: "src/assets/fonts/Segoe-ui/Segoe-ui-regular.ttf",
+      fontWeight: 400,
+    },
+    {
+      src: "src/assets/fonts/Segoe-ui/Segoe-ui-semibold.ttf",
+      fontWeight: 600,
+    },
+    {
+      src: "src/assets/fonts/Segoe-ui/Segoe-ui-bold.ttf",
+      fontWeight: 700,
+    },
+    {
+      src: "src/assets/fonts/Segoe-ui/Segoe-ui-bold-italic.ttf",
+      fontStyle: "italic",
+      fontWeight: 700,
+    },
+  ],
+});
+
+Font.register({
+  family: "Alibaba PuHuiTi",
+  fonts: [
+    {
+      src: "src/assets/fonts/Alibaba-Puhuiti/Alibaba-Puhuiti-regular.ttf",
+      fontWeight: 400,
+    },
+    {
+      src: "src/assets/fonts/Alibaba-Puhuiti/Alibaba-Puhuiti-bold.ttf",
+      fontWeight: 700,
+    },
+  ],
+});
+
+// Function to convert MUI Icon to raw SVG code
+const renderSvgIcon = (IconComponent: React.ElementType): string => {
+  const svgMarkup = renderToStaticMarkup(<IconComponent />);
+  return svgMarkup; // Return raw SVG code
+};
 
 const styles = StyleSheet.create({
   page: {
@@ -110,24 +154,37 @@ const styles = StyleSheet.create({
     fontSize: 10,
   },
   experience: {
-    marginBottom: 10,
+    marginBottom: 15,
+    paddingBottom: 10,
+    borderBottom: "1px solid #e2e8f0",
   },
   experienceTitle: {
     fontSize: 12,
     fontWeight: "bold",
+    color: "#2d3748",
   },
   experienceCompany: {
     fontSize: 10,
-    color: "#718096",
-    marginTop: 2,
+    color: "#4a5568",
     fontStyle: "italic",
   },
   bulletPoint: {
     fontSize: 10,
-    marginLeft: 10,
     marginBottom: 3,
+    marginLeft: 15, // Indent bullet point text
+    textIndent: -7, // Adjust indent for the bullet itself
+  },
+  projectLocation: {
+    fontSize: 11,
+    lineHeight: 1.4,
+  },
+  icon: {
+    width: 15,
+    height: 15,
   },
 });
+
+const Chip = () => <></>;
 
 interface CVTemplateProps {
   selectedCV: PreviewCV | CV | CVFormData;
@@ -146,16 +203,18 @@ const CVTemplate: React.FC<CVTemplateProps> = ({ selectedCV }) => {
           <View style={styles.contactContainer}>
             <Image style={styles.image} src={CvImage} />
             <View style={styles.contactItem}>
-              📧 <Text>rory.d.dev@gmail.com</Text>
+              {/* Email Icon */}
+              <Image style={styles.icon} src={renderSvgIcon(Email)} />
+              <Text>rory.d.dev@gmail.com</Text>
             </View>
             <View style={styles.contactItem}>
-              📞 <Text>+1 408-757-0660</Text>
+              <Text>+1 408-757-0660</Text>
             </View>
             <View style={styles.contactItem}>
-              📍 <Text>Campbell, CA</Text>
+              <Text>Campbell, CA</Text>
             </View>
             <View style={styles.contactItem}>
-              🔗{" "}
+              {" "}
               <Link src="https://www.linkedin.com/in/rory-diaz/">
                 in/rory-diaz/
               </Link>
@@ -192,22 +251,28 @@ const CVTemplate: React.FC<CVTemplateProps> = ({ selectedCV }) => {
           <Text style={styles.sectionHeader}>Experience</Text>
           {selectedCV.experiences.map((experience) => (
             <View key={experience.id} style={styles.experience}>
+              {/* Title, Company, and Project */}
               <Text style={styles.experienceTitle}>
-                {experience.title} - {experience.company}
+                {experience.title} @ {experience.company}
+              </Text>
+              {/* Date Range and Hire Type */}
+              <Text style={styles.projectLocation}>
+                {experience.project} | {experience.location}
               </Text>
               <Text style={styles.experienceCompany}>
-                {experience.dateFrom}
+                {experience.dateFrom} - {experience.dateTo} (
+                {experience.hireType})
               </Text>
-              {experience.bulletPoints?.length ? (
-                experience.bulletPoints.map((point, index) => (
-                  <Text key={index} style={styles.bulletPoint}>
-                    • {point}
-                  </Text>
-                ))
-              ) : (
-                <Text style={styles.content}>
-                  {experience.prompt || "No additional details provided."}
-                </Text>
+
+              {/* Bullet Points */}
+              {(experience.bulletPoints?.length ?? 0) > 0 && (
+                <View style={{ marginTop: 5 }}>
+                  {experience.bulletPoints?.map((point, index) => (
+                    <Text key={index} style={styles.bulletPoint}>
+                      • {point}
+                    </Text>
+                  ))}
+                </View>
               )}
             </View>
           ))}

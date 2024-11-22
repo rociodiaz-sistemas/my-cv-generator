@@ -69,6 +69,7 @@ const FormModal: React.FC = () => {
             sx={{
               transition: "all 0.3s ease",
               paddingLeft: 2,
+              height: "100%",
             }}
           >
             <Container
