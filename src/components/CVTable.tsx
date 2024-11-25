@@ -13,7 +13,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../store/store"; // Ensure correct path to RootState
 import { deleteCV, selectCV, clearSelectedCV, setCVs } from "../store/cvSlice";
 import { pdf } from "@react-pdf/renderer";
-import CVTemplate from "./CVTemplate";
+import CVTemplate from "./CVTemplate/CVTemplate";
 import {
   Visibility,
   VisibilityOff,
