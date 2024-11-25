@@ -63,7 +63,7 @@ export const SPACING = {
   },
   section: {
     SECTION_TITLE_PADDING_BOTTOM: "10px",
-    SECTION_PADDING_BOTTOM: "40px",
+    SECTION_PADDING_BOTTOM: "30px",
     SUB_SECTION_PADDING_BOTTOM: "10px",
   },
   title: {

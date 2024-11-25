@@ -168,6 +168,8 @@ const styles = StyleSheet.create({
     display: "flex",
     backgroundColor: COLORS.accentFillBlue,
     padding: 5,
+    paddingTop: 3,
+    paddingBottom: 3,
     fontSize: FONT_SIZES.BODY2_TEXT_FONT_SIZE,
     border: `1px solid ${COLORS.accentBorderBlue}`,
     gap: SPACING.general.CHIP_GAP,
