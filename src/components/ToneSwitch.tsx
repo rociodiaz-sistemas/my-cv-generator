@@ -6,7 +6,9 @@ import { setMatchTone } from "../store/suggestionsSlice";
 
 const ToneSwitch: React.FC = () => {
   const dispatch = useDispatch();
-  const { matchTone } = useSelector((state: RootState) => state.suggestions);
+  const { matchTone, toneOfJobPosting } = useSelector(
+    (state: RootState) => state.suggestions
+  );
   // Handle switch toggle
 
   const handleToggle = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,8 +32,8 @@ const ToneSwitch: React.FC = () => {
 
       {/* Example sentence that adjusts based on the switch */}
       <Typography variant="body2" color="textSecondary" mt={2}>
-        {matchTone
-          ? "We will try to match the tone of your job posting."
+        {matchTone && toneOfJobPosting
+          ? `Found tone: ${toneOfJobPosting}`
           : "We will not match the tone of your job posting."}
       </Typography>
     </Box>

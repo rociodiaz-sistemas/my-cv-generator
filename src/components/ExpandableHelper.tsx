@@ -21,6 +21,10 @@ const ExpandableHelper: React.FC<{ isExpanded: boolean }> = ({
     (state: RootState) => state.suggestions.KeyAttributes
   );
 
+  const { toneOfJobPosting } = useSelector(
+    (state: RootState) => state.suggestions
+  );
+
   // States to manage expand/collapse for each section
   const [isKeyAttributesExpanded, setIsKeyAttributesExpanded] = useState(false);
   const [isJobDescriptionExpanded, setIsJobDescriptionExpanded] =
@@ -122,6 +126,13 @@ const ExpandableHelper: React.FC<{ isExpanded: boolean }> = ({
           <Typography variant="body2">{jobPosting}</Typography>
         </Box>
       </Box>
+
+      {toneOfJobPosting && (
+        <Stack>
+          <Typography variant="h6">Tone of Job Posting</Typography>
+          <Typography variant="body2">{toneOfJobPosting}</Typography>
+        </Stack>
+      )}
     </Box>
   );
 };
