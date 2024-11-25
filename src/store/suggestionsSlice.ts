@@ -14,6 +14,7 @@ interface SuggestionsState {
   currentKnownFor: string[];
   formattedJobPosting: string;
   toneOfJobPosting: string;
+  matchTone: boolean;
 }
 
 const initialState: SuggestionsState = {
@@ -29,6 +30,7 @@ const initialState: SuggestionsState = {
   error: null,
   formattedJobPosting: "",
   currentKnownFor: [],
+  matchTone: false,
   KeyAttributes: {
     technicalSkills: [
       "React",
@@ -114,6 +116,9 @@ const suggestionsSlice = createSlice({
         (item) => item !== action.payload
       );
     },
+    setMatchTone: (state, action: PayloadAction<boolean>) => {
+      state.matchTone = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -150,7 +155,11 @@ const suggestionsSlice = createSlice({
   },
 });
 
-export const { clearSuggestions, addCurrentKnownFor, removeCurrentKnownFor } =
-  suggestionsSlice.actions;
+export const {
+  clearSuggestions,
+  addCurrentKnownFor,
+  removeCurrentKnownFor,
+  setMatchTone,
+} = suggestionsSlice.actions;
 
 export const suggestionsReducer = suggestionsSlice.reducer;

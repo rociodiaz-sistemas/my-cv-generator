@@ -17,6 +17,7 @@ import {
   addCurrentKnownFor,
   removeCurrentKnownFor,
 } from "../../../store/suggestionsSlice";
+import ToneSwitch from "../../ToneSwitch";
 
 const SetupStep: React.FC = () => {
   const dispatch = useDispatch();
@@ -134,6 +135,7 @@ const SetupStep: React.FC = () => {
             />
           ))}
         </Stack>
+        <ToneSwitch />
       </Box>
     </>
   );

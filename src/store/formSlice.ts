@@ -98,7 +98,6 @@ const formSlice = createSlice({
         (exp) => exp.id !== action.payload
       );
     },
-
     // Clear form (reset to initial state)
     clearForm: () => initialState,
   },
