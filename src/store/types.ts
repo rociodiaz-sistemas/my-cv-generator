@@ -4,7 +4,7 @@ export interface CV {
   jobTitle: string;
   introduction: string;
   date: string;
-  skills: string[];
+  skills: Skills;
   experiences: Experience[];
   cvPDFName: string;
 }
@@ -39,7 +39,7 @@ export interface StepConfig {
 
 export interface Profile {
   profileExperiences: Experience[];
-  skills: string[];
+  skills: Skills;
   jobTitle: string;
 }
 
@@ -57,3 +57,8 @@ export interface ExperiencesSuggestions {
 export type PreviewCV = Omit<CV, "id" | "cvPDFName" | "date" | "title">;
 
 export type CVFormData = Omit<CV, "id" | "cvPDFName" | "date">;
+
+export interface Skills {
+  soft: string[];
+  technical: string[];
+}

@@ -371,7 +371,7 @@ const CVTemplate: React.FC<CVTemplateProps> = ({ selectedCV }) => {
             <View style={styles.subSectionContainer}>
               <Text style={styles.sectionSubTitle}>Technical</Text>
               <View style={styles.skillsContainer}>
-                {selectedCV.skills.map((skill, index) => (
+                {selectedCV.skills.technical.map((skill, index) => (
                   <Chip key={index} label={skill} />
                 ))}
               </View>
@@ -379,7 +379,7 @@ const CVTemplate: React.FC<CVTemplateProps> = ({ selectedCV }) => {
             <View style={styles.subSectionContainer}>
               <Text style={styles.sectionSubTitle}>Soft</Text>
               <View style={styles.skillsContainer}>
-                {selectedCV.skills.map((skill, index) => (
+                {selectedCV.skills.soft.map((skill, index) => (
                   <Chip key={index} label={skill} />
                 ))}
               </View>

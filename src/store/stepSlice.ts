@@ -66,6 +66,31 @@ const stepSlice = createSlice({
       }
     },
 
+    jumpToStep: (
+      state,
+      action: PayloadAction<{ mainStep: string; substepIndex?: number }>
+    ) => {
+      const { mainStep, substepIndex = 0 } = action.payload;
+
+      // Validate the main step
+      if (state.mainSteps.includes(mainStep)) {
+        state.activeMainStep = mainStep;
+
+        // Always reset to the first substep if moving to a new main step
+        if (mainStep !== state.activeMainStep) {
+          state.activeSubstepIndex = 0;
+        } else {
+          // Validate the substep index for the current main step
+          const substeps = state.steps[mainStep];
+          if (substepIndex >= 0 && substepIndex < substeps.length) {
+            state.activeSubstepIndex = substepIndex;
+          } else {
+            state.activeSubstepIndex = 0;
+          }
+        }
+      }
+    },
+
     // Dynamically set experience steps based on user selections
     setExperienceSteps: (state, action: PayloadAction<string[]>) => {
       state.steps.experience = action.payload.map((exp, index) => `${exp}`);
@@ -102,6 +127,7 @@ export const {
   setActiveMainStep,
   setActiveSubstepIndex,
   resetSteps,
+  jumpToStep,
 } = stepSlice.actions;
 
 export const stepReducer = stepSlice.reducer;

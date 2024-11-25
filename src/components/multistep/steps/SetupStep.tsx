@@ -29,7 +29,9 @@ const SetupStep: React.FC = () => {
   const { jobTitleSuggestion, company } = useSelector(
     (state: RootState) => state.suggestions
   );
-  const knownFor = useSelector((state: RootState) => state.profile.knownFor);
+  const knownFor = useSelector(
+    (state: RootState) => state.profile.profileSkills.soft
+  );
   const currentKnownFor = useSelector(
     (state: RootState) => state.suggestions.currentKnownFor
   );

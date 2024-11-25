@@ -1,11 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Experience } from "./types";
+import { Experience, Skills } from "./types";
 
 interface FormState {
   jobPosting: string;
   formTitle: string;
   formIntroduction: string;
-  formSkills: string[];
+  formSkills: Skills;
   formExperiences: Experience[];
   formJobTitle: string;
 }
@@ -15,7 +15,10 @@ const initialState: FormState = {
   formJobTitle: "",
   formTitle: "",
   formIntroduction: "",
-  formSkills: [],
+  formSkills: {
+    soft: [],
+    technical: [],
+  },
   formExperiences: [],
 };
 
@@ -53,32 +56,69 @@ const formSlice = createSlice({
       action: PayloadAction<{ field: string; value: string[] | Experience[] }>
     ) => {
       const { field, value } = action.payload;
-      if (field === "skills") {
-        state.formSkills = value as string[];
-      } else if (field === "formExperiences") {
+
+      if (field === "formExperiences") {
         state.formExperiences = value as Experience[];
       }
     },
 
-    // Setters for specific fields
-    setSkills: (state, action: PayloadAction<string[]>) => {
-      state.formSkills = action.payload;
-    },
     setFormExperiences: (state, action: PayloadAction<Experience[]>) => {
       state.formExperiences = action.payload;
     },
 
-    // Adding/removing items from array fields
-    addSkill: (state, action: PayloadAction<string>) => {
-      if (!state.formSkills.includes(action.payload)) {
-        state.formSkills.push(action.payload);
+    // Add a skill to the formSkills (soft or technical)
+    addSkill: (
+      state: FormState,
+      action: PayloadAction<{ category: keyof Skills; skill: string }>
+    ) => {
+      const { category, skill } = action.payload;
+      if (!state.formSkills[category].includes(skill)) {
+        state.formSkills[category].push(skill);
       }
     },
-    removeSkill: (state, action: PayloadAction<string>) => {
-      state.formSkills = state.formSkills.filter(
-        (skill) => skill !== action.payload
+
+    // Remove a skill from formSkills (soft or technical)
+    removeSkill: (
+      state: FormState,
+      action: PayloadAction<{ category: keyof Skills; skill: string }>
+    ) => {
+      const { category, skill } = action.payload;
+      state.formSkills[category] = state.formSkills[category].filter(
+        (existingSkill) => existingSkill !== skill
       );
     },
+
+    // Move a skill between categories in formSkills
+    moveSkill: (
+      state,
+      action: PayloadAction<{
+        from: "soft" | "technical";
+        to: "soft" | "technical";
+        skill: string;
+      }>
+    ) => {
+      const { from, to, skill } = action.payload;
+      if (state.formSkills[from].includes(skill)) {
+        // Remove from the 'from' category
+        state.formSkills[from] = state.formSkills[from].filter(
+          (s) => s !== skill
+        );
+
+        // Add to the 'to' category if it's not already there
+        if (!state.formSkills[to].includes(skill)) {
+          state.formSkills[to].push(skill);
+        }
+      }
+    },
+
+    setSkills: (
+      state: FormState,
+      action: PayloadAction<{ category: keyof Skills; skills: string[] }>
+    ) => {
+      const { category, skills } = action.payload;
+      state.formSkills[category] = skills;
+    },
+
     updateExperienceBulletpoints: (
       state,
       action: PayloadAction<{ id: number; bulletPoints: string[] }>

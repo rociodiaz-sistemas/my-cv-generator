@@ -19,7 +19,10 @@ const OverviewStep: React.FC = () => {
   const [previewCV, setPreviewCV] = useState<PreviewCV>({
     jobTitle: "",
     introduction: "",
-    skills: [],
+    skills: {
+      soft: [],
+      technical: [],
+    },
     experiences: [],
   });
 

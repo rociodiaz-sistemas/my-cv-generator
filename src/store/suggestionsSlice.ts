@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { ExperiencesSuggestions, KeyAttributes } from "./types";
 
 interface SuggestionsState {
-  skillsSuggestions: string[];
   experiencesSuggestions: ExperiencesSuggestions[];
   loading: boolean;
   error: string | null;
@@ -22,7 +21,6 @@ const initialState: SuggestionsState = {
   toneOfJobPosting: "",
   company: "Spark Innovations",
   jobTitleSuggestion: "React Developer",
-  skillsSuggestions: ["ReactJS", "NodeJS", "TypeScript", "React"],
   experiencesSuggestions: [{ id: 1, reason: "Migration" }],
   introductionSuggestion:
     "I am a React Developer with 3 years of experience. I have worked on multiple projects using React, Node.js, and TypeScript. I am passionate about building scalable web applications and solving complex problems.",
@@ -100,7 +98,6 @@ const suggestionsSlice = createSlice({
   initialState,
   reducers: {
     clearSuggestions: (state) => {
-      state.skillsSuggestions = [];
       state.experiencesSuggestions = [];
       state.loading = false;
       state.error = null;
@@ -130,7 +127,6 @@ const suggestionsSlice = createSlice({
         fetchSkillsSuggestions.fulfilled,
         (state, action: PayloadAction<string[]>) => {
           state.loading = false;
-          state.skillsSuggestions = action.payload;
         }
       )
       .addCase(fetchSkillsSuggestions.rejected, (state, action) => {
