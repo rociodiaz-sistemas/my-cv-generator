@@ -21,7 +21,7 @@ const ExpandableHelper: React.FC<{ isExpanded: boolean }> = ({
     (state: RootState) => state.suggestions.KeyAttributes
   );
 
-  const { toneOfJobPosting } = useSelector(
+  const { toneOfJobPosting, jobPostingTips } = useSelector(
     (state: RootState) => state.suggestions
   );
 
@@ -29,6 +29,8 @@ const ExpandableHelper: React.FC<{ isExpanded: boolean }> = ({
   const [isKeyAttributesExpanded, setIsKeyAttributesExpanded] = useState(false);
   const [isJobDescriptionExpanded, setIsJobDescriptionExpanded] =
     useState(false);
+
+  const [isJobTipsExpanded, setIsJobTipsExpanded] = useState(false);
 
   return (
     <Box
@@ -46,6 +48,41 @@ const ExpandableHelper: React.FC<{ isExpanded: boolean }> = ({
       }}
     >
       <Typography variant="h6">Job Posting</Typography>
+
+      <Box sx={{ marginBottom: "1rem", transition: "all 0.3s ease" }}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <Typography variant="subtitle1">Tips</Typography>
+          </Box>
+          <IconButton
+            size="small"
+            onClick={() => setIsJobTipsExpanded((prev) => !prev)}
+          >
+            {isJobTipsExpanded ? <ExpandLess /> : <ExpandMore />}
+          </IconButton>
+        </Box>
+        <Box
+          sx={{
+            height: isJobTipsExpanded ? "auto" : "0px",
+            overflow: "hidden",
+            transition: "height 0.3s ease",
+          }}
+        >
+          <Typography variant="body2">{jobPostingTips}</Typography>
+          {toneOfJobPosting && (
+            <Stack>
+              <Typography variant="subtitle2">Tone</Typography>
+              <Typography variant="body2">{toneOfJobPosting}</Typography>
+            </Stack>
+          )}
+        </Box>
+      </Box>
 
       {/* Key Attributes Section */}
       <Box sx={{ marginBottom: "1rem", transition: "all 0.3s ease" }}>
@@ -126,13 +163,6 @@ const ExpandableHelper: React.FC<{ isExpanded: boolean }> = ({
           <Typography variant="body2">{jobPosting}</Typography>
         </Box>
       </Box>
-
-      {toneOfJobPosting && (
-        <Stack>
-          <Typography variant="h6">Tone of Job Posting</Typography>
-          <Typography variant="body2">{toneOfJobPosting}</Typography>
-        </Stack>
-      )}
     </Box>
   );
 };
