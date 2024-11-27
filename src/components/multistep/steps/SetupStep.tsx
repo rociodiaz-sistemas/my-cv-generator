@@ -16,8 +16,12 @@ import { Add, HelpOutline } from "@mui/icons-material";
 import {
   addCurrentKnownFor,
   removeCurrentKnownFor,
+  setSetupData,
 } from "../../../store/suggestionsSlice";
 import ToneSwitch from "../../ToneSwitch";
+import { useAIResponse } from "../../../hooks/useAIResponses";
+import { createSetupPrompt } from "../../../prompts";
+import Loading from "../../Loading";
 
 const SetupStep: React.FC = () => {
   const dispatch = useDispatch();
@@ -36,17 +40,49 @@ const SetupStep: React.FC = () => {
     (state: RootState) => state.suggestions.currentKnownFor
   );
 
-  // If formJobTitle is empty, initialize it with the jobTitleSuggestion
+  const jobPosting = useSelector(
+    (state: RootState) => state.formData.jobPosting
+  );
+
+  const { data, isLoading, isError } = useAIResponse(
+    createSetupPrompt(jobPosting)
+  );
+
   useEffect(() => {
-    if (!formJobTitle && jobTitleSuggestion) {
-      dispatch(
-        updateStringField({ field: "formJobTitle", value: jobTitleSuggestion })
-      );
+    if (data && data.choices && data.choices.length > 0 && !isLoading) {
+      try {
+        const responseContent = data.choices[0]?.message?.content;
+        if (responseContent) {
+          const parsedData = JSON.parse(responseContent);
+          console.log(responseContent, "responseContent");
+          console.log(parsedData, "parsedData");
+
+          // Save the suggestions in the suggestions slice
+          dispatch(setSetupData(parsedData));
+
+          // Check and update jobTitle and company suggestions in the form only if not set
+          if (!formJobTitle && parsedData.jobTitleSuggestion) {
+            dispatch(
+              updateStringField({
+                field: "formJobTitle",
+                value: parsedData.jobTitleSuggestion,
+              })
+            );
+          }
+          if (!formTitle && parsedData.company) {
+            dispatch(
+              updateStringField({
+                field: "formTitle",
+                value: parsedData.company,
+              })
+            );
+          }
+        }
+      } catch (error) {
+        console.error("Error parsing response content:", error);
+      }
     }
-    if (!formTitle && company) {
-      dispatch(updateStringField({ field: "formTitle", value: company }));
-    }
-  }, [jobTitleSuggestion, formJobTitle, company, formTitle, dispatch]);
+  }, [data, dispatch, formJobTitle, formTitle, isLoading]);
 
   // Handle input field changes
   const handleFieldChange =
@@ -64,6 +100,11 @@ const SetupStep: React.FC = () => {
       dispatch(addCurrentKnownFor(keyword)); // Add to selected (enabled)
     }
   };
+
+  // If loading, show the Loading component
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <>

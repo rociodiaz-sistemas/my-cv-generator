@@ -17,10 +17,10 @@ interface SuggestionsState {
 }
 
 const initialState: SuggestionsState = {
-  jobPostingTips: "React Developer",
+  jobPostingTips: "",
   toneOfJobPosting: "",
-  company: "Spark Innovations",
-  jobTitleSuggestion: "React Developer",
+  company: "",
+  jobTitleSuggestion: "",
   experiencesSuggestions: [{ id: 1, reason: "Migration" }],
   introductionSuggestion:
     "I am a React Developer with 3 years of experience. I have worked on multiple projects using React, Node.js, and TypeScript. I am passionate about building scalable web applications and solving complex problems.",
@@ -30,29 +30,9 @@ const initialState: SuggestionsState = {
   currentKnownFor: [],
   matchTone: false,
   KeyAttributes: {
-    technicalSkills: [
-      "React",
-      "TypeScript",
-      "Redux",
-      "Node.js",
-      "Express",
-      "MongoDB",
-      "PostgreSQL",
-    ],
-    concepts: [
-      "RESTful APIs",
-      "CRUD operations",
-      "Database design",
-      "State management",
-      "Authentication",
-    ],
-    interpersonalSkills: [
-      "Communication",
-      "Teamwork",
-      "Problem-solving",
-      "Time management",
-      "Adaptability",
-    ],
+    technicalSkills: [],
+    concepts: [],
+    interpersonalSkills: [],
   },
 };
 
@@ -97,6 +77,24 @@ const suggestionsSlice = createSlice({
   name: "suggestions",
   initialState,
   reducers: {
+    setSetupData: (state, action: PayloadAction<SuggestionsState>) => {
+      const {
+        company,
+        jobTitleSuggestion,
+        toneOfJobPosting,
+        jobPostingTips,
+        KeyAttributes,
+      } = action.payload;
+      state.company = company || "";
+      state.jobTitleSuggestion = jobTitleSuggestion || "";
+      state.toneOfJobPosting = toneOfJobPosting || "";
+      state.jobPostingTips = jobPostingTips || "";
+      state.KeyAttributes = KeyAttributes || {
+        technicalSkills: [],
+        concepts: [],
+        interpersonalSkills: [],
+      };
+    },
     clearSuggestions: (state) => {
       state.experiencesSuggestions = [];
       state.loading = false;
@@ -108,6 +106,7 @@ const suggestionsSlice = createSlice({
         state.currentKnownFor.push(action.payload);
       }
     },
+
     removeCurrentKnownFor: (state, action: PayloadAction<string>) => {
       state.currentKnownFor = state.currentKnownFor.filter(
         (item) => item !== action.payload
@@ -156,6 +155,7 @@ export const {
   addCurrentKnownFor,
   removeCurrentKnownFor,
   setMatchTone,
+  setSetupData,
 } = suggestionsSlice.actions;
 
 export const suggestionsReducer = suggestionsSlice.reducer;
