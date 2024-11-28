@@ -13,6 +13,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store/store";
 import { updateExperienceBulletpoints } from "../../../store/formSlice";
 import { Experience } from "../../../store/types";
+import { useAIResponse } from "../../../hooks/useAIResponses";
+import { createExperiencePrompt } from "../../../prompts";
+import Loading from "../../Loading";
 
 interface ExperienceStepProps {
   experience: Experience;
@@ -25,13 +28,41 @@ const ExperienceStep: React.FC<ExperienceStepProps> = ({ experience }) => {
     (state: RootState) => state.profile.profileExperiences
   );
 
+  const formJobTitle = useSelector(
+    (state: RootState) => state.formData.formJobTitle
+  );
+
+  const keyAttributes = useSelector(
+    (state: RootState) => state.suggestions.KeyAttributes
+  );
+
+  const { data, isLoading, isError } = useAIResponse(
+    createExperiencePrompt(experience, formJobTitle, keyAttributes)
+  );
+
   const initialBulletPoints = experience?.bulletPoints ?? [];
   const [bulletPoints, setBulletPoints] =
     useState<string[]>(initialBulletPoints);
-  const suggestions = ["suggestion1", "suggestion2"];
+  const [suggestions, setSuggestions] = useState<string[]>([]);
 
   // Refs to store the text input elements
   const bulletPointRefs = useRef<(HTMLTextAreaElement | null)[]>([]);
+
+  useEffect(() => {
+    console.log("ExperienceStep: useEffect");
+    if (data && data.choices && data.choices.length > 0 && !isLoading) {
+      try {
+        const responseContent = data.choices[0]?.message?.content;
+        if (responseContent) {
+          console.log(responseContent);
+          const parsedData = JSON.parse(responseContent);
+          setSuggestions(parsedData.suggestions);
+        }
+      } catch (error) {
+        console.error("Error parsing response content:", error);
+      }
+    }
+  }, [data, dispatch, isLoading]);
 
   // Handler for changes in a bullet point input
   const handleBulletPointChange = (index: number, value: string) => {
@@ -153,12 +184,26 @@ const ExperienceStep: React.FC<ExperienceStepProps> = ({ experience }) => {
     }
   };
 
+  if (isLoading) {
+    return (
+      <Loading whatItsLoading={`your experience at ${experience.company}`} />
+    );
+  }
+
   return (
     <Box>
       {/* Header with title and date */}
       <Stack direction="row" spacing={2} sx={{ marginBottom: 2 }}>
         <Typography variant="body2">{experience.title} - </Typography>
         <Typography variant="body2">{experience.dateFrom}</Typography>
+        {/* Reset Button */}
+        <Button
+          color="secondary"
+          onClick={handleReset} // Reset bullet points
+          sx={{ marginTop: 0, p: 0 }}
+        >
+          Reset
+        </Button>
       </Stack>
 
       {/* Render each bullet point as an individual input */}
@@ -198,26 +243,22 @@ const ExperienceStep: React.FC<ExperienceStepProps> = ({ experience }) => {
       </Box>
 
       {/* Suggested bullet points as Chips */}
-      <Box sx={{ marginBottom: 2 }}>
+      <Stack spacing={1}>
         {suggestions.map((suggestion, index) => (
-          <Chip
+          <Box
+            sx={{
+              backgroundColor: "aliceblue",
+              cursor: "pointer",
+              p: 0.5,
+              borderRadius: 15,
+            }}
             key={index}
-            label={`• ${suggestion}`}
-            onClick={() => handleAddSuggestion(suggestion)} // Add suggestion to Redux
-            sx={{ margin: 1 }}
-          />
+            onClick={() => handleAddSuggestion(suggestion)}
+          >
+            <Typography variant="body2">• {suggestion}</Typography>
+          </Box>
         ))}
-      </Box>
-
-      {/* Reset Button */}
-      <Button
-        variant="outlined"
-        color="secondary"
-        onClick={handleReset} // Reset bullet points
-        sx={{ marginTop: 2 }}
-      >
-        Reset
-      </Button>
+      </Stack>
     </Box>
   );
 };

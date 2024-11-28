@@ -1,19 +1,20 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import { ExperiencesSuggestions, KeyAttributes } from "./types";
+import { ReccomendedExperience, KeyAttributes } from "./types";
 
 interface SuggestionsState {
-  experiencesSuggestions: ExperiencesSuggestions[];
+  experienceSuggestions: string[];
   loading: boolean;
   error: string | null;
   KeyAttributes: KeyAttributes;
   company: string;
   jobTitleSuggestion: string;
-  introductionSuggestion: string;
+  introductionSuggestions: string[];
   jobPostingTips: string;
   currentKnownFor: string[];
   formattedJobPosting: string;
   toneOfJobPosting: string;
   matchTone: boolean;
+  recommendedExperiences: ReccomendedExperience[];
 }
 
 const initialState: SuggestionsState = {
@@ -21,13 +22,13 @@ const initialState: SuggestionsState = {
   toneOfJobPosting: "",
   company: "",
   jobTitleSuggestion: "",
-  experiencesSuggestions: [{ id: 1, reason: "Migration" }],
-  introductionSuggestion:
-    "I am a React Developer with 3 years of experience. I have worked on multiple projects using React, Node.js, and TypeScript. I am passionate about building scalable web applications and solving complex problems.",
+  experienceSuggestions: [],
+  introductionSuggestions: [],
   loading: false,
   error: null,
   formattedJobPosting: "",
   currentKnownFor: [],
+  recommendedExperiences: [],
   matchTone: false,
   KeyAttributes: {
     technicalSkills: [],
@@ -95,8 +96,19 @@ const suggestionsSlice = createSlice({
         interpersonalSkills: [],
       };
     },
+    setIntroductionSuggestions: (state, action: PayloadAction<string[]>) => {
+      state.introductionSuggestions = action.payload;
+    },
+
+    setRecommendedExperiences: (
+      state,
+      action: PayloadAction<ReccomendedExperience[]>
+    ) => {
+      state.recommendedExperiences = action.payload;
+    },
+
     clearSuggestions: (state) => {
-      state.experiencesSuggestions = [];
+      state.experienceSuggestions = [];
       state.loading = false;
       state.error = null;
     },
@@ -136,13 +148,6 @@ const suggestionsSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(
-        fetchExperiencesSuggestions.fulfilled,
-        (state, action: PayloadAction<ExperiencesSuggestions[]>) => {
-          state.loading = false;
-          state.experiencesSuggestions = action.payload;
-        }
-      )
       .addCase(fetchExperiencesSuggestions.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
@@ -156,6 +161,8 @@ export const {
   removeCurrentKnownFor,
   setMatchTone,
   setSetupData,
+  setIntroductionSuggestions,
+  setRecommendedExperiences,
 } = suggestionsSlice.actions;
 
 export const suggestionsReducer = suggestionsSlice.reducer;

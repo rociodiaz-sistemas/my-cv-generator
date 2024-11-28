@@ -49,13 +49,17 @@ const SetupStep: React.FC = () => {
   );
 
   useEffect(() => {
-    if (data && data.choices && data.choices.length > 0 && !isLoading) {
+    if (
+      data &&
+      data.choices &&
+      data.choices.length > 0 &&
+      !isLoading &&
+      !company
+    ) {
       try {
         const responseContent = data.choices[0]?.message?.content;
         if (responseContent) {
           const parsedData = JSON.parse(responseContent);
-          console.log(responseContent, "responseContent");
-          console.log(parsedData, "parsedData");
 
           // Save the suggestions in the suggestions slice
           dispatch(setSetupData(parsedData));
@@ -82,7 +86,7 @@ const SetupStep: React.FC = () => {
         console.error("Error parsing response content:", error);
       }
     }
-  }, [data, dispatch, formJobTitle, formTitle, isLoading]);
+  }, [data, dispatch, formJobTitle, formTitle, isLoading, company]);
 
   // Handle input field changes
   const handleFieldChange =

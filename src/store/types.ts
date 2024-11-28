@@ -49,11 +49,6 @@ export interface KeyAttributes {
   interpersonalSkills: string[];
 }
 
-export interface ExperiencesSuggestions {
-  id: Experience["id"];
-  reason: string;
-}
-
 export type PreviewCV = Omit<CV, "id" | "cvPDFName" | "date" | "title">;
 
 export type CVFormData = Omit<CV, "id" | "cvPDFName" | "date">;
@@ -61,4 +56,10 @@ export type CVFormData = Omit<CV, "id" | "cvPDFName" | "date">;
 export interface Skills {
   soft: string[];
   technical: string[];
+}
+
+export interface ReccomendedExperience {
+  id: Experience["id"];
+  recommended: boolean;
+  reason: string | null;
 }

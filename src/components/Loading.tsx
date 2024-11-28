@@ -2,7 +2,12 @@ import React from "react";
 import { Box, CircularProgress, Typography } from "@mui/material";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 
-const Loading: React.FC = () => {
+interface LoadingProps {
+  whatItsLoading?: string;
+}
+
+const Loading: React.FC<LoadingProps> = ({ whatItsLoading }) => {
+  const whatItsLoadingText = whatItsLoading ? whatItsLoading : "your resume";
   return (
     <Box
       display="flex"
@@ -37,8 +42,8 @@ const Loading: React.FC = () => {
         color="text.secondary"
         sx={{ maxWidth: "80%" }}
       >
-        Hang tight! Our AI is working its magic to enhance your resume and make
-        it shine ✨.
+        Hang tight! Our AI is working its magic to enhance {whatItsLoadingText}{" "}
+        and make it shine ✨.
       </Typography>
     </Box>
   );
