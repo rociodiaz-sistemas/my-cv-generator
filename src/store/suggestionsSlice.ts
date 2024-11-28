@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { ReccomendedExperience, KeyAttributes } from "./types";
+import { capitalizeWords } from "../helpers";
 
 interface SuggestionsState {
   experienceSuggestions: string[];
@@ -95,6 +96,14 @@ const suggestionsSlice = createSlice({
         concepts: [],
         interpersonalSkills: [],
       };
+      state.KeyAttributes.technicalSkills =
+        state.KeyAttributes.technicalSkills.map(capitalizeWords);
+
+      state.KeyAttributes.concepts =
+        state.KeyAttributes.concepts.map(capitalizeWords);
+
+      state.KeyAttributes.interpersonalSkills =
+        state.KeyAttributes.interpersonalSkills.map(capitalizeWords);
     },
     setIntroductionSuggestions: (state, action: PayloadAction<string[]>) => {
       state.introductionSuggestions = action.payload;

@@ -11,6 +11,8 @@ import Loading from "../../Loading";
 const IntroductionStep: React.FC = () => {
   const dispatch = useDispatch();
 
+  const [isComponentLoading, setIsComponentLoading] = React.useState(true);
+
   const profileIntroduction = useSelector(
     (state: RootState) => state.profile.profileIntroduction
   );
@@ -51,7 +53,8 @@ const IntroductionStep: React.FC = () => {
       keyAttributes,
       candidateSkills,
       toneOfJobPosting
-    )
+    ),
+    introductionSuggestions.length < 1
   );
 
   useEffect(() => {
@@ -62,6 +65,7 @@ const IntroductionStep: React.FC = () => {
           const parsedData = JSON.parse(responseContent);
           dispatch(setIntroductionSuggestions(parsedData.introductions));
         }
+        setIsComponentLoading(false);
       } catch (error) {
         console.error("Error parsing response content:", error);
       }
@@ -112,7 +116,7 @@ const IntroductionStep: React.FC = () => {
     navigator.clipboard.writeText(sentence);
   };
 
-  if (isLoading) {
+  if (isComponentLoading) {
     return <Loading whatItsLoading="your introduction" />;
   }
 

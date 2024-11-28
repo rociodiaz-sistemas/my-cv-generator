@@ -44,8 +44,11 @@ const SetupStep: React.FC = () => {
     (state: RootState) => state.formData.jobPosting
   );
 
+  const shouldFetch = !company;
+
   const { data, isLoading, isError } = useAIResponse(
-    createSetupPrompt(jobPosting)
+    createSetupPrompt(jobPosting),
+    shouldFetch
   );
 
   useEffect(() => {

@@ -26,3 +26,7 @@ export const createCV = (cvData: CVFormData) => {
 };
 
 export const YEARS_OF_EXPERIENCE = 6;
+
+// Helper function to capitalize each word in a string
+export const capitalizeWords = (str: string) =>
+  str.replace(/\b\w/g, (char) => char.toUpperCase());

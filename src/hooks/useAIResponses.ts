@@ -31,25 +31,28 @@ const fetchAIResponse = async (prompt: string) => {
 };
 
 // Use queryOptions helper to get the query configuration
-export const aiQueryOptions = (prompt: string) => {
+export const aiQueryOptions = (prompt: string, shouldFetch: boolean) => {
   return queryOptions({
     queryKey: ["ai-response", prompt],
     queryFn: () => fetchAIResponse(prompt),
     staleTime: 60 * 1000, // Cache for 1 minute
     retry: 3, // Retry up to 3 times
     refetchOnWindowFocus: false, // Prevent refetch on window focus
-    enabled: true,
+    enabled: shouldFetch, // Only fetch if shouldFetch is true
   });
 };
 
-export const useAIResponse = (prompt: string) => {
-  return useQuery(aiQueryOptions(prompt));
+export const useAIResponse = (prompt: string, shouldFetch: boolean) => {
+  return useQuery(aiQueryOptions(prompt, shouldFetch));
 };
 
 // Custom hook to handle multiple AI calls
-export const useMultipleAIResponses = (prompts: string[]) => {
+export const useMultipleAIResponses = (
+  prompts: string[],
+  shouldFetch: boolean
+) => {
   const queryResults = useQueries({
-    queries: prompts.map((prompt) => aiQueryOptions(prompt)),
+    queries: prompts.map((prompt) => aiQueryOptions(prompt, shouldFetch)),
   });
 
   return queryResults;

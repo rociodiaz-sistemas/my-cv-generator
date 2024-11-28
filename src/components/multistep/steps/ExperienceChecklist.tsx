@@ -20,6 +20,8 @@ import Loading from "../../Loading";
 const ExperienceChecklist: React.FC = () => {
   const dispatch = useAppDispatch();
 
+  const [isComponentLoading, setIsComponentLoading] = React.useState(true);
+
   // Get the selected experiences from Redux (will include default selections)
   const selectedExperiences = useSelector(
     (state: RootState) => state.ui.selectedExperiences
@@ -40,7 +42,8 @@ const ExperienceChecklist: React.FC = () => {
   );
 
   const { data, isLoading, isError } = useAIResponse(
-    createRecommendedExperiencePrompt(keyAttributes, profileExperiences)
+    createRecommendedExperiencePrompt(keyAttributes, profileExperiences),
+    recommendedExperiences.length < 1
   );
 
   useEffect(() => {
@@ -50,6 +53,7 @@ const ExperienceChecklist: React.FC = () => {
         if (responseContent) {
           const parsedData = JSON.parse(responseContent);
           dispatch(setRecommendedExperiences(parsedData));
+          setIsComponentLoading(false);
         }
       } catch (error) {
         console.error("Error parsing response content:", error);
@@ -86,7 +90,7 @@ const ExperienceChecklist: React.FC = () => {
     dispatch(setExperiencesAndSteps(updatedSelectedExperiences));
   };
 
-  if (isLoading) {
+  if (isComponentLoading) {
     return <Loading whatItsLoading="your selection of experiences" />;
   }
 

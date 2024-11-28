@@ -85,14 +85,14 @@ const styles = StyleSheet.create({
 
   // Containers
   leftSectionContainer: {
-    flex: 3,
+    flex: 4,
     paddingLeft: SPACING.general.PAGE_PADDING_LEFT_RIGHT,
     paddingRight: SPACING.general.PAGE_PADDING_RIGHT,
     paddingTop: SPACING.general.PAGE_PADDING_TOP_BOTTOM,
     paddingBottom: SPACING.general.PAGE_PADDING_TOP_BOTTOM,
   },
   rightSectionContainer: {
-    flex: 1,
+    flex: 2,
     paddingTop: SPACING.general.PAGE_PADDING_TOP_BOTTOM,
     paddingLeft: SPACING.general.RIGHT_COLUMN_PADDING_LEFT,
     paddingRight: SPACING.general.PAGE_PADDING_LEFT_RIGHT,
@@ -173,6 +173,8 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZES.BODY2_TEXT_FONT_SIZE,
     border: `1px solid ${COLORS.accentBorderBlue}`,
     gap: SPACING.general.CHIP_GAP,
+    wordWrap: "no-wrap",
+    maxHeight: "30px",
   },
   name: {
     fontSize: FONT_SIZES.TITLE_FONT_SIZE,
@@ -205,7 +207,7 @@ const styles = StyleSheet.create({
   bodyText: {
     fontSize: FONT_SIZES.BODY_TEXT_FONT_SIZE,
     lineHeight: SPACING.general.BODY_LINE_HEIGHT,
-    textAlign: "justify",
+    textAlign: "left",
   },
   experienceTitleText: {
     fontSize: FONT_SIZES.EXPERIENCE_TITLE_FONT_SIZE,
@@ -259,6 +261,10 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     gap: 0,
   },
+  other: {
+    display: "flex",
+    gap: 2,
+  },
 });
 
 const Chip: React.FC<{ label: string }> = ({ label }) => {
@@ -290,6 +296,13 @@ interface CVTemplateProps {
 }
 
 const CVTemplate: React.FC<CVTemplateProps> = ({ selectedCV }) => {
+  const addPeriodIfMissing = (text: string): string => {
+    if (!text.trim().endsWith(".")) {
+      return `${text.trim()}.`;
+    }
+    return text;
+  };
+
   return (
     <Document>
       <Page size="A4" style={styles.page}>
@@ -300,7 +313,9 @@ const CVTemplate: React.FC<CVTemplateProps> = ({ selectedCV }) => {
             <Text style={styles.jobTitle}>Frontend Developer</Text>
           </View>
           <View style={styles.sectionContainer}>
-            <Text style={styles.sectionTitle}>Experience</Text>
+            <Text
+              style={styles.sectionTitle}
+            >{`Relevant Experience (${selectedCV.experiences.length}/8)`}</Text>
             <View style={styles.experiencesContainer}>
               {selectedCV.experiences.map((experience, index) => (
                 <View style={styles.experienceContainer} key={index}>
@@ -330,7 +345,7 @@ const CVTemplate: React.FC<CVTemplateProps> = ({ selectedCV }) => {
                         <View key={index} style={styles.bulletPointContainer}>
                           <Text style={styles.bulletPoint}>•</Text>
                           <Text style={styles.bulletPointText}>
-                            {bulletPoint}
+                            {addPeriodIfMissing(bulletPoint)}
                           </Text>
                         </View>
                       ))}
@@ -388,8 +403,7 @@ const CVTemplate: React.FC<CVTemplateProps> = ({ selectedCV }) => {
               <Text style={styles.sectionSubTitle}>Other</Text>
               <View>
                 <Text style={styles.bodyText}>• US Citizen</Text>
-                <Text style={styles.bodyText}>• Native English</Text>
-                <Text style={styles.bodyText}>• Native Spanish</Text>
+                <Text style={styles.bodyText}>• Native English/Spanish</Text>
               </View>
             </View>
           </View>

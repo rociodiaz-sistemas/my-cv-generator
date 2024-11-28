@@ -14,7 +14,10 @@ const initialState: CVState = {
   previewCV: {
     jobTitle: "",
     introduction: "",
-    skills: [],
+    skills: {
+      soft: [],
+      technical: [],
+    },
     experiences: [],
   },
 };
@@ -46,7 +49,10 @@ const cvSlice = createSlice({
       state.previewCV = {
         jobTitle: "",
         introduction: "",
-        skills: [],
+        skills: {
+          soft: [],
+          technical: [],
+        },
         experiences: [],
       };
     },

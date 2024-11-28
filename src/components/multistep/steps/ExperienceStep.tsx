@@ -24,6 +24,8 @@ interface ExperienceStepProps {
 const ExperienceStep: React.FC<ExperienceStepProps> = ({ experience }) => {
   const dispatch = useDispatch();
 
+  const [isComponentLoading, setIsComponentLoading] = useState(true);
+
   const profileExperiences = useSelector(
     (state: RootState) => state.profile.profileExperiences
   );
@@ -36,10 +38,6 @@ const ExperienceStep: React.FC<ExperienceStepProps> = ({ experience }) => {
     (state: RootState) => state.suggestions.KeyAttributes
   );
 
-  const { data, isLoading, isError } = useAIResponse(
-    createExperiencePrompt(experience, formJobTitle, keyAttributes)
-  );
-
   const initialBulletPoints = experience?.bulletPoints ?? [];
   const [bulletPoints, setBulletPoints] =
     useState<string[]>(initialBulletPoints);
@@ -48,9 +46,20 @@ const ExperienceStep: React.FC<ExperienceStepProps> = ({ experience }) => {
   // Refs to store the text input elements
   const bulletPointRefs = useRef<(HTMLTextAreaElement | null)[]>([]);
 
+  const { data, isLoading, isError } = useAIResponse(
+    createExperiencePrompt(bulletPoints, formJobTitle, keyAttributes),
+    suggestions.length < 1 // Only fetch if suggestions.length < 1
+  );
+
   useEffect(() => {
     console.log("ExperienceStep: useEffect");
-    if (data && data.choices && data.choices.length > 0 && !isLoading) {
+    if (
+      data &&
+      data.choices &&
+      data.choices.length > 0 &&
+      !isLoading &&
+      suggestions.length < 1
+    ) {
       try {
         const responseContent = data.choices[0]?.message?.content;
         if (responseContent) {
@@ -58,6 +67,7 @@ const ExperienceStep: React.FC<ExperienceStepProps> = ({ experience }) => {
           const parsedData = JSON.parse(responseContent);
           setSuggestions(parsedData.suggestions);
         }
+        setIsComponentLoading(false);
       } catch (error) {
         console.error("Error parsing response content:", error);
       }
@@ -184,7 +194,7 @@ const ExperienceStep: React.FC<ExperienceStepProps> = ({ experience }) => {
     }
   };
 
-  if (isLoading) {
+  if (isComponentLoading) {
     return (
       <Loading whatItsLoading={`your experience at ${experience.company}`} />
     );

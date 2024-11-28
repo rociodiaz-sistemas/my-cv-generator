@@ -5,6 +5,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store/store";
 import { setSkills } from "../../../store/formSlice";
 import { KeyAttributes } from "../../../store/types";
+import { COLORS, FONT_SIZES, SPACING } from "../../CVTemplate/Styles";
+import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+import ReorderableSkills from "../../DragAndDropSkills";
 
 const SkillsStep: React.FC = () => {
   const dispatch = useDispatch();
@@ -104,6 +107,16 @@ const SkillsStep: React.FC = () => {
         [category]: currentSuggestions[category].filter((s) => s !== skill),
       });
     }
+  };
+
+  const handleReorderTechnical = (updatedSkills: string[]) => {
+    // Dispatch the updated technical skills to Redux
+    dispatch(setSkills({ category: "technical", skills: updatedSkills }));
+  };
+
+  const handleReorderSoft = (updatedSkills: string[]) => {
+    // Dispatch the updated technical skills to Redux
+    dispatch(setSkills({ category: "soft", skills: updatedSkills }));
   };
 
   return (
@@ -238,6 +251,17 @@ const SkillsStep: React.FC = () => {
             </Grid>
           </Grid>
         </Grid>
+      </Box>
+      <Box>
+        <Typography variant="h6">Overview</Typography>
+        <ReorderableSkills
+          skills={formSkills.technical}
+          onReorder={handleReorderTechnical}
+        />
+        <ReorderableSkills
+          skills={formSkills.soft}
+          onReorder={handleReorderSoft}
+        />
       </Box>
     </Box>
   );
