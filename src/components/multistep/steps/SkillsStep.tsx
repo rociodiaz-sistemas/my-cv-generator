@@ -1,13 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { Box, Chip, Grid, Typography } from "@mui/material";
+import {
+  Box,
+  Chip,
+  Grid,
+  IconButton,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store/store";
-import { setSkills } from "../../../store/formSlice";
+import { addSkill, removeSkill, setSkills } from "../../../store/formSlice";
 import { KeyAttributes } from "../../../store/types";
-import { COLORS, FONT_SIZES, SPACING } from "../../CVTemplate/Styles";
-import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
-import ReorderableSkills from "../../DragAndDropSkills";
+import ChipInput from "../../ChipInput";
 
 const SkillsStep: React.FC = () => {
   const dispatch = useDispatch();
@@ -16,6 +22,12 @@ const SkillsStep: React.FC = () => {
     technical: string[];
     soft: string[];
   }>({ technical: [], soft: [] });
+
+  const [addedTechnicalSkills, setAddedTechnicalSkills] = useState<string[]>(
+    []
+  );
+
+  const [addedSoftSkills, setAddedSoftSkills] = useState<string[]>([]);
 
   // Redux state selectors
   const profileSkills = useSelector(
@@ -109,14 +121,60 @@ const SkillsStep: React.FC = () => {
     }
   };
 
-  const handleReorderTechnical = (updatedSkills: string[]) => {
-    // Dispatch the updated technical skills to Redux
-    dispatch(setSkills({ category: "technical", skills: updatedSkills }));
+  // const handleReorderTechnical = (updatedSkills: string[]) => {
+  //   // Dispatch the updated technical skills to Redux
+  //   dispatch(setSkills({ category: "technical", skills: updatedSkills }));
+  // };
+
+  // const handleReorderSoft = (updatedSkills: string[]) => {
+  //   // Dispatch the updated technical skills to Redux
+  //   dispatch(setSkills({ category: "soft", skills: updatedSkills }));
+  // };
+
+  const handleAddCustomSkill = (
+    category: "technical" | "soft",
+    skill: string
+  ) => {
+    if (category === "technical") {
+      setAddedTechnicalSkills([...addedTechnicalSkills, skill]);
+      dispatch(
+        setSkills({
+          category,
+          skills: [...formSkills[category], skill], // Add the new skill to the existing skills
+        })
+      );
+    } else {
+      setAddedSoftSkills([...addedSoftSkills, skill]);
+      dispatch(
+        setSkills({
+          category,
+          skills: [...formSkills[category], skill], // Add the new skill to the existing skills
+        })
+      );
+    }
   };
 
-  const handleReorderSoft = (updatedSkills: string[]) => {
-    // Dispatch the updated technical skills to Redux
-    dispatch(setSkills({ category: "soft", skills: updatedSkills }));
+  const handleRemoveCustomSkill = (
+    category: "technical" | "soft",
+    skill: string
+  ) => {
+    if (category === "technical") {
+      setAddedTechnicalSkills(addedTechnicalSkills.filter((s) => s !== skill));
+      dispatch(
+        setSkills({
+          category,
+          skills: formSkills[category].filter((s) => s !== skill),
+        })
+      );
+    } else {
+      setAddedSoftSkills(addedSoftSkills.filter((s) => s !== skill));
+      dispatch(
+        setSkills({
+          category,
+          skills: formSkills[category].filter((s) => s !== skill),
+        })
+      );
+    }
   };
 
   return (
@@ -127,6 +185,12 @@ const SkillsStep: React.FC = () => {
         <Grid container spacing={2}>
           {/* Technical Skills */}
           <Grid item xs={12} md={6}>
+            <ChipInput
+              category={"technical"}
+              onAddSkill={(category, skill) =>
+                handleAddCustomSkill(category, skill)
+              }
+            />
             <Typography variant="subtitle1">Technical Skills:</Typography>
             <Grid container spacing={1}>
               {profileSkills.technical.map((skill) => (
@@ -170,12 +234,32 @@ const SkillsStep: React.FC = () => {
                     />
                   </Grid>
                 ))}
+
+              {/* added techinical skills */}
+              {addedTechnicalSkills.map((skill) => (
+                <Grid item key={skill}>
+                  <Chip
+                    label={skill}
+                    color="success"
+                    onDelete={() => handleRemoveCustomSkill("technical", skill)}
+                    variant="outlined"
+                  />
+                </Grid>
+              ))}
             </Grid>
           </Grid>
 
           {/* Soft Skills */}
+
           <Grid item xs={12} md={6}>
+            <ChipInput
+              category={"soft"}
+              onAddSkill={(category, skill) =>
+                handleAddCustomSkill(category, skill)
+              }
+            />
             <Typography variant="subtitle1">Soft Skills:</Typography>
+
             <Grid container spacing={1}>
               {profileSkills.soft.map((skill) => (
                 <Grid item key={skill}>
@@ -209,6 +293,16 @@ const SkillsStep: React.FC = () => {
                     />
                   </Grid>
                 ))}
+              {addedSoftSkills.map((skill) => (
+                <Grid item key={skill}>
+                  <Chip
+                    label={skill}
+                    color="success"
+                    onDelete={() => handleRemoveCustomSkill("soft", skill)}
+                    variant="outlined"
+                  />
+                </Grid>
+              ))}
             </Grid>
           </Grid>
         </Grid>
@@ -252,7 +346,7 @@ const SkillsStep: React.FC = () => {
           </Grid>
         </Grid>
       </Box>
-      <Box>
+      {/* <Box>
         <Typography variant="h6">Overview</Typography>
         <ReorderableSkills
           skills={formSkills.technical}
@@ -262,7 +356,7 @@ const SkillsStep: React.FC = () => {
           skills={formSkills.soft}
           onReorder={handleReorderSoft}
         />
-      </Box>
+      </Box> */}
     </Box>
   );
 };

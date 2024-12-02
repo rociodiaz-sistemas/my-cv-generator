@@ -11,7 +11,7 @@ import Loading from "../../Loading";
 const IntroductionStep: React.FC = () => {
   const dispatch = useDispatch();
 
-  const [isComponentLoading, setIsComponentLoading] = React.useState(true);
+  const [isComponentLoading, setIsComponentLoading] = React.useState(false);
 
   const profileIntroduction = useSelector(
     (state: RootState) => state.profile.profileIntroduction
@@ -54,11 +54,12 @@ const IntroductionStep: React.FC = () => {
       candidateSkills,
       toneOfJobPosting
     ),
-    introductionSuggestions.length < 1
+    introductionSuggestions && introductionSuggestions.length < 1
   );
 
   useEffect(() => {
     if (data && data.choices && data.choices.length > 0 && !isLoading) {
+      setIsComponentLoading(true);
       try {
         const responseContent = data.choices[0]?.message?.content;
         if (responseContent) {
@@ -116,7 +117,7 @@ const IntroductionStep: React.FC = () => {
     navigator.clipboard.writeText(sentence);
   };
 
-  if (isComponentLoading) {
+  if (isComponentLoading || isLoading) {
     return <Loading whatItsLoading="your introduction" />;
   }
 

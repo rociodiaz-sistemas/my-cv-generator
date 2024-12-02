@@ -20,7 +20,7 @@ import Loading from "../../Loading";
 const ExperienceChecklist: React.FC = () => {
   const dispatch = useAppDispatch();
 
-  const [isComponentLoading, setIsComponentLoading] = React.useState(true);
+  const [isComponentLoading, setIsComponentLoading] = React.useState(false);
 
   // Get the selected experiences from Redux (will include default selections)
   const selectedExperiences = useSelector(
@@ -49,6 +49,7 @@ const ExperienceChecklist: React.FC = () => {
   useEffect(() => {
     if (data && data.choices && data.choices.length > 0 && !isLoading) {
       try {
+        console.log(setIsComponentLoading(true));
         const responseContent = data.choices[0]?.message?.content;
         if (responseContent) {
           const parsedData = JSON.parse(responseContent);

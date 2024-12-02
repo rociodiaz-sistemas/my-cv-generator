@@ -144,7 +144,6 @@ export const createExperiencePrompt = (
   jobTitle: string,
   keyAttributes: KeyAttributes
 ) => {
-  console.log(experience);
   return `I need you to analyze a **candidate experience** for a ${jobTitle} position and compare it to the **job posting key attributes**. Your task is to provide **10 suggestions** on how the experience aligns with the attributes. Your output should be a JSON array of strings, with each suggestion being **one sentence** and ranked by relevance (most accurate first).
 
 ### Instructions:

@@ -115,6 +115,7 @@ const formSlice = createSlice({
       state: FormState,
       action: PayloadAction<{ category: keyof Skills; skills: string[] }>
     ) => {
+      console.log(action.payload);
       const { category, skills } = action.payload;
       state.formSkills[category] = skills;
     },

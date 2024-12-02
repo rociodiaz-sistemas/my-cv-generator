@@ -63,3 +63,8 @@ export interface ReccomendedExperience {
   recommended: boolean;
   reason: string | null;
 }
+
+export interface ExperienceSuggestions {
+  id: Experience["id"];
+  suggestions: string[];
+}

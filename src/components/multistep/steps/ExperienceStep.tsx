@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import {
   Box,
   TextField,
@@ -24,7 +24,7 @@ interface ExperienceStepProps {
 const ExperienceStep: React.FC<ExperienceStepProps> = ({ experience }) => {
   const dispatch = useDispatch();
 
-  const [isComponentLoading, setIsComponentLoading] = useState(true);
+  const [isComponentLoading, setIsComponentLoading] = useState(false);
 
   const profileExperiences = useSelector(
     (state: RootState) => state.profile.profileExperiences
@@ -41,38 +41,32 @@ const ExperienceStep: React.FC<ExperienceStepProps> = ({ experience }) => {
   const initialBulletPoints = experience?.bulletPoints ?? [];
   const [bulletPoints, setBulletPoints] =
     useState<string[]>(initialBulletPoints);
-  const [suggestions, setSuggestions] = useState<string[]>([]);
+
+  const [suggestions, setSuggestions] = useState<string[]>([""]);
 
   // Refs to store the text input elements
   const bulletPointRefs = useRef<(HTMLTextAreaElement | null)[]>([]);
 
   const { data, isLoading, isError } = useAIResponse(
     createExperiencePrompt(bulletPoints, formJobTitle, keyAttributes),
-    suggestions.length < 1 // Only fetch if suggestions.length < 1
+    true
   );
 
   useEffect(() => {
-    console.log("ExperienceStep: useEffect");
-    if (
-      data &&
-      data.choices &&
-      data.choices.length > 0 &&
-      !isLoading &&
-      suggestions.length < 1
-    ) {
+    if (!isLoading && data?.choices?.length > 0) {
       try {
         const responseContent = data.choices[0]?.message?.content;
         if (responseContent) {
-          console.log(responseContent);
           const parsedData = JSON.parse(responseContent);
           setSuggestions(parsedData.suggestions);
         }
-        setIsComponentLoading(false);
       } catch (error) {
         console.error("Error parsing response content:", error);
+      } finally {
+        setIsComponentLoading(false);
       }
     }
-  }, [data, dispatch, isLoading]);
+  }, [isLoading]);
 
   // Handler for changes in a bullet point input
   const handleBulletPointChange = (index: number, value: string) => {
@@ -105,18 +99,18 @@ const ExperienceStep: React.FC<ExperienceStepProps> = ({ experience }) => {
     );
   }, []); // Empty dependency array to run only on mount
 
-  // Handler to add a suggestion as a bullet point
-  const handleAddSuggestion = (suggestion: string) => {
-    setBulletPoints((prev) => [...prev, suggestion]); // Add suggestion as a new bullet point
-
-    // Dispatch updated bullet points to Redux
-    dispatch(
-      updateExperienceBulletpoints({
-        id: experience.id,
-        bulletPoints: [...bulletPoints, suggestion],
-      })
-    );
-  };
+  const handleAddSuggestion = useCallback(
+    (suggestion: string) => {
+      const updatedBulletPoints = [...bulletPoints, suggestion];
+      dispatch(
+        updateExperienceBulletpoints({
+          id: experience.id,
+          bulletPoints: updatedBulletPoints,
+        })
+      );
+    },
+    [bulletPoints, dispatch, experience.id]
+  );
 
   const handleReset = () => {
     const profileExperience = profileExperiences.find(

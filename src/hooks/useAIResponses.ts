@@ -3,11 +3,12 @@ import axios from "axios";
 
 // Define the AI query fetch function
 const fetchAIResponse = async (prompt: string) => {
-  const combinedPrompt = `${prompt}`;
+  const combinedPrompt = `ONLY JSON OUTPUT, NO INTRODUCTIONS OR OTHER MESSAGES ${prompt}`;
   console.log(import.meta.env.VITE_OPENROUTER_API_KEY);
   const response = await axios.post(
     "https://openrouter.ai/api/v1/chat/completions",
     JSON.stringify({
+      // model: "meta-llama/llama-3.1-8b-instruct",
       model: "liquid/lfm-40b:free",
       messages: [{ role: "user", content: combinedPrompt }],
       temperature: 0.0,
@@ -18,12 +19,12 @@ const fetchAIResponse = async (prompt: string) => {
       top_k: 0.0,
       top_p: 1.0,
       transforms: ["remove_redundancy", "group_similar_tasks"],
-      maxTokens: 300,
+      maxTokens: 10000,
     }),
     {
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${import.meta.env.VITE_OPENROUTER_API_KEY}`,
+        Authorization: `Bearer ${import.meta.env.VITE_CHATGPT_API_KEY}`,
       },
     }
   );
