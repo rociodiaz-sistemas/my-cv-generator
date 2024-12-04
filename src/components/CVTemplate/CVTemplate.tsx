@@ -336,7 +336,7 @@ const CVTemplate: React.FC<CVTemplateProps> = ({ selectedCV }) => {
                           {experience.dateFrom} - {experience.dateTo}
                         </Text>
                         <Text style={styles.experienceLocationText}>
-                          {experience.location}
+                          {experience.hireType} - {experience.location}
                         </Text>
                       </View>
                     </View>

@@ -49,7 +49,6 @@ const ExperienceChecklist: React.FC = () => {
   useEffect(() => {
     if (data && data.choices && data.choices.length > 0 && !isLoading) {
       try {
-        console.log(setIsComponentLoading(true));
         const responseContent = data.choices[0]?.message?.content;
         if (responseContent) {
           const parsedData = JSON.parse(responseContent);

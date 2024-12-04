@@ -54,7 +54,7 @@ const IntroductionStep: React.FC = () => {
       candidateSkills,
       toneOfJobPosting
     ),
-    introductionSuggestions && introductionSuggestions.length < 1
+    introductionSuggestions !== undefined
   );
 
   useEffect(() => {
@@ -66,9 +66,10 @@ const IntroductionStep: React.FC = () => {
           const parsedData = JSON.parse(responseContent);
           dispatch(setIntroductionSuggestions(parsedData.introductions));
         }
-        setIsComponentLoading(false);
       } catch (error) {
         console.error("Error parsing response content:", error);
+      } finally {
+        setIsComponentLoading(false);
       }
     }
   }, [data, dispatch, isLoading]);
@@ -138,7 +139,7 @@ const IntroductionStep: React.FC = () => {
       )}
       <Stack spacing={2} sx={{ marginTop: 2 }}>
         <Typography variant="h6">AI Suggestions</Typography>
-        {introductionSuggestions.map((suggestion, index) => (
+        {introductionSuggestions?.map((suggestion, index) => (
           <Stack direction="row" spacing={2} alignItems="center">
             <Box key={index} sx={{ padding: 1, flex: 5 }}>
               {suggestion.split(/[.!?]/).map((sentence, sentenceIndex) => (

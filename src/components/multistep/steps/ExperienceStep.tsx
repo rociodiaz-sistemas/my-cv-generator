@@ -16,6 +16,7 @@ import { Experience } from "../../../store/types";
 import { useAIResponse } from "../../../hooks/useAIResponses";
 import { createExperiencePrompt } from "../../../prompts";
 import Loading from "../../Loading";
+import { addSuggestionsByExperienceId } from "../../../store/suggestionsSlice";
 
 interface ExperienceStepProps {
   experience: Experience;
@@ -38,18 +39,25 @@ const ExperienceStep: React.FC<ExperienceStepProps> = ({ experience }) => {
     (state: RootState) => state.suggestions.KeyAttributes
   );
 
-  const initialBulletPoints = experience?.bulletPoints ?? [];
-  const [bulletPoints, setBulletPoints] =
-    useState<string[]>(initialBulletPoints);
+  const suggestions = useSelector(
+    (state: RootState) =>
+      state.suggestions.experienceSuggestions.find(
+        (item) => item.id === experience.id
+      ) || { suggestions: undefined }
+  );
 
-  const [suggestions, setSuggestions] = useState<string[]>([""]);
+  const bulletPoints = useSelector(
+    (state: RootState) =>
+      state.formData.formExperiences.find((exp) => exp.id === experience.id)
+        ?.bulletPoints ?? []
+  );
 
   // Refs to store the text input elements
   const bulletPointRefs = useRef<(HTMLTextAreaElement | null)[]>([]);
 
   const { data, isLoading, isError } = useAIResponse(
     createExperiencePrompt(bulletPoints, formJobTitle, keyAttributes),
-    true
+    suggestions.suggestions === undefined
   );
 
   useEffect(() => {
@@ -58,7 +66,13 @@ const ExperienceStep: React.FC<ExperienceStepProps> = ({ experience }) => {
         const responseContent = data.choices[0]?.message?.content;
         if (responseContent) {
           const parsedData = JSON.parse(responseContent);
-          setSuggestions(parsedData.suggestions);
+          console.log("Parsed data:", parsedData.updated_experience);
+          dispatch(
+            addSuggestionsByExperienceId({
+              id: experience.id,
+              suggestions: parsedData.updated_experience,
+            })
+          );
         }
       } catch (error) {
         console.error("Error parsing response content:", error);
@@ -73,8 +87,6 @@ const ExperienceStep: React.FC<ExperienceStepProps> = ({ experience }) => {
     const updatedBulletPoints = [...bulletPoints];
     updatedBulletPoints[index] = value; // Update the specific bullet point
 
-    setBulletPoints(updatedBulletPoints);
-
     // Dispatch updated bullet points to Redux
     dispatch(
       updateExperienceBulletpoints({
@@ -88,7 +100,6 @@ const ExperienceStep: React.FC<ExperienceStepProps> = ({ experience }) => {
     const filteredBulletPoints = bulletPoints.filter(
       (point) => point.trim() !== ""
     );
-    setBulletPoints(filteredBulletPoints);
 
     // Dispatch updated bullet points to Redux
     dispatch(
@@ -125,7 +136,6 @@ const ExperienceStep: React.FC<ExperienceStepProps> = ({ experience }) => {
           bulletPoints: profileExperience.bulletPoints ?? [],
         })
       );
-      setBulletPoints(profileExperience.bulletPoints ?? []); // Reset to profile experience bullet points
     }
   };
 
@@ -134,11 +144,12 @@ const ExperienceStep: React.FC<ExperienceStepProps> = ({ experience }) => {
     if (event.key === "Enter") {
       event.preventDefault(); // Prevent default action (new line)
 
-      // Add a new bullet point when Enter is pressed
-      setBulletPoints((prev) => {
-        const updated = [...prev, ""]; // Add an empty string for the new bullet point
-        return updated;
-      });
+      dispatch(
+        updateExperienceBulletpoints({
+          id: experience.id,
+          bulletPoints: [...bulletPoints, ""],
+        })
+      );
 
       // Focus the new bullet point input after adding it
       setTimeout(() => {
@@ -159,10 +170,14 @@ const ExperienceStep: React.FC<ExperienceStepProps> = ({ experience }) => {
       if (bulletPoints[index] === "") {
         // Remove the bullet point if it is empty
         const updatedBulletPoints = [...bulletPoints];
-        updatedBulletPoints.splice(index, 1); // Remove bullet point at the index
 
-        // Update the state
-        setBulletPoints(updatedBulletPoints);
+        updatedBulletPoints.splice(index, 1);
+        dispatch(
+          updateExperienceBulletpoints({
+            id: experience.id,
+            bulletPoints: updatedBulletPoints,
+          })
+        );
 
         // Delay focus management to prevent conflicts
         setTimeout(() => {
@@ -188,7 +203,7 @@ const ExperienceStep: React.FC<ExperienceStepProps> = ({ experience }) => {
     }
   };
 
-  if (isComponentLoading) {
+  if (isComponentLoading || isLoading) {
     return (
       <Loading whatItsLoading={`your experience at ${experience.company}`} />
     );
@@ -248,20 +263,21 @@ const ExperienceStep: React.FC<ExperienceStepProps> = ({ experience }) => {
 
       {/* Suggested bullet points as Chips */}
       <Stack spacing={1}>
-        {suggestions.map((suggestion, index) => (
-          <Box
-            sx={{
-              backgroundColor: "aliceblue",
-              cursor: "pointer",
-              p: 0.5,
-              borderRadius: 15,
-            }}
-            key={index}
-            onClick={() => handleAddSuggestion(suggestion)}
-          >
-            <Typography variant="body2">• {suggestion}</Typography>
-          </Box>
-        ))}
+        {suggestions?.suggestions !== undefined &&
+          suggestions.suggestions.map((suggestion, index) => (
+            <Box
+              key={index}
+              sx={{
+                backgroundColor: "aliceblue",
+                cursor: "pointer",
+                p: 0.5,
+                borderRadius: 15,
+              }}
+              onClick={() => handleAddSuggestion(suggestion)}
+            >
+              <Typography variant="body2">• {suggestion}</Typography>
+            </Box>
+          ))}
       </Stack>
     </Box>
   );

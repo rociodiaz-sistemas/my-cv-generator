@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Experience, Skills } from "./types";
+import exp from "constants";
 
 interface FormState {
   jobPosting: string;
@@ -125,9 +126,10 @@ const formSlice = createSlice({
       action: PayloadAction<{ id: number; bulletPoints: string[] }>
     ) => {
       const { id, bulletPoints } = action.payload;
+      console.log(bulletPoints, "bulletPoints");
       const experience = state.formExperiences.find((exp) => exp.id === id);
-
       if (experience) {
+        console.log("found");
         experience.bulletPoints = bulletPoints;
       }
     },

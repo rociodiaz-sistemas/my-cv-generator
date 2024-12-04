@@ -1,15 +1,19 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import { ReccomendedExperience, KeyAttributes } from "./types";
+import {
+  ReccomendedExperience,
+  KeyAttributes,
+  ExperienceSuggestions,
+} from "./types";
 import { capitalizeWords } from "../helpers";
 
 interface SuggestionsState {
-  experienceSuggestions: string[];
+  experienceSuggestions: ExperienceSuggestions[];
   loading: boolean;
   error: string | null;
   KeyAttributes: KeyAttributes;
   company: string;
   jobTitleSuggestion: string;
-  introductionSuggestions: string[];
+  introductionSuggestions: string[] | undefined;
   jobPostingTips: string;
   currentKnownFor: string[];
   formattedJobPosting: string;
@@ -128,6 +132,26 @@ const suggestionsSlice = createSlice({
       }
     },
 
+    addSuggestionsByExperienceId: (
+      state,
+      action: PayloadAction<{ id: number; suggestions: string[] }>
+    ) => {
+      const { id, suggestions } = action.payload;
+
+      // Check if the experience ID already exists in the suggestions list
+      const existingIndex = state.experienceSuggestions.findIndex(
+        (item) => item.id === id
+      );
+
+      if (existingIndex !== -1) {
+        // Update the existing entry with new suggestions
+        state.experienceSuggestions[existingIndex].suggestions = suggestions;
+      } else {
+        // Add a new entry if the ID doesn't exist
+        state.experienceSuggestions.push({ id, suggestions });
+      }
+    },
+
     removeCurrentKnownFor: (state, action: PayloadAction<string>) => {
       state.currentKnownFor = state.currentKnownFor.filter(
         (item) => item !== action.payload
@@ -172,6 +196,7 @@ export const {
   setSetupData,
   setIntroductionSuggestions,
   setRecommendedExperiences,
+  addSuggestionsByExperienceId,
 } = suggestionsSlice.actions;
 
 export const suggestionsReducer = suggestionsSlice.reducer;

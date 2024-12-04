@@ -144,56 +144,47 @@ export const createExperiencePrompt = (
   jobTitle: string,
   keyAttributes: KeyAttributes
 ) => {
-  return `I need you to analyze a **candidate experience** for a ${jobTitle} position and compare it to the **job posting key attributes**. Your task is to provide **10 suggestions** on how the experience aligns with the attributes. Your output should be a JSON array of strings, with each suggestion being **one sentence** and ranked by relevance (most accurate first).
+  return `I need you to analyze the candidate's job experience descriptions and compare them to the key attributes and skills required for a job posting. Your task is to generate  **20 bullet points** that can **improve**, **add**, or **create new** descriptions based on the candidate's experience and the job posting's key requirements.
 
 ### Instructions:
-1. **Input Details**:
-    - **Candidate Experience**: A single job-related description of the candidate’s past work. It may include technologies, tasks, outcomes, or key achievements.
-    - **Job Posting Key Attributes**: A list of skills, qualities, or technologies required by the job.
+1. **Input Details:**
+    - **Candidate Job Experience (existing bullet points):** A list of bullet points describing the candidate’s previous job experience.
+    - **Job Posting Key Attributes:** A list of skills, technologies, and qualities required by the job posting.
 
-2. **Your Goal**:
-    - Generate suggestions that **highlight how the candidate’s experience** matches or relates to the job posting’s key attributes. These suggestions should improve the candidate’s resume, either by **adding new bullet points**, **modifying existing ones**, or **replacing less relevant information**.
+2. **Your Goal:**
+    - **Improve** the existing bullet points, making them more specific, relevant, and tailored to the job posting.
+    - **Add new bullet points** that align the candidate's experience with missing skills or key attributes from the job posting.
+    - **Generate new bullet points** if there are gaps in the experience or skills that can be inferred based on the job posting.
 
-3. **How to Generate Suggestions**:
-    - **Direct Matches**: Start by focusing on **explicit matches** between the candidate's experience and the job posting attributes (e.g., specific tools, methodologies, or accomplishments).
-    - **Inferred Skills**: Identify **implied qualities** or tools based on the experience. For example:
-        - If the experience mentions "leading a project," infer qualities such as **leadership**, **team collaboration**, or **communication**.
-        - If the experience includes programming but no specific tools, infer commonly used tools (e.g., **Git**, **Node.js**, **React**).
-    - **Creative Suggestions**: Later suggestions (7–10) can be **more speculative**, but they should still be **realistic and plausible** based on the context of the job and the experience.
+3. **How to Generate Bullet Points:**
+    - **Direct Matches:** Focus on matching **explicit** key attributes from the job posting with the candidate’s experience.
+    - **Inferred Skills:** Identify skills or experiences that are **not explicitly mentioned** but can be logically inferred from the candidate's work (e.g., using common tools or frameworks in the industry).
+    - **Create New Bullet Points:** If a key skill or experience is missing, generate a **new bullet point** that seems **realistic** based on the job’s requirements (but should align with the candidate’s overall profile).
+    - **Ensure Relevance:** All bullet points should be **relevant**, **clear**, and **concise**.
 
-4. **Output Format**:
-    - Return your suggestions in a **JSON array** of **10 strings**, each representing **one clear sentence**.
-    - Rank the suggestions by **relevance** and **accuracy**, with the most relevant ones listed first.
+4. **Output Format:**
+    - Return a JSON object containing a list of at least **10 bullet points**. These should include **a mix of improvements**, **new suggestions**, and **inferred additions**.
 
-### Guidelines for Suggestions:
-- **Clarity**: Each suggestion should be **concise and clear**, ideally one sentence.
-- **Accuracy**: Start with **directly supported** suggestions based on the candidate’s experience and job posting attributes.
-- **Inferences**: Use **logical reasoning** to infer skills, qualities, or technologies that the candidate might possess based on their experience.
-- **Speculative Suggestions**: The last suggestions (7–10) can be more **creative** or **imaginative**, but they must still remain realistic and aligned with the job posting’s requirements.
-
-### Output Example:
+### Example Output Format Structure:
 {
-  "suggestions": [
-    "Suggested bullet point 1 based on direct match with the job posting.",
-    "Suggested bullet point 2 based on direct match with the job posting.",
-    "Suggested bullet point 3 with inferred skills or tools.",
-    "Suggested bullet point 4 with inferred leadership qualities.",
-    "Suggested bullet point 5 with inferred technical expertise.",
-    "Suggested bullet point 6 with inferred soft skills.",
-    "Suggested bullet point 7 based on plausible reasoning.",
-    "Suggested bullet point 8 with further inferred details.",
-    "Suggested bullet point 9 with creative but relevant reasoning.",
-    "Suggested bullet point 10 with more speculative connections."
+  "updated_experience": [
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "...",
   ]
 }
+Input for Analysis:
+Candidate Experience:
+${JSON.stringify(experience)}
 
-### Input for Analysis:
-**Candidate Experience**:
-"${JSON.stringify(experience)}"
-
-**Job Posting Key Attributes**:
+Job Posting Key Attributes:
 ${JSON.stringify(keyAttributes)}
-
-Now analyze the provided inputs and generate suggestions in the specified JSON format.
 `;
 };
