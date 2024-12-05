@@ -10,7 +10,6 @@ import SkillsStep from "./steps/SkillsStep";
 import JobPostingForm from "./steps/JobPostingForm";
 import SectionWrapper from "./SectionWrapper";
 import IntroductionStep from "./steps/IntroductionStep";
-import { createSelector } from "reselect";
 
 const FormContent: React.FC = () => {
   const { activeMainStep, activeSubstepIndex, steps } = useSelector(
