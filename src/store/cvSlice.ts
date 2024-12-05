@@ -12,6 +12,7 @@ const initialState: CVState = {
   cvs: JSON.parse(localStorage.getItem("cvs") || "[]"),
   selectedCV: null,
   previewCV: {
+    isSpanish: false,
     jobTitle: "",
     introduction: "",
     skills: {
@@ -35,7 +36,6 @@ const cvSlice = createSlice({
       localStorage.setItem("cvs", JSON.stringify(state.cvs));
     },
     selectCV: (state, action: PayloadAction<string>) => {
-      console.log(state.cvs.find((cv) => cv.id === action.payload));
       state.selectedCV =
         state.cvs.find((cv) => cv.id === action.payload) || null;
     },
@@ -47,6 +47,7 @@ const cvSlice = createSlice({
     },
     resetPreviewCV: (state) => {
       state.previewCV = {
+        isSpanish: false,
         jobTitle: "",
         introduction: "",
         skills: {

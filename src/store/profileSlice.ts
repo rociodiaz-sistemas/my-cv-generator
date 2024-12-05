@@ -179,8 +179,7 @@ const initialState: ProfileState = {
     {
       id: 8,
       label: "StreamCoder",
-      title:
-        "React Typescript Frontend Engineer - Project Manager - UX Designer",
+      title: "React Typescript Engineer - Leader - UX",
       company: "StreamCoder",
       dateFrom: "July 2021",
       dateTo: "Present",

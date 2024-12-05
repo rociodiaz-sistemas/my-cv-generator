@@ -12,6 +12,7 @@ const OverviewStep: React.FC = () => {
     formIntroduction,
     formSkills,
     formExperiences,
+    isSpanish,
   } = useSelector((state: RootState) => state.formData);
 
   const { isHelperExpanded } = useSelector((state: RootState) => state.ui); // Track the expanded state from the store
@@ -23,6 +24,7 @@ const OverviewStep: React.FC = () => {
       soft: [],
       technical: [],
     },
+    isSpanish: false,
     experiences: [],
   });
 
@@ -34,6 +36,7 @@ const OverviewStep: React.FC = () => {
       introduction: formIntroduction || "",
       skills: formSkills || [],
       experiences: formExperiences || [],
+      isSpanish: isSpanish,
     });
   }, [formJobTitle, formTitle, formIntroduction, formSkills, formExperiences]);
 

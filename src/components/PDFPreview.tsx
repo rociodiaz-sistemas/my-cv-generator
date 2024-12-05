@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { pdf } from "@react-pdf/renderer";
 import CVTemplate from "./CVTemplate/CVTemplate";
 import { PreviewCV } from "../store/types";
+import CVTemplateSpanish from "./CVTemplate/CVTemplateSpanish";
 
 interface PDFPreviewProps {
   selectedCV: PreviewCV;
@@ -9,6 +10,7 @@ interface PDFPreviewProps {
 
 const PDFPreview: React.FC<PDFPreviewProps> = ({ selectedCV }) => {
   const [pdfUrl, setPdfUrl] = useState("");
+  const isSpanish = selectedCV.isSpanish;
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
@@ -16,7 +18,13 @@ const PDFPreview: React.FC<PDFPreviewProps> = ({ selectedCV }) => {
   useEffect(() => {
     const generatePdf = async () => {
       if (selectedCV) {
-        const blob = await pdf(<CVTemplate selectedCV={selectedCV} />).toBlob();
+        const blob = await pdf(
+          !isSpanish ? (
+            <CVTemplate selectedCV={selectedCV} />
+          ) : (
+            <CVTemplateSpanish selectedCV={selectedCV} />
+          )
+        ).toBlob();
         const url = URL.createObjectURL(blob);
         setPdfUrl(url);
       }

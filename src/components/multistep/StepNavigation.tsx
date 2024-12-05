@@ -7,6 +7,7 @@ import { submitForm } from "../../store/uiSlice";
 import CVTemplate from "../CVTemplate/CVTemplate";
 import { CV, PreviewCV } from "../../store/types";
 import { pdf } from "@react-pdf/renderer";
+import CVTemplateSpanish from "../CVTemplate/CVTemplateSpanish";
 
 const StepNavigation: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -16,6 +17,8 @@ const StepNavigation: React.FC = () => {
   const { activeMainStep, activeSubstepIndex, mainSteps } = useSelector(
     (state: RootState) => state.step
   );
+
+  const isSpanish = useSelector((state: RootState) => state.formData.isSpanish);
 
   // Check if we're on the last substep of the last main step
   const isLastMainStep = activeMainStep === mainSteps[mainSteps.length - 1];
@@ -36,7 +39,13 @@ const StepNavigation: React.FC = () => {
 
   const handleDownload = async (CV: CV) => {
     if (!CV) return;
-    const blob = await pdf(<CVTemplate selectedCV={CV} />).toBlob();
+    const blob = await pdf(
+      !isSpanish ? (
+        <CVTemplate selectedCV={CV} />
+      ) : (
+        <CVTemplateSpanish selectedCV={CV} />
+      )
+    ).toBlob();
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;

@@ -20,6 +20,7 @@ import {
   Download as DownloadIcon,
   Delete,
 } from "@mui/icons-material";
+import CVTemplateSpanish from "./CVTemplate/CVTemplateSpanish";
 
 const CVTable: React.FC = () => {
   const dispatch = useDispatch();
@@ -40,7 +41,13 @@ const CVTable: React.FC = () => {
   const handleDownload = async (id: string) => {
     const selectedCV = cvs.find((cv) => cv.id === id);
     if (!selectedCV) return;
-    const blob = await pdf(<CVTemplate selectedCV={selectedCV} />).toBlob();
+    const blob = await pdf(
+      !selectedCV.isSpanish ? (
+        <CVTemplate selectedCV={selectedCV} />
+      ) : (
+        <CVTemplateSpanish selectedCV={selectedCV} />
+      )
+    ).toBlob();
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;

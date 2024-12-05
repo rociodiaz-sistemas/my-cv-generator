@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "./store";
 import { resetSteps, setExperienceSteps } from "./stepSlice";
-import { CV, CVFormData, Experience, PreviewCV } from "./types";
+import { CV, Experience } from "./types";
 import { clearForm, setFormExperiences } from "./formSlice";
 import { addCV } from "./cvSlice";
 import { createCV } from "../helpers";
@@ -58,6 +58,7 @@ export const submitForm = createAsyncThunk<CV, void, { state: RootState }>(
       skills: formState.formSkills,
       experiences: formState.formExperiences,
       title: formState.formTitle,
+      isSpanish: formState.isSpanish,
     };
 
     const newCV = createCV(cvData);

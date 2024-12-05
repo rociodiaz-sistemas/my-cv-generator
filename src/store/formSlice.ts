@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Experience, Skills } from "./types";
-import exp from "constants";
 
 interface FormState {
   jobPosting: string;
@@ -9,9 +8,11 @@ interface FormState {
   formSkills: Skills;
   formExperiences: Experience[];
   formJobTitle: string;
+  isSpanish: boolean;
 }
 
 const initialState: FormState = {
+  isSpanish: false,
   jobPosting: "",
   formJobTitle: "",
   formTitle: "",
@@ -141,6 +142,9 @@ const formSlice = createSlice({
         (exp) => exp.id !== action.payload
       );
     },
+    setIsSpanish: (state, action: PayloadAction<boolean>) => {
+      state.isSpanish = action.payload;
+    },
     // Clear form (reset to initial state)
     clearForm: () => initialState,
   },
@@ -157,6 +161,7 @@ export const {
   clearForm,
   setFormExperiences,
   updateExperienceBulletpoints,
+  setIsSpanish,
 } = formSlice.actions;
 
 export const formReducer = formSlice.reducer;

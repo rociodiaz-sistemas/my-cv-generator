@@ -7,6 +7,7 @@ export interface CV {
   skills: Skills;
   experiences: Experience[];
   cvPDFName: string;
+  isSpanish: boolean;
 }
 
 export interface Experience {
