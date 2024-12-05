@@ -39,17 +39,17 @@ export const createIntroductionPrompt = (
   candidatePreviousIntroduction: string,
   jobTitle: string,
   yearsOfExperience: string,
-  knownFor: string[],
   jobPostingTips: string,
   keyAttributes: KeyAttributes,
   candidateSkills: Skills,
-  toneOfJobPosting?: string
+  toneOfJobPosting?: string,
+  knownFor?: string[]
 ) => {
   return `Generate 6 unique, ${toneOfJobPosting} resume introductions for a ${jobTitle} position. Each introduction should:
 
 1. Be 3-5 sentences long.
 2. Optionally highlight the candidate's traits"
-3. Use the provided Years of experience,Job Posting Tips, Candidate Skills, and Key Attributes from the job posting as inspiration but treat all of them as references. You do not need to use everything in each introduction.
+3. Use the provided Years of experience,Job Posting Tips, Candidate Skills (optional, may be empty), and Key Attributes from the job posting as inspiration but treat all of them as references. You do not need to use everything in each introduction.
 4. Compare the **Candidate Skills** and **Key Attributes** from the job posting to align the introductions with job requirements while emphasizing the candidate's strengths.
 5. Optionally compare the candidate's previously used default introduction. If irrelevant, ignore it.
 6. Focus on crafting an impactful, concise summary that is suitable for a ${toneOfJobPosting} resume.
@@ -57,7 +57,9 @@ export const createIntroductionPrompt = (
 ### Key Information:
 - **Job Title**: ${jobTitle}
 - **Years of Experience**: ${yearsOfExperience}
-- **Candidate Traits**: ${Object.values(knownFor).join(", ")}
+- **Candidate Traits**: ${
+    knownFor && knownFor.length > 1 ? Object.values(knownFor).join(", ") : "N/A"
+  }
 - **Job Posting Tips**: ${jobPostingTips}
 = **Candidate's Previous Introduction**: ${candidatePreviousIntroduction}
 - **Candidate Skills**:

@@ -69,3 +69,13 @@ export interface ExperienceSuggestions {
   id: Experience["id"];
   suggestions: string[];
 }
+
+export interface CoverLetter {
+  cvid: CV["id"];
+  id: string;
+  title: string;
+  date: string;
+  salutation: string;
+  letter: string;
+  coverLetterPDFName: string;
+}

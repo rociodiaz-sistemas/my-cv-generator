@@ -16,8 +16,10 @@ const IntroductionStep: React.FC = () => {
   const profileIntroduction = useSelector(
     (state: RootState) => state.profile.profileIntroduction
   );
-  const knownFor = useSelector(
-    (state: RootState) => state.profile.profileSkills.soft
+  const knownFor = useSelector((state: RootState) =>
+    state.profile.profileSkills.soft.length > 0
+      ? state.profile.profileSkills.soft
+      : []
   );
   const candidateSkills = useSelector(
     (state: RootState) => state.profile.profileSkills
@@ -48,11 +50,11 @@ const IntroductionStep: React.FC = () => {
       profileIntroduction,
       jobTitle,
       `6`,
-      knownFor,
       jobPostingTips,
       keyAttributes,
       candidateSkills,
-      toneOfJobPosting
+      toneOfJobPosting,
+      knownFor
     ),
     introductionSuggestions !== undefined
   );
