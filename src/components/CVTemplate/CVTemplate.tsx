@@ -310,7 +310,7 @@ const CVTemplate: React.FC<CVTemplateProps> = ({ selectedCV }) => {
         <View style={styles.leftSectionContainer}>
           <View style={styles.leftSectionHeaderContainer}>
             <Text style={styles.name}>Rocio Diaz</Text>
-            <Text style={styles.jobTitle}>Frontend Developer</Text>
+            <Text style={styles.jobTitle}>{selectedCV.jobTitle}</Text>
           </View>
           <View style={styles.sectionContainer}>
             <Text
@@ -402,7 +402,7 @@ const CVTemplate: React.FC<CVTemplateProps> = ({ selectedCV }) => {
             <View style={styles.subSectionContainer}>
               <Text style={styles.sectionSubTitle}>Other</Text>
               <View>
-                <Text style={styles.bodyText}>• US Citizen</Text>
+                <Text style={styles.bodyText}>• Dual US-ARG Citizenship</Text>
                 <Text style={styles.bodyText}>• Native English/Spanish</Text>
               </View>
             </View>
