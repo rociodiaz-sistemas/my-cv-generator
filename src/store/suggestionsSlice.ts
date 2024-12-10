@@ -20,6 +20,7 @@ interface SuggestionsState {
   toneOfJobPosting: string;
   matchTone: boolean;
   recommendedExperiences: ReccomendedExperience[];
+  qualifications: string[];
 }
 
 const initialState: SuggestionsState = {
@@ -40,6 +41,7 @@ const initialState: SuggestionsState = {
     concepts: [],
     interpersonalSkills: [],
   },
+  qualifications: [],
 };
 
 // Async thunk to fetch suggestions (based on profile and job posting)
@@ -90,6 +92,7 @@ const suggestionsSlice = createSlice({
         toneOfJobPosting,
         jobPostingTips,
         KeyAttributes,
+        qualifications,
       } = action.payload;
       state.company = company || "";
       state.jobTitleSuggestion = jobTitleSuggestion || "";
@@ -108,6 +111,7 @@ const suggestionsSlice = createSlice({
 
       state.KeyAttributes.interpersonalSkills =
         state.KeyAttributes.interpersonalSkills.map(capitalizeWords);
+      state.qualifications = qualifications || [];
     },
     setIntroductionSuggestions: (state, action: PayloadAction<string[]>) => {
       state.introductionSuggestions = action.payload;

@@ -25,12 +25,18 @@ const ExpandableHelper: React.FC<{ isExpanded: boolean }> = ({
     (state: RootState) => state.suggestions
   );
 
+  const qualifications = useSelector(
+    (state: RootState) => state.suggestions.qualifications
+  );
+
   // States to manage expand/collapse for each section
   const [isKeyAttributesExpanded, setIsKeyAttributesExpanded] = useState(false);
   const [isJobDescriptionExpanded, setIsJobDescriptionExpanded] =
     useState(false);
 
   const [isJobTipsExpanded, setIsJobTipsExpanded] = useState(false);
+  const [isQualificationsExpanded, setIsQualificationsExpanded] =
+    useState(false);
 
   return (
     <Box
@@ -49,6 +55,7 @@ const ExpandableHelper: React.FC<{ isExpanded: boolean }> = ({
     >
       <Typography variant="h6">Job Posting</Typography>
 
+      {/* Job Tips Section */}
       <Box sx={{ marginBottom: "1rem", transition: "all 0.3s ease" }}>
         <Box
           sx={{
@@ -81,6 +88,45 @@ const ExpandableHelper: React.FC<{ isExpanded: boolean }> = ({
               <Typography variant="body2">{toneOfJobPosting}</Typography>
             </Stack>
           )}
+        </Box>
+      </Box>
+
+      {/* Qualifications */}
+      <Box sx={{ marginBottom: "1rem", transition: "all 0.3s ease" }}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <Typography variant="subtitle1">Qualifications</Typography>
+            <Tooltip title="These are the AI detected qualifications.">
+              <IconButton size="small">
+                <HelpOutline fontSize="small" />
+              </IconButton>
+            </Tooltip>
+          </Box>
+          <IconButton
+            size="small"
+            onClick={() => setIsQualificationsExpanded((prev) => !prev)}
+          >
+            {isQualificationsExpanded ? <ExpandLess /> : <ExpandMore />}
+          </IconButton>
+        </Box>
+        <Box
+          sx={{
+            height: isQualificationsExpanded ? "auto" : "0px",
+            overflow: "hidden",
+            transition: "height 0.3s ease",
+          }}
+        >
+          {qualifications.map((qualification, index) => (
+            <ul key={index}>
+              <li>{qualification}</li>
+            </ul>
+          ))}
         </Box>
       </Box>
 

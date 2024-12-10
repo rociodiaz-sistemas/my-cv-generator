@@ -12,6 +12,7 @@ KeyAttributes:
 technicalSkills: A list of specific technologies or tools mentioned in the job posting (e.g., programming languages, frameworks, databases).
 concepts: A list of inferred concepts or practices mentioned in the job posting (e.g., Agile, CRUD operations, etc).
 interpersonalSkills: A list of interpersonal skills (soft skills) mentioned in the job posting (e.g., communication, leadership, teamwork).
+qualifications: A list of qualifications or requirements mentioned in the job posting. Use sentences or phrases that describe the expected qualifications.
 
 The examples are merely a demonstration of the expected output. The actual values should be extracted from the job posting text.
 Here is the job posting text:
@@ -30,6 +31,7 @@ Return the extracted information in the following JSON format:
     "concepts": ["string", "string"],
     "interpersonalSkills": ["string", "string"]
   }
+  "qualifications": ["string", "string"]
 }
 
 Ensure that the information is structured and clearly organized based on the details given in the job posting.`;
@@ -143,8 +145,8 @@ ${JSON.stringify(experiences)}
 
 export const createExperiencePrompt = (
   experience: string[],
-  jobTitle: string,
-  keyAttributes: KeyAttributes
+  keyAttributes: KeyAttributes,
+  qualifications: string[]
 ) => {
   return `I need you to analyze the candidate's job experience descriptions and compare them to the key attributes and skills required for a job posting. Your task is to generate  **20 bullet points** that can **improve**, **add**, or **create new** descriptions based on the candidate's experience and the job posting's key requirements.
 
@@ -152,6 +154,7 @@ export const createExperiencePrompt = (
 1. **Input Details:**
     - **Candidate Job Experience (existing bullet points):** A list of bullet points describing the candidate’s previous job experience.
     - **Job Posting Key Attributes:** A list of skills, technologies, and qualities required by the job posting.
+    - **Qualifications and responsabilities:** A list of qualifications, requirements or responsabilities, for the job posting.
 
 2. **Your Goal:**
     - **Improve** the existing bullet points, making them more specific, relevant, and tailored to the job posting.
@@ -188,5 +191,8 @@ ${JSON.stringify(experience)}
 
 Job Posting Key Attributes:
 ${JSON.stringify(keyAttributes)}
+
+Job Posting qualifications and responsabilities:
+${JSON.stringify(qualifications)}
 `;
 };
