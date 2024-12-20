@@ -11,6 +11,7 @@ import {
 } from "@react-pdf/renderer";
 import EmailIcon from "../../assets/icons/email-image.png";
 import LinkedinIcon from "../../assets/icons/linkedin-image.png";
+import SmartPhoneIcon from "../../assets/icons/Layer_1.png";
 import { CV, CVFormData, PreviewCV } from "../../store/types";
 import { COLORS, FONT_SIZES, ICON_PROPERTIES, SPACING } from "./Styles";
 
@@ -313,9 +314,10 @@ const CVTemplate: React.FC<CVTemplateProps> = ({ selectedCV }) => {
             <Text style={styles.jobTitle}>{selectedCV.jobTitle}</Text>
           </View>
           <View style={styles.sectionContainer}>
-            <Text
+            {/* <Text
               style={styles.sectionTitle}
-            >{`Relevant Experience (${selectedCV.experiences.length}/8)`}</Text>
+            >{`Relevant Experience (${selectedCV.experiences.length}/9)`}</Text> */}
+            <Text style={styles.sectionTitle}>{`Experience`}</Text>
             <View style={styles.experiencesContainer}>
               {selectedCV.experiences.map((experience, index) => (
                 <View style={styles.experienceContainer} key={index}>
@@ -376,6 +378,14 @@ const CVTemplate: React.FC<CVTemplateProps> = ({ selectedCV }) => {
                 style={styles.iconLinkedin}
               />
             </View>
+            {/* <View style={styles.contactInformationContainer}>
+              <Detail
+                detail="+54 11-25127060"
+                linkSrc="tel:+541125127060"
+                iconSrc={SmartPhoneIcon}
+                style={styles.iconLinkedin}
+              />
+            </View> */}
           </View>
           <View style={styles.sectionContainer}>
             <Text style={styles.sectionTitle}>About me</Text>
