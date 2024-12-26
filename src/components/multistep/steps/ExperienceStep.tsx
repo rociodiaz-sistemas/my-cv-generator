@@ -31,8 +31,8 @@ const ExperienceStep: React.FC<ExperienceStepProps> = ({ experience }) => {
     (state: RootState) => state.profile.profileExperiences
   );
 
-  const formJobTitle = useSelector(
-    (state: RootState) => state.formData.formJobTitle
+  const qualifications = useSelector(
+    (state: RootState) => state.suggestions.qualifications
   );
 
   const keyAttributes = useSelector(
@@ -56,7 +56,7 @@ const ExperienceStep: React.FC<ExperienceStepProps> = ({ experience }) => {
   const bulletPointRefs = useRef<(HTMLTextAreaElement | null)[]>([]);
 
   const { data, isLoading, isError } = useAIResponse(
-    createExperiencePrompt(bulletPoints, formJobTitle, keyAttributes),
+    createExperiencePrompt(bulletPoints, keyAttributes, qualifications),
     suggestions.suggestions === undefined
   );
 

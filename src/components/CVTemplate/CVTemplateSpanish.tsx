@@ -13,6 +13,7 @@ import EmailIcon from "../../assets/icons/email-image.png";
 import LinkedinIcon from "../../assets/icons/linkedin-image.png";
 import { CV, CVFormData, PreviewCV } from "../../store/types";
 import { COLORS, FONT_SIZES, ICON_PROPERTIES, SPACING } from "./Styles";
+import SmartPhoneIcon from "../../assets/icons/Layer_1.png";
 
 Font.registerHyphenationCallback((word) => [word]);
 
@@ -376,6 +377,14 @@ const CVTemplateSpanish: React.FC<CVTemplateProps> = ({ selectedCV }) => {
                 style={styles.iconLinkedin}
               />
             </View>
+            <View style={styles.contactInformationContainer}>
+              <Detail
+                detail="+54 11-25127060"
+                linkSrc="tel:+541125127060"
+                iconSrc={SmartPhoneIcon}
+                style={styles.iconLinkedin}
+              />
+            </View>
           </View>
           <View style={styles.sectionContainer}>
             <Text style={styles.sectionTitle}>Sobre mí</Text>
@@ -392,7 +401,7 @@ const CVTemplateSpanish: React.FC<CVTemplateProps> = ({ selectedCV }) => {
               </View>
             </View>
             <View style={styles.subSectionContainer}>
-              <Text style={styles.sectionSubTitle}>Blandos</Text>
+              <Text style={styles.sectionSubTitle}>Blandas</Text>
               <View style={styles.skillsContainer}>
                 {selectedCV.skills.soft.map((skill, index) => (
                   <Chip key={index} label={skill} />
