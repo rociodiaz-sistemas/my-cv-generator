@@ -19,12 +19,19 @@ import {
   VisibilityOff,
   Download as DownloadIcon,
   Delete,
+  Edit,
 } from "@mui/icons-material";
 import CVTemplateSpanish from "./CVTemplate/CVTemplateSpanish";
+import { EditForm } from "./EditForm/EditForm";
+import { setIsEditFormModalOpen } from "../store/uiSlice";
 
 const CVTable: React.FC = () => {
   const dispatch = useDispatch();
+  const isEditFormOpen = useSelector(
+    (state: RootState) => state.ui.isEditFormModalOpen
+  );
   const { cvs, selectedCV } = useSelector((state: RootState) => state.cv);
+  const [EditCVId, setEditCVId] = React.useState<string>("");
 
   const handleSelectCv = (id: string) => {
     if (!selectedCV || selectedCV.id !== id) {
@@ -36,6 +43,11 @@ const CVTable: React.FC = () => {
 
   const handleDeleteCv = (id: string) => {
     dispatch(deleteCV(id));
+  };
+
+  const handleEditCv = (cvId: string) => {
+    setEditCVId(cvId);
+    dispatch(setIsEditFormModalOpen(true));
   };
 
   const handleDownload = async (id: string) => {
@@ -100,11 +112,15 @@ const CVTable: React.FC = () => {
                 <Button onClick={() => handleDeleteCv(cv.id)}>
                   <Delete />
                 </Button>
+                <Button onClick={() => handleEditCv(cv.id)}>
+                  <Edit />
+                </Button>
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
+      <EditForm open={isEditFormOpen} cvId={EditCVId} />
     </TableContainer>
   );
 };

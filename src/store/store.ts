@@ -5,6 +5,7 @@ import { cvReducer } from "./cvSlice";
 import { formReducer } from "./formSlice";
 import { stepReducer } from "./stepSlice";
 import { suggestionsReducer } from "./suggestionsSlice";
+import { editFormReducer } from "./editFormSlice";
 
 export const store = configureStore({
   reducer: {
@@ -14,6 +15,7 @@ export const store = configureStore({
     formData: formReducer, // This will hold our form data
     step: stepReducer, // This will hold our step data
     suggestions: suggestionsReducer, // This will hold our suggestions data
+    EditForm: editFormReducer,
   },
 });
 

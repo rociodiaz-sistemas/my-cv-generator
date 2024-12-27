@@ -12,6 +12,7 @@ interface UIState {
   activeStep: number;
   selectedExperiences: number[];
   isHelperExpanded: boolean;
+  isEditFormModalOpen: boolean;
 }
 
 const initialState: UIState = {
@@ -20,6 +21,7 @@ const initialState: UIState = {
   activeStep: 0,
   selectedExperiences: [],
   isHelperExpanded: false,
+  isEditFormModalOpen: false,
 };
 
 export const setExperiencesAndSteps = createAsyncThunk<
@@ -103,6 +105,9 @@ const uiSlice = createSlice({
     setIsHelperExpanded: (state, action: PayloadAction<boolean>) => {
       state.isHelperExpanded = action.payload;
     },
+    setIsEditFormModalOpen: (state, action: PayloadAction<boolean>) => {
+      state.isEditFormModalOpen = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(setExperiencesAndSteps.fulfilled, (state) => {});
@@ -123,6 +128,7 @@ export const {
   setSelectedExperiences,
   setActiveStep,
   setIsHelperExpanded,
+  setIsEditFormModalOpen,
 } = uiSlice.actions;
 
 export const UIReducer = uiSlice.reducer;

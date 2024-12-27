@@ -10,6 +10,7 @@ import React, { useState } from "react";
 import { RootState } from "../store/store";
 import { useSelector } from "react-redux";
 import { ExpandMore, ExpandLess, HelpOutline } from "@mui/icons-material";
+import { ExpandableWrapper } from "./ExpandableWrapper";
 
 const ExpandableHelper: React.FC<{ isExpanded: boolean }> = ({
   isExpanded,
@@ -39,20 +40,7 @@ const ExpandableHelper: React.FC<{ isExpanded: boolean }> = ({
     useState(false);
 
   return (
-    <Box
-      sx={{
-        marginLeft: "2rem",
-        height: "80%",
-        width: isExpanded ? "60%" : "0%",
-        maxWidth: "20vw",
-        display: "block",
-        wordBreak: "break-word",
-        padding: "1rem",
-        overflow: "auto",
-        transition: "width 0.3s",
-        borderLeft: isExpanded ? "1px solid #ccc" : "none",
-      }}
-    >
+    <ExpandableWrapper isExpanded={isExpanded}>
       <Typography variant="h6">Job Posting</Typography>
 
       {/* Job Tips Section */}
@@ -209,7 +197,7 @@ const ExpandableHelper: React.FC<{ isExpanded: boolean }> = ({
           <Typography variant="body2">{jobPosting}</Typography>
         </Box>
       </Box>
-    </Box>
+    </ExpandableWrapper>
   );
 };
 

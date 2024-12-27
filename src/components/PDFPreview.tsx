@@ -6,21 +6,22 @@ import CVTemplateSpanish from "./CVTemplate/CVTemplateSpanish";
 
 interface PDFPreviewProps {
   selectedCV: PreviewCV;
+  onePageOnly?: boolean;
 }
 
-const PDFPreview: React.FC<PDFPreviewProps> = ({ selectedCV }) => {
+const PDFPreview: React.FC<PDFPreviewProps> = ({ selectedCV, onePageOnly }) => {
   const [pdfUrl, setPdfUrl] = useState("");
   const isSpanish = selectedCV.isSpanish;
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
-  // Generate the PDF URL whenever selectedCV changes
   useEffect(() => {
+    console.log("selectedCV changed:", selectedCV);
     const generatePdf = async () => {
       if (selectedCV) {
         const blob = await pdf(
           !isSpanish ? (
-            <CVTemplate selectedCV={selectedCV} />
+            <CVTemplate onePageOnly={onePageOnly} selectedCV={selectedCV} />
           ) : (
             <CVTemplateSpanish selectedCV={selectedCV} />
           )
@@ -31,7 +32,7 @@ const PDFPreview: React.FC<PDFPreviewProps> = ({ selectedCV }) => {
     };
 
     generatePdf();
-  }, [selectedCV]);
+  }, [selectedCV, onePageOnly]);
 
   // Resize the iframe when the container size changes
   useEffect(() => {

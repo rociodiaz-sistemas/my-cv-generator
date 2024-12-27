@@ -292,9 +292,13 @@ const Detail: React.FC<{
 
 interface CVTemplateProps {
   selectedCV: PreviewCV | CV | CVFormData;
+  onePageOnly?: boolean;
 }
 
-const CVTemplate: React.FC<CVTemplateProps> = ({ selectedCV }) => {
+const CVTemplate: React.FC<CVTemplateProps> = ({
+  selectedCV,
+  onePageOnly = false,
+}) => {
   const addPeriodIfMissing = (text: string): string => {
     if (!text.trim().endsWith(".")) {
       return `${text.trim()}.`;
@@ -304,7 +308,7 @@ const CVTemplate: React.FC<CVTemplateProps> = ({ selectedCV }) => {
 
   return (
     <Document pageMode="fullScreen">
-      <Page size="A4" style={styles.page}>
+      <Page size="A4" style={styles.page} wrap={onePageOnly ? false : true}>
         {/* Left Section */}
         <View style={styles.leftSectionContainer}>
           <View style={{ paddingTop: "20px" }} fixed></View>
