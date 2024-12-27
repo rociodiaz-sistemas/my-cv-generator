@@ -415,7 +415,7 @@ const CVTemplate: React.FC<CVTemplateProps> = ({
                 ))}
               </View>
             </View>
-            <View style={styles.subSectionContainer}>
+            <View style={styles.subSectionContainer} break>
               <Text style={styles.sectionSubTitle}>Other</Text>
               <View>
                 <Text style={styles.bodyText}>• Dual US-ARG Citizenship</Text>
