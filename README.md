@@ -1,50 +1,25 @@
-# React + TypeScript + Vite
+# CV Generator Project
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Overview
+The CV Generator is a web application designed to streamline the process of creating professional, AI-assisted CVs. The application allows users to input their details into a step-by-step form, receive AI-generated suggestions, and download a polished CV in PDF format using a pre-designed template.
 
-Currently, two official plugins are available:
+## Features
+- **AI-Powered Suggestions**: Integrated with OpenRouter's Liquid LLM to provide contextually tailored CV suggestions.
+- **Dynamic Form**: Multi-step form built with React and Material UI for a clean, intuitive user interface.
+- **Customizable Template**: Offers a downloadable PDF with the generated CV in a professional template.
+- **State Management**: Leverages Redux for managing form state and user inputs.
+- **Optimized API Calls**: Utilizes React Query for efficient and seamless API data fetching and caching.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Technologies Used
+- **Frontend Framework**: [Vite](https://vitejs.dev/) + [React](https://reactjs.org/) with TypeScript for a modern, fast development experience.
+- **State Management**: [Redux](https://redux.js.org/)
+- **API Management**: [React Query](https://tanstack.com/query)
+- **UI Framework**: [Material UI](https://mui.com/) for a simple and professional design.
+- **AI Integration**: [OpenRouter Liquid LLM](https://openrouter.ai/) for generating CV content.
+- **PDF Generation**: Built-in functionality for exporting CVs as PDFs.
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
-
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+## Installation
+1. Clone the repository
+2. npm install
+3. npm run dev
+4. npm run storybook
