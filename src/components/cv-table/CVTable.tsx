@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo } from "react";
 import {
   Table,
   TableBody,
@@ -13,15 +13,14 @@ import { RootState } from "../../store/store"; // Ensure correct path to RootSta
 import useFetchCVs from "../../hooks/useCvs";
 import { CV } from "../../store/types";
 import CVRow from "./CVRow";
-import { ModalWrapper } from "../modals/ModalWrapper";
-import { EditCVForm } from "../modals/EditCVForm";
-import { CVPreviewModal } from "../modals/CVPreviewModal";
 import { useModal } from "../../hooks/useModal";
 import { setSelectedTableCV } from "../../store/uiSlice";
+import CVModals from "./CVModals";
 
 const CVTable: React.FC = () => {
   const dispatch = useDispatch();
   useFetchCVs();
+
   const editFormModalState = useModal();
   const previewModalState = useModal();
 
@@ -37,6 +36,17 @@ const CVTable: React.FC = () => {
     previewModalState.openModal();
   };
 
+  const memoizedCVRows = useMemo(() => {
+    return cvs.map((cv) => (
+      <CVRow
+        key={cv.id}
+        cv={cv}
+        onEdit={() => handleEditForm(cv)}
+        onPreview={() => handlePreview(cv)}
+      />
+    ));
+  }, [cvs]);
+
   return (
     <>
       <TableContainer component={Paper} style={{ marginTop: "20px" }}>
@@ -48,38 +58,17 @@ const CVTable: React.FC = () => {
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
-          <TableBody>
-            {cvs.map((cv) => (
-              <CVRow
-                key={cv.id}
-                cv={cv}
-                onEdit={() => handleEditForm(cv)}
-                onPreview={() => handlePreview(cv)}
-              />
-            ))}
-          </TableBody>
+          <TableBody>{memoizedCVRows}</TableBody>
         </Table>
       </TableContainer>
 
-      {/* Modal for editing CV */}
-
-      {editFormModalState.isOpen && (
-        <ModalWrapper
-          isOpen={editFormModalState.isOpen}
-          onClose={editFormModalState.closeModal}
-        >
-          <EditCVForm />
-        </ModalWrapper>
-      )}
-      {/* Modal for previewing CV */}
-      {previewModalState.isOpen && (
-        <ModalWrapper
-          isOpen={previewModalState.isOpen}
-          onClose={previewModalState.closeModal}
-        >
-          <CVPreviewModal />
-        </ModalWrapper>
-      )}
+      {/* Modals for editing and previewing CV */}
+      <CVModals
+        isEditFormOpen={editFormModalState.isOpen}
+        isPreviewOpen={previewModalState.isOpen}
+        onEditFormClose={editFormModalState.closeModal}
+        onPreviewClose={previewModalState.closeModal}
+      />
     </>
   );
 };

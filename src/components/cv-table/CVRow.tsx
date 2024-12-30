@@ -13,6 +13,7 @@ interface CVRowProps {
 }
 
 const CVRow: React.FC<CVRowProps> = React.memo(({ cv, onEdit, onPreview }) => {
+  console.log("rendering cv row");
   const handleDeleteCv = (cv: CV) => {
     console.log("deleting cv", cv);
   };

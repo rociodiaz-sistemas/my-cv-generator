@@ -10,6 +10,7 @@ import MenuItem from "@mui/material/MenuItem";
 import MenuList from "@mui/material/MenuList";
 import { useDispatch } from "react-redux";
 import { addEditedCV, saveChanges } from "../../store/editFormSlice";
+import useFetchCVs from "../../hooks/useCvs";
 
 const options = ["Save changes", "Save as new"];
 

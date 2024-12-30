@@ -4,8 +4,11 @@ import { useSelector } from "react-redux";
 import PDFPreview from "../../PDFPreview";
 import { PreviewCV } from "../../../store/types";
 import { Box } from "@mui/material";
+import withLanguageSwitch from "../../cv-template/withLanguageTemplate";
 
 const OverviewStep: React.FC = () => {
+  const PDFPreviewWithLanguage = withLanguageSwitch(PDFPreview);
+
   const {
     formJobTitle,
     formTitle,
@@ -47,7 +50,7 @@ const OverviewStep: React.FC = () => {
 
   return (
     <Box sx={{ height: "60vh" }}>
-      {previewCV && <PDFPreview key={refreshKey} selectedCV={previewCV} />}
+      {previewCV && <PDFPreviewWithLanguage selectedCV={previewCV} />}
     </Box>
   );
 };

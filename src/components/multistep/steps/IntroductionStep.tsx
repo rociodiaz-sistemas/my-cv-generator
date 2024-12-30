@@ -7,11 +7,10 @@ import { createIntroductionPrompt } from "../../../prompts";
 import { useAIResponse } from "../../../hooks/useAIResponses";
 import { setIntroductionSuggestions } from "../../../store/suggestionsSlice";
 import Loading from "../../Loading";
+import withLoading from "../../withLoading";
 
 const IntroductionStep: React.FC = () => {
   const dispatch = useDispatch();
-
-  const [isComponentLoading, setIsComponentLoading] = React.useState(false);
 
   const profileIntroduction = useSelector(
     (state: RootState) => state.profile.profileIntroduction
@@ -61,7 +60,6 @@ const IntroductionStep: React.FC = () => {
 
   useEffect(() => {
     if (data && data.choices && data.choices.length > 0 && !isLoading) {
-      setIsComponentLoading(true);
       try {
         const responseContent = data.choices[0]?.message?.content;
         if (responseContent) {
@@ -70,8 +68,6 @@ const IntroductionStep: React.FC = () => {
         }
       } catch (error) {
         console.error("Error parsing response content:", error);
-      } finally {
-        setIsComponentLoading(false);
       }
     }
   }, [data, dispatch, isLoading]);
@@ -119,10 +115,6 @@ const IntroductionStep: React.FC = () => {
   const copyToClipboard = (sentence: string) => {
     navigator.clipboard.writeText(sentence);
   };
-
-  if (isComponentLoading || isLoading) {
-    return <Loading whatItsLoading="your introduction" />;
-  }
 
   return (
     <>
@@ -177,4 +169,6 @@ const IntroductionStep: React.FC = () => {
   );
 };
 
-export default IntroductionStep;
+export default withLoading(IntroductionStep, {
+  whatItsLoading: "your resume introduction",
+});
