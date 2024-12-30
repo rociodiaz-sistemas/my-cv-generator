@@ -5,6 +5,8 @@ import { CV } from "../../store/types";
 import CVTemplate from "../cv-template/CVTemplate";
 import CVTemplateSpanish from "../cv-template/CVTemplateSpanish";
 import { pdf } from "@react-pdf/renderer";
+import { useAppDispatch } from "../../hooks/useAppDispatch";
+import { deleteCV } from "../../store/cvSlice";
 
 interface CVRowProps {
   cv: CV;
@@ -13,9 +15,9 @@ interface CVRowProps {
 }
 
 const CVRow: React.FC<CVRowProps> = React.memo(({ cv, onEdit, onPreview }) => {
-  console.log("rendering cv row");
+  const dispatch = useAppDispatch();
   const handleDeleteCv = (cv: CV) => {
-    console.log("deleting cv", cv);
+    dispatch(deleteCV(cv.id));
   };
 
   const handleDownloadCV = async (cv: CV) => {

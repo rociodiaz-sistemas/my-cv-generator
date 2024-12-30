@@ -8,23 +8,25 @@ import Paper from "@mui/material/Paper";
 import Popper from "@mui/material/Popper";
 import MenuItem from "@mui/material/MenuItem";
 import MenuList from "@mui/material/MenuList";
-import { useDispatch } from "react-redux";
-import { addEditedCV, saveChanges } from "../../store/editFormSlice";
-import useFetchCVs from "../../hooks/useCvs";
+import { useAppDispatch } from "../../hooks/useAppDispatch";
+import { RootState } from "../../store/store";
+import { useSelector } from "react-redux";
+import { addNewCV, saveCVChanges } from "../../store/cvSlice";
 
 const options = ["Save changes", "Save as new"];
 
 export default function EditSplitSaveButton() {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef<HTMLDivElement>(null);
   const [selectedIndex, setSelectedIndex] = React.useState(1);
+  const cv = useSelector((state: RootState) => state.EditForm.CV);
 
   const handleClick = () => {
     if (selectedIndex === 0) {
-      dispatch(saveChanges());
+      if (cv) dispatch(saveCVChanges(cv));
     } else {
-      dispatch(addEditedCV());
+      if (cv) dispatch(addNewCV(cv));
     }
   };
 
