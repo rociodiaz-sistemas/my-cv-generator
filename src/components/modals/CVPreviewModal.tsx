@@ -1,15 +1,9 @@
 import React from "react";
 import PDFPreview from "../PDFPreview";
-import { CV } from "../../store/types";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store/store";
 
-interface CVPreviewModalProps {
-  cv: CV;
-}
-
-export const CVPreviewModal: React.FC<CVPreviewModalProps> = ({ cv }) => {
-  return (
-    <>
-      <PDFPreview selectedCV={cv} />
-    </>
-  );
+export const CVPreviewModal: React.FC = () => {
+  const cv = useSelector((state: RootState) => state.ui.selectedTableCV);
+  return <>{cv && <PDFPreview selectedCV={cv} />}</>;
 };

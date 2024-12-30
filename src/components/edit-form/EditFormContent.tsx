@@ -1,12 +1,39 @@
-import { Container, TextField } from "@mui/material";
-import React from "react";
+import { Container, TextField, CircularProgress } from "@mui/material";
+import React, { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import EditFormExperience from "./EditFormExperience";
 
 export const EditFormContent: React.FC = () => {
   const dispatch = useDispatch();
-  const CV = useSelector((state: RootState) => state.EditForm.CV);
+  const cv = useSelector((state: RootState) => state.ui.selectedTableCV);
+  const formCV = useSelector((state: RootState) => state.EditForm.CV);
+
+  const jobTitle = useMemo(() => formCV?.jobTitle, [formCV?.jobTitle]);
+  const introduction = useMemo(
+    () => formCV?.introduction,
+    [formCV?.introduction]
+  );
+
+  useEffect(() => {
+    if (cv) {
+      dispatch({
+        type: "editForm/setCV",
+        payload: cv,
+      });
+    }
+  }, [cv]); // Run when cv changes
+
+  if (!formCV) {
+    // Render a loading spinner or fallback UI
+    return (
+      <Container
+        style={{ display: "flex", justifyContent: "center", padding: "20px" }}
+      >
+        <CircularProgress />
+      </Container>
+    );
+  }
 
   return (
     <Container
@@ -15,7 +42,7 @@ export const EditFormContent: React.FC = () => {
       <TextField
         fullWidth
         label="Job Title"
-        value={CV?.jobTitle}
+        value={jobTitle}
         onChange={(e) =>
           dispatch({
             type: "editForm/updateCVField",
@@ -29,7 +56,7 @@ export const EditFormContent: React.FC = () => {
         label="About me"
         multiline
         rows={7}
-        value={CV?.introduction}
+        value={introduction}
         onChange={(e) =>
           dispatch({
             type: "editForm/updateCVField",
@@ -37,7 +64,7 @@ export const EditFormContent: React.FC = () => {
           })
         }
       />
-      {CV?.experiences.map((experience) => (
+      {formCV.experiences.map((experience) => (
         <EditFormExperience key={experience.id} experience={experience} />
       ))}
     </Container>

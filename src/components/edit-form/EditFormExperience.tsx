@@ -1,16 +1,14 @@
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, { useRef, useEffect } from "react";
 import {
   Box,
   TextField,
-  Button,
   Stack,
   Typography,
   InputAdornment,
 } from "@mui/material";
 import { Experience } from "../../store/types";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Circle } from "@mui/icons-material";
-import { RootState } from "../../store/store";
 import { editExperienceBulletpoints } from "../../store/editFormSlice";
 
 interface ExperienceStepProps {
@@ -20,11 +18,7 @@ interface ExperienceStepProps {
 const EditFormExperience: React.FC<ExperienceStepProps> = ({ experience }) => {
   const dispatch = useDispatch();
 
-  const bulletPoints = useSelector(
-    (state: RootState) =>
-      state.EditForm.CV?.experiences.find((exp) => exp.id === experience.id)
-        ?.bulletPoints ?? []
-  );
+  const bulletPoints = experience.bulletPoints ?? [];
 
   // Refs to store the text input elements
   const bulletPointRefs = useRef<(HTMLTextAreaElement | null)[]>([]);

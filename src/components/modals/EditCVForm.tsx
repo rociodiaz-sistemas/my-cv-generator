@@ -3,7 +3,6 @@ import React from "react";
 import { ExpandableOverview } from "../edit-form/ExpandableOverView";
 import { EditFormContent } from "../edit-form/EditFormContent";
 import EditSplitSaveButton from "../edit-form/EditSplitSaveButton";
-
 export const EditCVForm: React.FC = () => {
   return (
     <>
