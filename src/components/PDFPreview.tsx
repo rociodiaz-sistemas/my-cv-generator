@@ -1,30 +1,30 @@
 import React, { useState, useEffect, useRef } from "react";
 import { pdf } from "@react-pdf/renderer";
-import CVTemplate from "./cv-template/CVTemplate";
-import { PreviewCV } from "../store/types";
-import CVTemplateSpanish from "./cv-template/CVTemplateSpanish";
 
 interface PDFPreviewProps {
-  selectedCV: PreviewCV;
+  selectedCV: any;
+  TemplateComponent: React.ComponentType<any>; // Template is passed from the HOC
   onePageOnly?: boolean;
 }
 
-const PDFPreview: React.FC<PDFPreviewProps> = ({ selectedCV, onePageOnly }) => {
+const PDFPreview: React.FC<PDFPreviewProps> = ({
+  selectedCV,
+  TemplateComponent,
+  onePageOnly,
+}) => {
   const [pdfUrl, setPdfUrl] = useState("");
-  const isSpanish = selectedCV.isSpanish;
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    console.log("selectedCV changed:", selectedCV);
     const generatePdf = async () => {
       if (selectedCV) {
+        // Use the TemplateComponent directly, passed by the HOC
         const blob = await pdf(
-          !isSpanish ? (
-            <CVTemplate onePageOnly={onePageOnly} selectedCV={selectedCV} />
-          ) : (
-            <CVTemplateSpanish selectedCV={selectedCV} />
-          )
+          <TemplateComponent
+            onePageOnly={onePageOnly}
+            selectedCV={selectedCV}
+          />
         ).toBlob();
         const url = URL.createObjectURL(blob);
         setPdfUrl(url);
@@ -32,27 +32,7 @@ const PDFPreview: React.FC<PDFPreviewProps> = ({ selectedCV, onePageOnly }) => {
     };
 
     generatePdf();
-  }, [selectedCV, onePageOnly]);
-
-  // Resize the iframe when the container size changes
-  useEffect(() => {
-    const resizeObserver = new ResizeObserver(() => {
-      if (iframeRef.current && containerRef.current) {
-        // iframeRef.current.style.height = `${containerRef.current.offsetHeight}px`;
-        iframeRef.current.style.width = "100%"; // Ensure full width
-      }
-    });
-
-    if (containerRef.current) {
-      resizeObserver.observe(containerRef.current);
-    }
-
-    return () => {
-      if (containerRef.current) {
-        resizeObserver.unobserve(containerRef.current);
-      }
-    };
-  }, []);
+  }, [selectedCV, TemplateComponent, onePageOnly]);
 
   return pdfUrl ? (
     <div ref={containerRef} style={{ width: "100%", height: "100%" }}>

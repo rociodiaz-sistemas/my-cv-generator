@@ -5,10 +5,12 @@ import { RootState } from "../../store/store";
 import { Box, FormControlLabel, IconButton, Switch } from "@mui/material";
 import React, { useState } from "react";
 import { ArrowBack, ArrowForward } from "@mui/icons-material";
+import withLanguageSwitch from "../cv-template/withLanguageTemplate";
 
 export const ExpandableOverview: React.FC = () => {
   const [isOverviewExpanded, setIsOverviewExpanded] = useState(true);
   const FormCV = useSelector((state: RootState) => state.EditForm.CV);
+  const PDFPreviewWithLanguage = withLanguageSwitch(PDFPreview);
   const [onePageOnly, setOnePageOnly] = useState(false);
 
   const handleOnePageOnly = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,7 +31,7 @@ export const ExpandableOverview: React.FC = () => {
           }
           label="Show only one page?"
         />
-        {FormCV && <PDFPreview onePageOnly={onePageOnly} selectedCV={FormCV} />}
+        {FormCV && <PDFPreviewWithLanguage selectedCV={FormCV} />}
       </ExpandableWrapper>
       {/* Button to toggle expansion */}
       <Box sx={{ position: "absolute", top: "50%", right: "5px" }}>
