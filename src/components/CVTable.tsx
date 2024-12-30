@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   Button,
   Table,
@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../store/store"; // Ensure correct path to RootState
-import { deleteCV, selectCV, clearSelectedCV, setCVs } from "../store/cvSlice";
+import { deleteCV, selectCV, clearSelectedCV } from "../store/cvSlice";
 import { pdf } from "@react-pdf/renderer";
 import CVTemplate from "./CVTemplate/CVTemplate";
 import {
@@ -22,35 +22,25 @@ import {
   Edit,
 } from "@mui/icons-material";
 import CVTemplateSpanish from "./CVTemplate/CVTemplateSpanish";
-import { EditForm } from "./EditForm/EditForm";
+import { EditFormModal } from "./EditForm/EditFormModal";
 import { setIsEditFormModalOpen } from "../store/uiSlice";
+import { setCV } from "../store/editFormSlice";
+import { CV } from "../store/types";
+import useFetchCVs from "../hooks/useCvs";
+import { CVPreviewModal } from "./CVPreviewModal";
 
 const CVTable: React.FC = () => {
   const dispatch = useDispatch();
-  const isEditFormOpen = useSelector(
-    (state: RootState) => state.ui.isEditFormModalOpen
-  );
-  const { cvs, selectedCV } = useSelector((state: RootState) => state.cv);
-  const [EditCVId, setEditCVId] = React.useState<string>("");
-
-  const handleSelectCv = (id: string) => {
-    if (!selectedCV || selectedCV.id !== id) {
-      dispatch(selectCV(id));
-    } else {
-      dispatch(clearSelectedCV());
-    }
-  };
+  useFetchCVs();
+  const { cvs } = useSelector((state: RootState) => state.cv);
+  const [isViewModalOpen, setIsViewModalOpen] = React.useState(false);
+  const [cvToView, setCVToView] = React.useState({} as CV);
 
   const handleDeleteCv = (id: string) => {
     dispatch(deleteCV(id));
   };
 
-  const handleEditCv = (cvId: string) => {
-    setEditCVId(cvId);
-    dispatch(setIsEditFormModalOpen(true));
-  };
-
-  const handleDownload = async (id: string) => {
+  const handleDownloadCV = async (id: string) => {
     const selectedCV = cvs.find((cv) => cv.id === id);
     if (!selectedCV) return;
     const blob = await pdf(
@@ -68,10 +58,19 @@ const CVTable: React.FC = () => {
     URL.revokeObjectURL(url);
   };
 
-  useEffect(() => {
-    const storedCVs = JSON.parse(localStorage.getItem("cvs") || "[]");
-    dispatch(setCVs(storedCVs));
-  }, [dispatch]);
+  const handleEditCv = (cv: CV) => {
+    dispatch(setCV(cv));
+    dispatch(setIsEditFormModalOpen(true));
+  };
+
+  const handleViewCV = (cv: CV) => {
+    setCVToView(cv);
+    setIsViewModalOpen(true);
+  };
+
+  const handleCloseViewModal = () => {
+    setIsViewModalOpen(false);
+  };
 
   return (
     <TableContainer component={Paper} style={{ marginTop: "20px" }}>
@@ -85,34 +84,20 @@ const CVTable: React.FC = () => {
         </TableHead>
         <TableBody>
           {cvs.map((cv) => (
-            <TableRow
-              sx={{
-                backgroundColor:
-                  selectedCV?.id === cv.id ? "#d1e3f4" : "inherit",
-              }}
-              key={cv.id}
-            >
-              <TableCell onClick={() => handleSelectCv(cv.id)}>
-                {cv.title}
-              </TableCell>
-              <TableCell onClick={() => handleSelectCv(cv.id)}>
-                {cv.date}
-              </TableCell>
+            <TableRow key={cv.id}>
+              <TableCell onClick={() => handleViewCV(cv)}>{cv.title}</TableCell>
+              <TableCell onClick={() => handleViewCV(cv)}>{cv.date}</TableCell>
               <TableCell>
-                <Button onClick={() => handleSelectCv(cv.id)}>
-                  {selectedCV?.id === cv.id ? (
-                    <VisibilityOff />
-                  ) : (
-                    <Visibility />
-                  )}
+                <Button onClick={() => handleViewCV(cv)}>
+                  <Visibility />
                 </Button>
-                <Button onClick={() => handleDownload(cv.id)}>
+                <Button onClick={() => handleDownloadCV(cv.id)}>
                   <DownloadIcon />
                 </Button>
                 <Button onClick={() => handleDeleteCv(cv.id)}>
                   <Delete />
                 </Button>
-                <Button onClick={() => handleEditCv(cv.id)}>
+                <Button onClick={() => handleEditCv(cv)}>
                   <Edit />
                 </Button>
               </TableCell>
@@ -120,7 +105,12 @@ const CVTable: React.FC = () => {
           ))}
         </TableBody>
       </Table>
-      <EditForm open={isEditFormOpen} cvId={EditCVId} />
+      <EditFormModal />
+      <CVPreviewModal
+        cv={cvToView}
+        isModalOpen={isViewModalOpen}
+        handleCloseModal={handleCloseViewModal}
+      />
     </TableContainer>
   );
 };

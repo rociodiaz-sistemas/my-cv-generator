@@ -9,7 +9,7 @@ interface CVState {
 }
 
 const initialState: CVState = {
-  cvs: JSON.parse(localStorage.getItem("cvs") || "[]"),
+  cvs: [],
   selectedCV: null,
   previewCV: {
     isSpanish: false,

@@ -9,8 +9,6 @@ import FormModal from "./multistep/FormModal";
 
 const Home: React.FC = () => {
   const dispatch = useDispatch();
-
-  const { selectedCV } = useSelector((state: RootState) => state.cv);
   const handleOpenModal = () => {
     dispatch(openModal());
   };
@@ -31,9 +29,6 @@ const Home: React.FC = () => {
         </Button>
         <CVTable />
         <FormModal />
-        <div style={{ height: "100vh" }}>
-          {selectedCV && <PDFPreview selectedCV={selectedCV} />}
-        </div>
       </Container>
     </>
   );
