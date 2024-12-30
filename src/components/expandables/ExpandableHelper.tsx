@@ -7,9 +7,9 @@ import {
   Tooltip,
 } from "@mui/material";
 import React, { useState } from "react";
-import { RootState } from "../store/store";
 import { useSelector } from "react-redux";
 import { ExpandMore, ExpandLess, HelpOutline } from "@mui/icons-material";
+import { RootState } from "../../store/store";
 import { ExpandableWrapper } from "./ExpandableWrapper";
 
 const ExpandableHelper: React.FC<{ isExpanded: boolean }> = ({

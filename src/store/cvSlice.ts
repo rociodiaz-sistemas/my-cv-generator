@@ -33,7 +33,7 @@ const cvSlice = createSlice({
     },
     deleteCV: (state, action: PayloadAction<string>) => {
       state.cvs = state.cvs.filter((cv) => cv.id !== action.payload);
-      localStorage.setItem("cvs", JSON.stringify(state.cvs));
+      deleteCV(action.payload);
     },
     selectCV: (state, action: PayloadAction<string>) => {
       state.selectedCV =
