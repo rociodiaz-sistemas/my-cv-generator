@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { pdf } from "@react-pdf/renderer";
-import CVTemplate from "./CVTemplate/CVTemplate";
+import CVTemplate from "./cv-template/CVTemplate";
 import { PreviewCV } from "../store/types";
-import CVTemplateSpanish from "./CVTemplate/CVTemplateSpanish";
+import CVTemplateSpanish from "./cv-template/CVTemplateSpanish";
 
 interface PDFPreviewProps {
   selectedCV: PreviewCV;

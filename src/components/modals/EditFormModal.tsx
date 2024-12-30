@@ -1,9 +1,9 @@
 import { Container, Grid } from "@mui/material";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { ExpandableOverview } from "./ExpandableOverView";
-import { EditFormContent } from "./EditFormContent";
-import EditSplitSaveButton from "./EditSplitSaveButton";
+import { ExpandableOverview } from "../edit-form/ExpandableOverView";
+import { EditFormContent } from "../edit-form/EditFormContent";
+import EditSplitSaveButton from "../edit-form/EditSplitSaveButton";
 import { ModalBox } from "../ModalBox";
 import { RootState } from "../../store/store";
 import { setIsEditFormModalOpen } from "../../store/uiSlice";

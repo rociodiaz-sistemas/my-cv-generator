@@ -1,11 +1,9 @@
 import React from "react";
 import { Container, Typography, Button } from "@mui/material";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../store/store";
-import PDFPreview from "./PDFPreview";
+import { useDispatch } from "react-redux";
 import CVTable from "./CVTable";
 import { openModal } from "../store/uiSlice";
-import FormModal from "./multistep/FormModal";
+import AddFormModal from "./modals/AddFormModal";
 
 const Home: React.FC = () => {
   const dispatch = useDispatch();
@@ -28,7 +26,7 @@ const Home: React.FC = () => {
           Add CV
         </Button>
         <CVTable />
-        <FormModal />
+        <AddFormModal />
       </Container>
     </>
   );

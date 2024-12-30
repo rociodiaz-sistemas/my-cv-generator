@@ -5,13 +5,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import { closeModal, setIsHelperExpanded } from "../../store/uiSlice";
 import { clearForm } from "../../store/formSlice";
-import VerticalStepper from "./VerticalStepper";
-import StepNavigation from "./StepNavigation";
-import FormContent from "./FormContent";
+import VerticalStepper from "../multistep/VerticalStepper";
+import StepNavigation from "../multistep/StepNavigation";
+import FormContent from "../multistep/FormContent";
 import ExpandableHelper from "../ExpandableHelper";
 import { resetSteps } from "../../store/stepSlice";
 
-const FormModal: React.FC = () => {
+const AddFormModal: React.FC = () => {
   const { isModalOpen, isHelperExpanded } = useSelector(
     (state: RootState) => state.ui
   );
@@ -108,4 +108,4 @@ const FormModal: React.FC = () => {
   );
 };
 
-export default FormModal;
+export default AddFormModal;

@@ -4,10 +4,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
 import { nextStep, previousStep } from "../../store/stepSlice";
 import { submitForm } from "../../store/uiSlice";
-import CVTemplate from "../CVTemplate/CVTemplate";
+import CVTemplate from "../cv-template/CVTemplate";
 import { CV, PreviewCV } from "../../store/types";
 import { pdf } from "@react-pdf/renderer";
-import CVTemplateSpanish from "../CVTemplate/CVTemplateSpanish";
+import CVTemplateSpanish from "../cv-template/CVTemplateSpanish";
 
 const StepNavigation: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
