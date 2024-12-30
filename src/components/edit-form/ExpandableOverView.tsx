@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { ExpandableWrapper } from "../ExpandableWrapper";
+import { ExpandableWrapper } from "../expandables/ExpandableWrapper";
 import PDFPreview from "../PDFPreview";
 import { RootState } from "../../store/store";
 import { Box, FormControlLabel, IconButton, Switch } from "@mui/material";

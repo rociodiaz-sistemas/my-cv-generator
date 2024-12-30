@@ -1,7 +1,7 @@
 import React from "react";
 import { Container, Typography, Button } from "@mui/material";
 import { useDispatch } from "react-redux";
-import CVTable from "./CVTable";
+import CVTable from "./cv-table/CVTable";
 import { openModal } from "../store/uiSlice";
 import AddFormModal from "./modals/AddFormModal";
 

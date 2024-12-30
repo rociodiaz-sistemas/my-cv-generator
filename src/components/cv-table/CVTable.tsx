@@ -10,23 +10,23 @@ import {
   Paper,
 } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../store/store"; // Ensure correct path to RootState
-import { deleteCV } from "../store/cvSlice";
+import { RootState } from "../../store/store"; // Ensure correct path to RootState
+import { deleteCV } from "../../store/cvSlice";
 import { pdf } from "@react-pdf/renderer";
-import CVTemplate from "./cv-template/CVTemplate";
+import CVTemplate from "../cv-template/CVTemplate";
 import {
   Visibility,
   Download as DownloadIcon,
   Delete,
   Edit,
 } from "@mui/icons-material";
-import CVTemplateSpanish from "./cv-template/CVTemplateSpanish";
-import { EditFormModal } from "./modals/EditFormModal";
-import { setIsEditFormModalOpen } from "../store/uiSlice";
-import { setCV } from "../store/editFormSlice";
-import { CV } from "../store/types";
-import useFetchCVs from "../hooks/useCvs";
-import { CVPreviewModal } from "./CVPreviewModal";
+import CVTemplateSpanish from "../cv-template/CVTemplateSpanish";
+import { EditFormModal } from "../modals/EditFormModal";
+import { setIsEditFormModalOpen } from "../../store/uiSlice";
+import { setCV } from "../../store/editFormSlice";
+import { CV } from "../../store/types";
+import useFetchCVs from "../../hooks/useCvs";
+import { CVPreviewModal } from "../CVPreviewModal";
 
 const CVTable: React.FC = () => {
   const dispatch = useDispatch();

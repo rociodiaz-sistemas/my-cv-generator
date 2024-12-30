@@ -8,7 +8,7 @@ import { clearForm } from "../../store/formSlice";
 import VerticalStepper from "../multistep/VerticalStepper";
 import StepNavigation from "../multistep/StepNavigation";
 import FormContent from "../multistep/FormContent";
-import ExpandableHelper from "../ExpandableHelper";
+import ExpandableHelper from "../expandables/ExpandableHelper";
 import { resetSteps } from "../../store/stepSlice";
 
 const AddFormModal: React.FC = () => {
