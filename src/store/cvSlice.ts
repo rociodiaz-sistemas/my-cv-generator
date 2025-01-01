@@ -3,7 +3,12 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { CV, PreviewCV } from "./types";
 import { db } from "../db/CVDatabase";
 import { v4 as uuidv4 } from "uuid";
-import { updateCV, addCV as addCVToDB } from "../db/CVOperations";
+import {
+  updateCV,
+  addCV as addCVToDB,
+  deleteCV as deleteCVFromDB,
+  getAllCVs,
+} from "../db/CVOperations";
 
 interface CVState {
   cvs: CV[];
@@ -16,14 +21,14 @@ interface CVState {
 // Refactor saveCVChanges to take cv directly as a parameter
 export const saveCVChanges = createAsyncThunk(
   "cv/saveCVChanges",
-  async (cv: CV, { rejectWithValue, dispatch }) => {
+  async (cv: CV, { rejectWithValue }) => {
     if (!cv) {
       return rejectWithValue("No CV found");
     }
 
     try {
       await updateCV(cv.id, { ...cv });
-      dispatch(fetchCVs()); // Trigger refetch after update
+      await getAllCVs();
       return cv;
     } catch (error) {
       return rejectWithValue("Error saving CV");
@@ -34,7 +39,7 @@ export const saveCVChanges = createAsyncThunk(
 // Refactor addNewCV to take cv directly and create a new copy
 export const addNewCV = createAsyncThunk(
   "cv/addNewCV",
-  async (cv: CV, { rejectWithValue, dispatch }) => {
+  async (cv: CV, { rejectWithValue }) => {
     if (!cv) {
       return rejectWithValue("No CV found to copy");
     }
@@ -42,7 +47,7 @@ export const addNewCV = createAsyncThunk(
     try {
       const newCV = { ...cv, id: uuidv4(), title: `${cv.title} - Copy` };
       await addCVToDB(newCV);
-      dispatch(fetchCVs()); // Trigger refetch after adding
+      await getAllCVs();
       return newCV;
     } catch (error) {
       return rejectWithValue("Error adding new CV");
@@ -52,10 +57,10 @@ export const addNewCV = createAsyncThunk(
 
 export const deleteCV = createAsyncThunk(
   "cv/deleteCV",
-  async (cvId: string, { rejectWithValue, dispatch }) => {
+  async (cvId: string, { rejectWithValue }) => {
     try {
-      await db.cvs.delete(cvId);
-      dispatch(fetchCVs()); // Trigger refetch after delete
+      await deleteCVFromDB(cvId);
+      await getAllCVs();
       return cvId;
     } catch (error) {
       return rejectWithValue("Error deleting CV");
@@ -66,7 +71,7 @@ export const deleteCV = createAsyncThunk(
 // Define the fetchCVs action
 export const fetchCVs = createAsyncThunk("cv/fetchCVs", async () => {
   try {
-    return await db.cvs.toArray();
+    return await getAllCVs();
   } catch (error) {
     console.error("Error fetching CVs:", error);
     return [];
