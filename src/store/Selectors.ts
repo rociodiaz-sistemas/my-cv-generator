@@ -1,12 +1,17 @@
-import { createSelector } from "@reduxjs/toolkit";
+// selectors.ts
+import { createSelector } from "reselect";
 import { RootState } from "./store";
 
-// Memoized selector to extract specific data
-export const selectBulletPoints = createSelector(
-  (state: RootState) => state.formData.formExperiences,
-  (_, experienceId: string) => experienceId,
-  (formExperiences, experienceId) =>
-    formExperiences.find(
-      (exp: { id: string; bulletPoints: string[] }) => exp.id === experienceId
-    )?.bulletPoints ?? []
-);
+// Basic selector to get the entire CV from the store
+const selectCV = (state: RootState) => state.EditForm.CV;
+
+// Memoized selector for getting bullet points from the CV
+export const selectBulletPoints = (state: RootState, experienceId: number) =>
+  selectCV(state)?.experiences.find((exp) => exp.id === experienceId)
+    ?.bulletPoints ?? [];
+
+// Memoized selector for filtered bullet points (non-empty ones)
+export const makeSelectBulletPoints = () =>
+  createSelector([selectBulletPoints], (bulletPoints) =>
+    bulletPoints.filter((point) => point.trim() !== "")
+  );
