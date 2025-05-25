@@ -8,7 +8,7 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "../../store/store"; // Ensure correct path to RootState
 import useFetchCVs from "../../hooks/useCvs";
 import { CVRow } from "./CVRow";
@@ -18,7 +18,7 @@ const CVTable: React.FC = () => {
   const { cvs } = useSelector((state: RootState) => state.cv);
 
   return (
-    <TableContainer component={Paper} style={{ marginTop: "20px" }}>
+    <TableContainer component={Paper}>
       <Table>
         <TableHead>
           <TableRow>

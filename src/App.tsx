@@ -2,17 +2,29 @@ import React from "react";
 
 import { Provider } from "react-redux";
 import { store } from "./store/store";
-import Home from "./components/Home";
+import Home from "./pages/Home";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Routes, Route } from "react-router-dom";
+import { Container, CssBaseline, ThemeProvider } from "@mui/material";
+import { theme } from "./theme";
+import Nav from "./components/nav/nav";
 
 const App: React.FC = () => {
   const queryClient = new QueryClient();
   return (
-    <QueryClientProvider client={queryClient}>
-      <Provider store={store}>
-        <Home />
-      </Provider>
-    </QueryClientProvider>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <QueryClientProvider client={queryClient}>
+        <Provider store={store}>
+          <Nav />
+          <Container>
+            <Routes>
+              <Route path="/" element={<Home />} />
+            </Routes>
+          </Container>
+        </Provider>
+      </QueryClientProvider>
+    </ThemeProvider>
   );
 };
 
