@@ -8,6 +8,8 @@ import { createCV } from "../helpers";
 
 interface UIState {
   isModalOpen: boolean;
+  isManualModalOpen: boolean;
+  isProfileModalOpen: boolean;
   isFormSubmitted: boolean;
   activeStep: number;
   selectedExperiences: number[];
@@ -17,6 +19,8 @@ interface UIState {
 
 const initialState: UIState = {
   isModalOpen: false, // Initially, the modal is closed
+  isManualModalOpen: false, // Manual builder modal is closed
+  isProfileModalOpen: false,
   isFormSubmitted: false, // Form is not submitted initially
   activeStep: 0,
   selectedExperiences: [],
@@ -56,6 +60,12 @@ export const submitForm = createAsyncThunk<CV, void, { state: RootState }>(
     // Construct the CV data from the form state
     const cvData = {
       jobTitle: formState.formJobTitle,
+      fullName: formState.formFullName,
+      email: formState.formEmail,
+      phone: formState.formPhone,
+      linkedin: formState.formLinkedin,
+      website: formState.formWebsite,
+      location: formState.formLocation,
       introduction: formState.formIntroduction,
       skills: formState.formSkills,
       experiences: formState.formExperiences,
@@ -82,6 +92,18 @@ const uiSlice = createSlice({
     },
     closeModal: (state) => {
       state.isModalOpen = false; // Close the modal
+    },
+    openManualModal: (state) => {
+      state.isManualModalOpen = true;
+    },
+    closeManualModal: (state) => {
+      state.isManualModalOpen = false;
+    },
+    openProfileModal: (state) => {
+      state.isProfileModalOpen = true;
+    },
+    closeProfileModal: (state) => {
+      state.isProfileModalOpen = false;
     },
     resetForm: (state) => {
       state.isFormSubmitted = false; // Reset form submission state
@@ -121,6 +143,10 @@ const uiSlice = createSlice({
 export const {
   openModal,
   closeModal,
+  openManualModal,
+  closeManualModal,
+  openProfileModal,
+  closeProfileModal,
   resetForm,
   incrementStep,
   decrementStep,

@@ -2,6 +2,12 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Experience, Skills } from "./types";
 
 interface ProfileState {
+  profileFullName: string;
+  profileEmail: string;
+  profilePhone: string;
+  profileLinkedin: string;
+  profileWebsite: string;
+  profileLocation: string;
   profileJobTitle: string;
   profileSkills: Skills;
   profileExperiences: Experience[];
@@ -9,7 +15,15 @@ interface ProfileState {
   profileIntroduction: string;
 }
 
-const initialState: ProfileState = {
+const PROFILE_STORAGE_KEY = "profileState";
+
+const defaultProfileState: ProfileState = {
+  profileFullName: "Rocio Diaz",
+  profileEmail: "rory.d.dev@gmail.com",
+  profilePhone: "+54 11-25127060",
+  profileLinkedin: "in/rory-diaz",
+  profileWebsite: "",
+  profileLocation: "Argentina",
   profileJobTitle: "React Typescript Developer",
   profileSkills: {
     technical: [
@@ -217,12 +231,29 @@ const initialState: ProfileState = {
   ],
 };
 
+const getInitialProfileState = (): ProfileState => {
+  try {
+    const storedProfile = localStorage.getItem(PROFILE_STORAGE_KEY);
+    if (storedProfile) {
+      return {
+        ...defaultProfileState,
+        ...JSON.parse(storedProfile),
+      };
+    }
+  } catch (error) {
+    console.error("Error loading profile state:", error);
+  }
+
+  return defaultProfileState;
+};
+
 const profileSlice = createSlice({
   name: "profile",
-  initialState,
+  initialState: getInitialProfileState(),
   reducers: {
     setProfile: (state, action: PayloadAction<Partial<ProfileState>>) => {
-      state = { ...state, ...action.payload };
+      Object.assign(state, action.payload);
+      localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(state));
     },
   },
 });

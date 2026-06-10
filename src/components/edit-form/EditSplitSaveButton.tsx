@@ -8,23 +8,47 @@ import Paper from "@mui/material/Paper";
 import Popper from "@mui/material/Popper";
 import MenuItem from "@mui/material/MenuItem";
 import MenuList from "@mui/material/MenuList";
-import { useDispatch } from "react-redux";
-import { addEditedCV, saveChanges } from "../../store/editFormSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../store/store";
+import { setCVs } from "../../store/cvSlice";
+import { setCV } from "../../store/editFormSlice";
+import { setIsEditFormModalOpen } from "../../store/uiSlice";
+import { db } from "../../db/CVDatabase";
+import { v4 as uuidv4 } from "uuid";
 
 const options = ["Save changes", "Save as new"];
 
 export default function EditSplitSaveButton() {
   const dispatch = useDispatch();
+  const currentCV = useSelector((state: RootState) => state.EditForm.CV);
+  const cvs = useSelector((state: RootState) => state.cv.cvs);
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef<HTMLDivElement>(null);
-  const [selectedIndex, setSelectedIndex] = React.useState(1);
+  const [selectedIndex, setSelectedIndex] = React.useState(0);
 
-  const handleClick = () => {
+  const handleClick = async () => {
+    if (!currentCV) return;
+
     if (selectedIndex === 0) {
-      dispatch(saveChanges());
+      await db.cvs.put(currentCV);
+      dispatch(
+        setCVs(cvs.map((cv) => (cv.id === currentCV.id ? currentCV : cv)))
+      );
     } else {
-      dispatch(addEditedCV());
+      const copiedCV = {
+        ...currentCV,
+        id: uuidv4(),
+        title: `${currentCV.title} - Copy`,
+        cvPDFName: `${currentCV.cvPDFName}-copy`,
+        date: new Date().toLocaleDateString(),
+      };
+
+      await db.cvs.add(copiedCV);
+      dispatch(setCVs([...cvs, copiedCV]));
     }
+
+    dispatch(setIsEditFormModalOpen(false));
+    dispatch(setCV(undefined));
   };
 
   const handleMenuItemClick = (
@@ -39,10 +63,10 @@ export default function EditSplitSaveButton() {
     setOpen((prevOpen) => !prevOpen);
   };
 
-  const handleClose = (event: Event) => {
+  const handleClose = (_event: Event) => {
     if (
       anchorRef.current &&
-      anchorRef.current.contains(event.target as HTMLElement)
+      anchorRef.current.contains(_event.target as HTMLElement)
     ) {
       return;
     }

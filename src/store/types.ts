@@ -1,6 +1,14 @@
 export interface CV {
   id: string;
   title: string;
+  fullName?: string;
+  email?: string;
+  phone?: string;
+  linkedin?: string;
+  linkedinText?: string;
+  linkedinUrl?: string;
+  website?: string;
+  location?: string;
   jobTitle: string;
   introduction: string;
   date: string;

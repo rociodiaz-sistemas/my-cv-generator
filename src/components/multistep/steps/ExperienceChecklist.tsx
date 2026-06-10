@@ -35,6 +35,9 @@ const ExperienceChecklist: React.FC = () => {
   const profileExperiences = useSelector(
     (state: RootState) => state.profile.profileExperiences
   );
+  const defaultCheckedExperiences = useSelector(
+    (state: RootState) => state.profile.defaultCheckedExperiences
+  );
 
   // Get recommended experiences from AI response
   const recommendedExperiences = useSelector(
@@ -62,13 +65,22 @@ const ExperienceChecklist: React.FC = () => {
   }, [data, dispatch, isLoading]);
 
   useEffect(() => {
-    // When the component mounts, we want to set the selected experiences to the defaultCheckedExperiences
+    // When the component mounts, we want to seed the selected experiences from the profile defaults.
     if (selectedExperiences.length === 0) {
       const selectedExperiencesList = profileExperiences.filter((exp) =>
-        recommendedExperiences.find(
-          (rec) => rec.id === exp.id && rec.recommended
-        )
+        defaultCheckedExperiences.includes(exp.id)
       );
+
+      if (selectedExperiencesList.length === 0) {
+        const fallbackExperiences = profileExperiences.filter((exp) =>
+          recommendedExperiences.find(
+            (rec) => rec.id === exp.id && rec.recommended
+          )
+        );
+        dispatch(setExperiencesAndSteps(fallbackExperiences));
+        return;
+      }
+
       dispatch(setExperiencesAndSteps(selectedExperiencesList));
     }
   }, [
@@ -76,6 +88,7 @@ const ExperienceChecklist: React.FC = () => {
     selectedExperiences,
     recommendedExperiences,
     profileExperiences,
+    defaultCheckedExperiences,
   ]);
 
   const handleCheckboxChange = (id: number, checked: boolean) => {

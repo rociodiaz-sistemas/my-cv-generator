@@ -1,9 +1,11 @@
 import React from "react";
-import { Button } from "@mui/material";
+import { Button, Stack } from "@mui/material";
 import { useDispatch } from "react-redux";
 import CVTable from "../components/cv-table/CVTable";
-import { openModal } from "../store/uiSlice";
+import { openManualModal, openModal } from "../store/uiSlice";
 import AddFormModal from "../components/modals/AddFormModal";
+import ManualCVFormModal from "../components/modals/ManualCVFormModal";
+import { EditCVModal } from "../components/modals/EditCVModal";
 
 const Home: React.FC = () => {
   const dispatch = useDispatch();
@@ -11,18 +13,28 @@ const Home: React.FC = () => {
     dispatch(openModal());
   };
 
+  const handleOpenManualModal = () => {
+    dispatch(openManualModal());
+  };
+
   return (
     <>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={handleOpenModal}
-        sx={{ float: "right" }}
+      <Stack
+        direction={{ xs: "column", sm: "row" }}
+        spacing={2}
+        sx={{ justifyContent: "flex-end", mb: 2 }}
       >
-        Add CV
-      </Button>
+        <Button variant="outlined" onClick={handleOpenManualModal}>
+          Build CV manually
+        </Button>
+        <Button variant="contained" color="primary" onClick={handleOpenModal}>
+          AI CV wizard
+        </Button>
+      </Stack>
       <CVTable />
       <AddFormModal />
+      <ManualCVFormModal />
+      <EditCVModal />
     </>
   );
 };

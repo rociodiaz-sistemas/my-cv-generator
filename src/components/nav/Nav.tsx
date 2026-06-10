@@ -13,6 +13,8 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import handshakeLogo from "../../assets/icons/handshake.svg";
 import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { openProfileModal } from "../../store/uiSlice";
 
 const pages = [
   { label: "Home", link: "/" },
@@ -21,6 +23,7 @@ const pages = [
 const settings = ["Profile", "Settings", "Logout"];
 
 function Nav() {
+  const dispatch = useDispatch();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
@@ -174,7 +177,15 @@ function Nav() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <MenuItem
+                  key={setting}
+                  onClick={() => {
+                    if (setting === "Profile") {
+                      dispatch(openProfileModal());
+                    }
+                    handleCloseUserMenu();
+                  }}
+                >
                   <Typography sx={{ textAlign: "center" }}>
                     {setting}
                   </Typography>

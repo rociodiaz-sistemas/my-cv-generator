@@ -278,18 +278,41 @@ const Chip: React.FC<{ label: string }> = ({ label }) => {
 
 const Detail: React.FC<{
   detail: string;
-  linkSrc: string;
+  linkSrc?: string;
   iconSrc: string;
   style?: any;
 }> = ({ detail, linkSrc, iconSrc, style }) => {
   return (
     <View style={styles.contactInformationDetail}>
       <Image style={style} src={iconSrc} />
-      <Link src={linkSrc}>
+      {linkSrc ? (
+        <Link src={linkSrc}>
+          <Text style={styles.contactInformationDetail}>{detail}</Text>
+        </Link>
+      ) : (
         <Text style={styles.contactInformationDetail}>{detail}</Text>
-      </Link>
+      )}
     </View>
   );
+};
+
+const normalizeWebsiteLink = (website?: string) => {
+  if (!website) return "";
+  if (website.startsWith("http://") || website.startsWith("https://")) {
+    return website;
+  }
+  return `https://${website}`;
+};
+
+const getLinkedInLabel = (cv: CV | CVFormData | PreviewCV) =>
+  cv.linkedinText || cv.linkedin || "";
+
+const getLinkedInUrl = (cv: CV | CVFormData | PreviewCV) => {
+  if (cv.linkedinUrl) return cv.linkedinUrl;
+  if (cv.linkedin && (cv.linkedin.startsWith("http://") || cv.linkedin.startsWith("https://"))) {
+    return cv.linkedin;
+  }
+  return undefined;
 };
 
 interface CVTemplateProps {
@@ -310,7 +333,7 @@ const CVTemplateSpanish: React.FC<CVTemplateProps> = ({ selectedCV }) => {
         {/* Left Section */}
         <View style={styles.leftSectionContainer}>
           <View style={styles.leftSectionHeaderContainer}>
-            <Text style={styles.name}>Rocio Diaz</Text>
+            <Text style={styles.name}>{selectedCV.fullName || "Rocio Diaz"}</Text>
             <Text style={styles.jobTitle}>{selectedCV.jobTitle}</Text>
           </View>
           <View style={styles.sectionContainer}>
@@ -361,30 +384,46 @@ const CVTemplateSpanish: React.FC<CVTemplateProps> = ({ selectedCV }) => {
         {/* Right Section */}
         <View style={styles.rightSectionContainer}>
           <View style={styles.rightSectionHeaderContainer}>
-            <View style={styles.contactInformationContainer}>
-              <Detail
-                detail="rory.d.dev@gmail.com"
-                linkSrc="mailto:rory.d.dev@gmail.com"
-                iconSrc={EmailIcon}
-                style={styles.iconEmail}
-              />
-            </View>
-            <View style={styles.contactInformationContainer}>
-              <Detail
-                detail="in/rory-diaz"
-                linkSrc="https://www.linkedin.com/in/rory-diaz/"
-                iconSrc={LinkedinIcon}
-                style={styles.iconLinkedin}
-              />
-            </View>
-            <View style={styles.contactInformationContainer}>
-              <Detail
-                detail="+54 11-25127060"
-                linkSrc="tel:+541125127060"
-                iconSrc={SmartPhoneIcon}
-                style={styles.iconLinkedin}
-              />
-            </View>
+            {selectedCV.email && (
+              <View style={styles.contactInformationContainer}>
+                <Detail
+                  detail={selectedCV.email}
+                  linkSrc={`mailto:${selectedCV.email}`}
+                  iconSrc={EmailIcon}
+                  style={styles.iconEmail}
+                />
+              </View>
+            )}
+            {getLinkedInLabel(selectedCV) && (
+              <View style={styles.contactInformationContainer}>
+                <Detail
+                  detail={getLinkedInLabel(selectedCV)}
+                  linkSrc={getLinkedInUrl(selectedCV)}
+                  iconSrc={LinkedinIcon}
+                  style={styles.iconLinkedin}
+                />
+              </View>
+            )}
+            {selectedCV.phone && (
+              <View style={styles.contactInformationContainer}>
+                <Detail
+                  detail={selectedCV.phone}
+                  linkSrc={`tel:${selectedCV.phone.replace(/[^\d+]/g, "")}`}
+                  iconSrc={SmartPhoneIcon}
+                  style={styles.iconLinkedin}
+                />
+              </View>
+            )}
+            {selectedCV.website && (
+              <View style={styles.contactInformationContainer}>
+                <Detail
+                  detail={selectedCV.website}
+                  linkSrc={normalizeWebsiteLink(selectedCV.website)}
+                  iconSrc={LinkedinIcon}
+                  style={styles.iconLinkedin}
+                />
+              </View>
+            )}
           </View>
           <View style={styles.sectionContainer}>
             <Text style={styles.sectionTitle}>Sobre mí</Text>

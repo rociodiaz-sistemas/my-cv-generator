@@ -1,6 +1,6 @@
 // cvSlice.ts
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { CV } from "./types";
+import { CV, Skills } from "./types";
 import { v4 as uuidv4 } from "uuid";
 
 interface EditFormState {
@@ -25,15 +25,94 @@ const EditFormSlice = createSlice({
       const { field, value } = action.payload;
       if (state.CV) {
         switch (field) {
+          case "fullName":
+            state.CV = { ...state.CV, fullName: value };
+            break;
+          case "email":
+            state.CV = { ...state.CV, email: value };
+            break;
+          case "phone":
+            state.CV = { ...state.CV, phone: value };
+            break;
+          case "linkedin":
+            state.CV = {
+              ...state.CV,
+              linkedin: value,
+              linkedinText: value,
+              linkedinUrl: value,
+            };
+            break;
+          case "linkedinText":
+            state.CV = { ...state.CV, linkedinText: value };
+            break;
+          case "linkedinUrl":
+            state.CV = { ...state.CV, linkedinUrl: value };
+            break;
+          case "website":
+            state.CV = { ...state.CV, website: value };
+            break;
+          case "location":
+            state.CV = { ...state.CV, location: value };
+            break;
           case "introduction":
-            state.CV.introduction = value;
+            state.CV = { ...state.CV, introduction: value };
             break;
           case "jobTitle":
-            state.CV.jobTitle = value;
+            state.CV = { ...state.CV, jobTitle: value };
             break;
           default:
             break;
         }
+      }
+    },
+    setCVSkills: (
+      state,
+      action: PayloadAction<{ category: keyof Skills; skills: string[] }>
+    ) => {
+      if (state.CV) {
+        state.CV = {
+          ...state.CV,
+          skills: {
+            ...state.CV.skills,
+            [action.payload.category]: action.payload.skills,
+          },
+        };
+      }
+    },
+    addCVSkill: (
+      state,
+      action: PayloadAction<{ category: keyof Skills; skill: string }>
+    ) => {
+      if (
+        state.CV &&
+        !state.CV.skills[action.payload.category].includes(
+          action.payload.skill
+        )
+      ) {
+        const nextSkills = {
+          ...state.CV.skills,
+          [action.payload.category]: [
+            ...state.CV.skills[action.payload.category],
+            action.payload.skill,
+          ],
+        };
+        state.CV = { ...state.CV, skills: nextSkills };
+      }
+    },
+    removeCVSkill: (
+      state,
+      action: PayloadAction<{ category: keyof Skills; skill: string }>
+    ) => {
+      if (state.CV) {
+        state.CV = {
+          ...state.CV,
+          skills: {
+            ...state.CV.skills,
+            [action.payload.category]: state.CV.skills[
+              action.payload.category
+            ].filter((item) => item !== action.payload.skill),
+          },
+        };
       }
     },
     editExperienceBulletpoints: (
@@ -41,9 +120,11 @@ const EditFormSlice = createSlice({
       action: PayloadAction<{ id: number; bulletPoints: string[] }>
     ) => {
       const { id, bulletPoints } = action.payload;
-      const experience = state.CV?.experiences.find((exp) => exp.id === id);
-      if (experience) {
-        experience.bulletPoints = bulletPoints;
+      if (state.CV) {
+        const nextExperiences = state.CV.experiences.map((experience) =>
+          experience.id === id ? { ...experience, bulletPoints } : experience
+        );
+        state.CV = { ...state.CV, experiences: nextExperiences };
       }
     },
     saveChanges: (state) => {
@@ -76,7 +157,14 @@ const EditFormSlice = createSlice({
   },
 });
 
-export const { setCV, editExperienceBulletpoints, addEditedCV, saveChanges } =
-  EditFormSlice.actions;
+export const {
+  setCV,
+  editExperienceBulletpoints,
+  addEditedCV,
+  saveChanges,
+  setCVSkills,
+  addCVSkill,
+  removeCVSkill,
+} = EditFormSlice.actions;
 
 export const editFormReducer = EditFormSlice.reducer;

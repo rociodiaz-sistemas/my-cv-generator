@@ -14,9 +14,10 @@ const PDFPreview: React.FC<PDFPreviewProps> = ({ selectedCV, onePageOnly }) => {
   const isSpanish = selectedCV.isSpanish;
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const selectedCVSnapshot = JSON.stringify(selectedCV);
 
   useEffect(() => {
-    console.log("selectedCV changed:", selectedCV);
+    let objectUrl = "";
     const generatePdf = async () => {
       if (selectedCV) {
         const blob = await pdf(
@@ -26,13 +27,18 @@ const PDFPreview: React.FC<PDFPreviewProps> = ({ selectedCV, onePageOnly }) => {
             <CVTemplateSpanish selectedCV={selectedCV} />
           )
         ).toBlob();
-        const url = URL.createObjectURL(blob);
-        setPdfUrl(url);
+        objectUrl = URL.createObjectURL(blob);
+        setPdfUrl(objectUrl);
       }
     };
 
     generatePdf();
-  }, [selectedCV, onePageOnly]);
+    return () => {
+      if (objectUrl) {
+        URL.revokeObjectURL(objectUrl);
+      }
+    };
+  }, [isSpanish, onePageOnly, selectedCVSnapshot]);
 
   // Resize the iframe when the container size changes
   useEffect(() => {

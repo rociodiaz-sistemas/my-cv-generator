@@ -4,6 +4,12 @@ import { Experience, Skills } from "./types";
 interface FormState {
   jobPosting: string;
   formTitle: string;
+  formFullName: string;
+  formEmail: string;
+  formPhone: string;
+  formLinkedin: string;
+  formWebsite: string;
+  formLocation: string;
   formIntroduction: string;
   formSkills: Skills;
   formExperiences: Experience[];
@@ -16,6 +22,12 @@ const initialState: FormState = {
   jobPosting: "",
   formJobTitle: "",
   formTitle: "",
+  formFullName: "",
+  formEmail: "",
+  formPhone: "",
+  formLinkedin: "",
+  formWebsite: "",
+  formLocation: "",
   formIntroduction: "",
   formSkills: {
     soft: [],
@@ -37,6 +49,24 @@ const formSlice = createSlice({
       switch (field) {
         case "formTitle":
           state.formTitle = value;
+          break;
+        case "formFullName":
+          state.formFullName = value;
+          break;
+        case "formEmail":
+          state.formEmail = value;
+          break;
+        case "formPhone":
+          state.formPhone = value;
+          break;
+        case "formLinkedin":
+          state.formLinkedin = value;
+          break;
+        case "formWebsite":
+          state.formWebsite = value;
+          break;
+        case "formLocation":
+          state.formLocation = value;
           break;
         case "formIntroduction":
           state.formIntroduction = value;

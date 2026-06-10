@@ -3,11 +3,12 @@ import { Button, TableCell, TableRow } from "@mui/material";
 import { useModal } from "../../hooks/useModal";
 import { useDispatch } from "react-redux";
 import { CV } from "../../store/types";
+import { setCV } from "../../store/editFormSlice";
+import { setIsEditFormModalOpen } from "../../store/uiSlice";
 import CVTemplate from "../cv-template/CVTemplate";
 import CVTemplateSpanish from "../cv-template/CVTemplateSpanish";
 import { pdf } from "@react-pdf/renderer";
 import { ModalWrapper } from "../modals/ModalWrapper";
-import { EditCVForm } from "../modals/EditCVForm";
 import { CVPreviewModal } from "../modals/CVPreviewModal";
 
 interface CVRowProps {
@@ -16,7 +17,6 @@ interface CVRowProps {
 
 export const CVRow: React.FC<CVRowProps> = ({ cv }) => {
   const dispatch = useDispatch();
-  const editCVFormModalState = useModal();
   const previewCVFormModalState = useModal();
 
   const handleDeleteCv = (cv: CV) => {
@@ -43,6 +43,12 @@ export const CVRow: React.FC<CVRowProps> = ({ cv }) => {
     onClick: () => void;
     icon: React.ReactNode;
   }> = ({ onClick, icon }) => <Button onClick={onClick}>{icon}</Button>;
+
+  const handleEditCv = () => {
+    dispatch(setCV(cv));
+    dispatch(setIsEditFormModalOpen(true));
+  };
+
   return (
     <>
       <TableRow key={cv.id}>
@@ -62,18 +68,9 @@ export const CVRow: React.FC<CVRowProps> = ({ cv }) => {
             icon={<Download />}
           />
           <ActionButton onClick={() => handleDeleteCv(cv)} icon={<Delete />} />
-          <ActionButton
-            onClick={() => editCVFormModalState.openModal()}
-            icon={<Edit />}
-          />
+          <ActionButton onClick={handleEditCv} icon={<Edit />} />
         </TableCell>
       </TableRow>
-      <ModalWrapper
-        isOpen={editCVFormModalState.isOpen}
-        onClose={editCVFormModalState.closeModal}
-      >
-        <EditCVForm />
-      </ModalWrapper>
       <ModalWrapper
         isOpen={previewCVFormModalState.isOpen}
         onClose={previewCVFormModalState.closeModal}
