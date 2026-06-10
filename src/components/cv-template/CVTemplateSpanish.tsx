@@ -320,6 +320,11 @@ interface CVTemplateProps {
 }
 
 const CVTemplateSpanish: React.FC<CVTemplateProps> = ({ selectedCV }) => {
+  const experienceHeading =
+    selectedCV.showExperienceCount === false
+      ? "Logros"
+      : `Logros (${selectedCV.experiences.length}/8)`;
+
   const addPeriodIfMissing = (text: string): string => {
     if (!text.trim().endsWith(".")) {
       return `${text.trim()}.`;
@@ -339,7 +344,7 @@ const CVTemplateSpanish: React.FC<CVTemplateProps> = ({ selectedCV }) => {
           <View style={styles.sectionContainer}>
             <Text
               style={styles.sectionTitle}
-            >{`Experiencia Relevante (${selectedCV.experiences.length}/8)`}</Text>
+            >{experienceHeading}</Text>
             <View style={styles.experiencesContainer}>
               {selectedCV.experiences.map((experience, index) => (
                 <View style={styles.experienceContainer} key={index}>

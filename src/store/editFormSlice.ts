@@ -20,45 +20,52 @@ const EditFormSlice = createSlice({
     },
     updateCVField: (
       state,
-      action: PayloadAction<{ field: keyof CV; value: string }>
+      action: PayloadAction<{ field: keyof CV; value: string | boolean }>
     ) => {
       const { field, value } = action.payload;
+      const stringValue = value as string;
       if (state.CV) {
         switch (field) {
           case "fullName":
-            state.CV = { ...state.CV, fullName: value };
+            state.CV = { ...state.CV, fullName: stringValue };
             break;
           case "email":
-            state.CV = { ...state.CV, email: value };
+            state.CV = { ...state.CV, email: stringValue };
             break;
           case "phone":
-            state.CV = { ...state.CV, phone: value };
+            state.CV = { ...state.CV, phone: stringValue };
             break;
           case "linkedin":
             state.CV = {
               ...state.CV,
-              linkedin: value,
-              linkedinText: value,
-              linkedinUrl: value,
+              linkedin: stringValue,
+              linkedinText: stringValue,
+              linkedinUrl: stringValue,
             };
             break;
           case "linkedinText":
-            state.CV = { ...state.CV, linkedinText: value };
+            state.CV = { ...state.CV, linkedinText: stringValue };
             break;
           case "linkedinUrl":
-            state.CV = { ...state.CV, linkedinUrl: value };
+            state.CV = { ...state.CV, linkedinUrl: stringValue };
             break;
           case "website":
-            state.CV = { ...state.CV, website: value };
+            state.CV = { ...state.CV, website: stringValue };
             break;
           case "location":
-            state.CV = { ...state.CV, location: value };
+            state.CV = { ...state.CV, location: stringValue };
+            break;
+          case "showExperienceCount":
+            state.CV = {
+              ...state.CV,
+              showExperienceCount: Boolean(value),
+            };
             break;
           case "introduction":
-            state.CV = { ...state.CV, introduction: value };
+            state.CV = { ...state.CV, introduction: stringValue };
             break;
           case "jobTitle":
-            state.CV = { ...state.CV, jobTitle: value };
+            state.CV = { ...state.CV, jobTitle: stringValue };
             break;
           default:
             break;

@@ -9,6 +9,7 @@ export interface CV {
   linkedinUrl?: string;
   website?: string;
   location?: string;
+  showExperienceCount?: boolean;
   jobTitle: string;
   introduction: string;
   date: string;

@@ -71,6 +71,7 @@ const ManualCVFormModal: React.FC = () => {
     createDraftExperience(),
   ]);
   const [isSpanish, setIsSpanish] = useState(false);
+  const [showExperienceCount, setShowExperienceCount] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
@@ -92,6 +93,7 @@ const ManualCVFormModal: React.FC = () => {
     setSoftSkills([]);
     setExperiences([createDraftExperience()]);
     setIsSpanish(false);
+    setShowExperienceCount(true);
     setIsSubmitting(false);
   }, [isOpen]);
 
@@ -248,6 +250,7 @@ const ManualCVFormModal: React.FC = () => {
         linkedinUrl: linkedinUrl.trim(),
         website: website.trim(),
         location: location.trim(),
+        showExperienceCount,
         jobTitle: jobTitle.trim(),
         introduction: introduction.trim(),
         skills: {
@@ -722,6 +725,17 @@ const ManualCVFormModal: React.FC = () => {
                       />
                     }
                     label="Export in Spanish"
+                  />
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={showExperienceCount}
+                        onChange={(event) =>
+                          setShowExperienceCount(event.target.checked)
+                        }
+                      />
+                    }
+                    label="Show experience numbers"
                   />
 
                   <Stack direction="row" spacing={1.5}>

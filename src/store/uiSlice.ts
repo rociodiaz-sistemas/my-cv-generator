@@ -66,6 +66,7 @@ export const submitForm = createAsyncThunk<CV, void, { state: RootState }>(
       linkedin: formState.formLinkedin,
       website: formState.formWebsite,
       location: formState.formLocation,
+      showExperienceCount: formState.showExperienceCount,
       introduction: formState.formIntroduction,
       skills: formState.formSkills,
       experiences: formState.formExperiences,

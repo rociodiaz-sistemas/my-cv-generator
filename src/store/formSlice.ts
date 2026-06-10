@@ -11,6 +11,7 @@ interface FormState {
   formWebsite: string;
   formLocation: string;
   formIntroduction: string;
+  showExperienceCount: boolean;
   formSkills: Skills;
   formExperiences: Experience[];
   formJobTitle: string;
@@ -29,6 +30,7 @@ const initialState: FormState = {
   formWebsite: "",
   formLocation: "",
   formIntroduction: "",
+  showExperienceCount: true,
   formSkills: {
     soft: [],
     technical: [],
@@ -175,6 +177,9 @@ const formSlice = createSlice({
     setIsSpanish: (state, action: PayloadAction<boolean>) => {
       state.isSpanish = action.payload;
     },
+    setShowExperienceCount: (state, action: PayloadAction<boolean>) => {
+      state.showExperienceCount = action.payload;
+    },
     // Clear form (reset to initial state)
     clearForm: () => initialState,
   },
@@ -192,6 +197,7 @@ export const {
   setFormExperiences,
   updateExperienceBulletpoints,
   setIsSpanish,
+  setShowExperienceCount,
 } = formSlice.actions;
 
 export const formReducer = formSlice.reducer;

@@ -322,6 +322,10 @@ const CVTemplate: React.FC<CVTemplateProps> = ({
   selectedCV,
   onePageOnly = false,
 }) => {
+  const experienceHeading = selectedCV.showExperienceCount === false
+    ? "Achievements"
+    : `Achievements (${selectedCV.experiences.length}/9)`;
+
   const addPeriodIfMissing = (text: string): string => {
     if (!text.trim().endsWith(".")) {
       return `${text.trim()}.`;
@@ -342,7 +346,7 @@ const CVTemplate: React.FC<CVTemplateProps> = ({
           <View style={styles.sectionContainer}>
             <Text
               style={styles.sectionTitle}
-            >{`Relevant Experience (${selectedCV.experiences.length}/9)`}</Text>
+            >{experienceHeading}</Text>
             <View style={styles.experiencesContainer}>
               {selectedCV.experiences.map((experience, index) => (
                 <View style={styles.experienceContainer} key={index}>

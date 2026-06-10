@@ -1,4 +1,13 @@
-import { Chip, Container, Divider, Stack, TextField, Typography } from "@mui/material";
+import {
+  Chip,
+  Container,
+  Divider,
+  FormControlLabel,
+  Stack,
+  Switch,
+  TextField,
+  Typography,
+} from "@mui/material";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/store";
@@ -178,6 +187,25 @@ export const EditFormContent: React.FC = () => {
           })
         }
       />
+
+      <FormControlLabel
+        control={
+          <Switch
+            checked={CV?.showExperienceCount !== false}
+            onChange={(event) =>
+              dispatch({
+                type: "editForm/updateCVField",
+                payload: {
+                  field: "showExperienceCount",
+                  value: event.target.checked,
+                },
+              })
+            }
+          />
+        }
+        label="Show number of experiences count"
+      />
+
       {CV?.experiences.map((experience) => (
         <EditFormExperience key={experience.id} experience={experience} />
       ))}
