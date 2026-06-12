@@ -82,6 +82,7 @@ const styles = StyleSheet.create({
     fontFamily: "Segoe UI",
     color: COLORS.leanBlack,
     flexDirection: "row",
+    position: "relative",
   },
 
   // Containers
@@ -264,6 +265,19 @@ const styles = StyleSheet.create({
     display: "flex",
     gap: 2,
   },
+  atsLayer: {
+    position: "absolute",
+    left: -1000,
+    top: -1000,
+    width: 1,
+    height: 1,
+    opacity: 0,
+    fontSize: 1,
+    lineHeight: 1,
+  },
+  atsBlock: {
+    marginBottom: 2,
+  },
 });
 
 const Chip: React.FC<{ label: string }> = ({ label }) => {
@@ -290,6 +304,61 @@ const Detail: React.FC<{
       ) : (
         <Text style={styles.contactInformationDetail}>{detail}</Text>
       )}
+    </View>
+  );
+};
+
+const AtsReadableLayer: React.FC<{ selectedCV: CV | CVFormData | PreviewCV }> = ({
+  selectedCV,
+}) => {
+  const linkedInLabel = getLinkedInLabel(selectedCV);
+  const linkedInUrl = getLinkedInUrl(selectedCV);
+  const websiteUrl = normalizeWebsiteLink(selectedCV.website);
+
+  return (
+    <View style={styles.atsLayer}>
+      <Text>{selectedCV.fullName || "Rocio Diaz"}</Text>
+      <Text>{selectedCV.jobTitle}</Text>
+      <Text>Contact</Text>
+      {selectedCV.email ? <Text>Email: {selectedCV.email}</Text> : null}
+      {selectedCV.phone ? <Text>Phone: {selectedCV.phone}</Text> : null}
+      {linkedInLabel ? (
+        <Text>
+          LinkedIn: {linkedInLabel}
+          {linkedInUrl ? ` ${linkedInUrl}` : ""}
+        </Text>
+      ) : null}
+      {selectedCV.website ? (
+        <Text>
+          Website: {selectedCV.website}
+          {websiteUrl && websiteUrl !== selectedCV.website ? ` ${websiteUrl}` : ""}
+        </Text>
+      ) : null}
+      <Text>Professional Summary</Text>
+      <Text>{selectedCV.introduction}</Text>
+      <Text>Technical Skills</Text>
+      <Text>{selectedCV.skills.technical.join(", ")}</Text>
+      <Text>Soft Skills</Text>
+      <Text>{selectedCV.skills.soft.join(", ")}</Text>
+      <Text>Professional Experience</Text>
+      {selectedCV.experiences.map((experience) => (
+        <View key={experience.id} style={styles.atsBlock}>
+          <Text>{`Role: ${experience.title}`}</Text>
+          <Text>{`Company: ${experience.company}`}</Text>
+          <Text>{`Combined: ${experience.title} @ ${experience.company}`}</Text>
+          <Text>{`Dates: ${[experience.dateFrom, experience.dateTo].filter(Boolean).join(" - ")}`}</Text>
+          <Text>{`Details: ${[
+              experience.project,
+              experience.hireType,
+              experience.location,
+            ]
+              .filter(Boolean)
+              .join(" | ")}`}</Text>
+          {(experience.bulletPoints ?? []).map((bulletPoint, index) => (
+            <Text key={`${experience.id}-${index}`}>{bulletPoint}</Text>
+          ))}
+        </View>
+      ))}
     </View>
   );
 };
@@ -323,8 +392,8 @@ const CVTemplate: React.FC<CVTemplateProps> = ({
   onePageOnly = false,
 }) => {
   const experienceHeading = selectedCV.showExperienceCount === false
-    ? "Achievements"
-    : `Achievements (${selectedCV.experiences.length}/9)`;
+    ? "Professional Experience"
+    : `Professional Experience (${selectedCV.experiences.length}/9)`;
 
   const addPeriodIfMissing = (text: string): string => {
     if (!text.trim().endsWith(".")) {
@@ -336,6 +405,7 @@ const CVTemplate: React.FC<CVTemplateProps> = ({
   return (
     <Document pageMode="fullScreen">
       <Page size="A4" style={styles.page} wrap={onePageOnly ? false : true}>
+        <AtsReadableLayer selectedCV={selectedCV} />
         {/* Left Section */}
         <View style={styles.leftSectionContainer}>
           <View style={{ paddingTop: "20px" }} fixed></View>
@@ -349,7 +419,7 @@ const CVTemplate: React.FC<CVTemplateProps> = ({
             >{experienceHeading}</Text>
             <View style={styles.experiencesContainer}>
               {selectedCV.experiences.map((experience, index) => (
-                <View style={styles.experienceContainer} key={index}>
+                <View style={styles.experienceContainer} key={index} wrap={false}>
                   {/* The left vertical line */}
                   <View style={styles.experienceLine} />
 
@@ -437,13 +507,13 @@ const CVTemplate: React.FC<CVTemplateProps> = ({
             )}
           </View>
           <View style={styles.sectionContainer}>
-            <Text style={styles.sectionTitle}>About me</Text>
+            <Text style={styles.sectionTitle}>Professional Summary</Text>
             <Text style={styles.bodyText}>{selectedCV.introduction}</Text>
           </View>
           <View style={styles.sectionContainer}>
-            <Text style={styles.sectionTitle}>Core skills</Text>
+            <Text style={styles.sectionTitle}>Technical Skills</Text>
             <View style={styles.subSectionContainer}>
-              <Text style={styles.sectionSubTitle}>Technical</Text>
+              <Text style={styles.sectionSubTitle}>Technical Skills</Text>
               <View style={styles.skillsContainer}>
                 {selectedCV.skills.technical.map((skill, index) => (
                   <Chip key={index} label={skill} />
@@ -451,7 +521,7 @@ const CVTemplate: React.FC<CVTemplateProps> = ({
               </View>
             </View>
             <View style={styles.subSectionContainer}>
-              <Text style={styles.sectionSubTitle}>Soft</Text>
+              <Text style={styles.sectionSubTitle}>Soft Skills</Text>
               <View style={styles.skillsContainer}>
                 {selectedCV.skills.soft.map((skill, index) => (
                   <Chip key={index} label={skill} />
@@ -459,7 +529,7 @@ const CVTemplate: React.FC<CVTemplateProps> = ({
               </View>
             </View>
             <View style={styles.subSectionContainer} break>
-              <Text style={styles.sectionSubTitle}>Other</Text>
+              <Text style={styles.sectionSubTitle}>Additional Information</Text>
               <View>
                 <Text style={styles.bodyText}>• Dual US-ARG Citizenship</Text>
                 <Text style={styles.bodyText}>• Native English/Spanish</Text>

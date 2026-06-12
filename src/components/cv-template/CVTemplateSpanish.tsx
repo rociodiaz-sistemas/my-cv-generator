@@ -82,6 +82,7 @@ const styles = StyleSheet.create({
     fontFamily: "Segoe UI",
     color: COLORS.leanBlack,
     flexDirection: "row",
+    position: "relative",
   },
 
   // Containers
@@ -266,6 +267,19 @@ const styles = StyleSheet.create({
     display: "flex",
     gap: 2,
   },
+  atsLayer: {
+    position: "absolute",
+    left: -1000,
+    top: -1000,
+    width: 1,
+    height: 1,
+    opacity: 0,
+    fontSize: 1,
+    lineHeight: 1,
+  },
+  atsBlock: {
+    marginBottom: 2,
+  },
 });
 
 const Chip: React.FC<{ label: string }> = ({ label }) => {
@@ -296,6 +310,61 @@ const Detail: React.FC<{
   );
 };
 
+const AtsReadableLayer: React.FC<{ selectedCV: CV | CVFormData | PreviewCV }> = ({
+  selectedCV,
+}) => {
+  const linkedInLabel = getLinkedInLabel(selectedCV);
+  const linkedInUrl = getLinkedInUrl(selectedCV);
+  const websiteUrl = normalizeWebsiteLink(selectedCV.website);
+
+  return (
+    <View style={styles.atsLayer}>
+      <Text>{selectedCV.fullName || "Rocio Diaz"}</Text>
+      <Text>{selectedCV.jobTitle}</Text>
+      <Text>Contact Information</Text>
+      {selectedCV.email ? <Text>Email: {selectedCV.email}</Text> : null}
+      {selectedCV.phone ? <Text>Phone: {selectedCV.phone}</Text> : null}
+      {linkedInLabel ? (
+        <Text>
+          LinkedIn: {linkedInLabel}
+          {linkedInUrl ? ` ${linkedInUrl}` : ""}
+        </Text>
+      ) : null}
+      {selectedCV.website ? (
+        <Text>
+          Website: {selectedCV.website}
+          {websiteUrl && websiteUrl !== selectedCV.website ? ` ${websiteUrl}` : ""}
+        </Text>
+      ) : null}
+      <Text>Professional Summary</Text>
+      <Text>{selectedCV.introduction}</Text>
+      <Text>Technical Skills</Text>
+      <Text>{selectedCV.skills.technical.join(", ")}</Text>
+      <Text>Soft Skills</Text>
+      <Text>{selectedCV.skills.soft.join(", ")}</Text>
+      <Text>Professional Experience</Text>
+      {selectedCV.experiences.map((experience) => (
+        <View key={experience.id} style={styles.atsBlock}>
+          <Text>{`Role: ${experience.title}`}</Text>
+          <Text>{`Company: ${experience.company}`}</Text>
+          <Text>{`Combined: ${experience.title} @ ${experience.company}`}</Text>
+          <Text>{`Dates: ${[experience.dateFrom, experience.dateTo].filter(Boolean).join(" - ")}`}</Text>
+          <Text>{`Details: ${[
+              experience.project,
+              experience.hireType,
+              experience.location,
+            ]
+              .filter(Boolean)
+              .join(" | ")}`}</Text>
+          {(experience.bulletPoints ?? []).map((bulletPoint, index) => (
+            <Text key={`${experience.id}-${index}`}>{bulletPoint}</Text>
+          ))}
+        </View>
+      ))}
+    </View>
+  );
+};
+
 const normalizeWebsiteLink = (website?: string) => {
   if (!website) return "";
   if (website.startsWith("http://") || website.startsWith("https://")) {
@@ -322,8 +391,8 @@ interface CVTemplateProps {
 const CVTemplateSpanish: React.FC<CVTemplateProps> = ({ selectedCV }) => {
   const experienceHeading =
     selectedCV.showExperienceCount === false
-      ? "Logros"
-      : `Logros (${selectedCV.experiences.length}/8)`;
+      ? "Professional Experience"
+      : `Professional Experience (${selectedCV.experiences.length}/8)`;
 
   const addPeriodIfMissing = (text: string): string => {
     if (!text.trim().endsWith(".")) {
@@ -335,6 +404,7 @@ const CVTemplateSpanish: React.FC<CVTemplateProps> = ({ selectedCV }) => {
   return (
     <Document>
       <Page size="A4" style={styles.page}>
+        <AtsReadableLayer selectedCV={selectedCV} />
         {/* Left Section */}
         <View style={styles.leftSectionContainer}>
           <View style={styles.leftSectionHeaderContainer}>
@@ -347,7 +417,7 @@ const CVTemplateSpanish: React.FC<CVTemplateProps> = ({ selectedCV }) => {
             >{experienceHeading}</Text>
             <View style={styles.experiencesContainer}>
               {selectedCV.experiences.map((experience, index) => (
-                <View style={styles.experienceContainer} key={index}>
+                <View style={styles.experienceContainer} key={index} wrap={false}>
                   {/* The left vertical line */}
                   <View style={styles.experienceLine} />
 
@@ -431,13 +501,13 @@ const CVTemplateSpanish: React.FC<CVTemplateProps> = ({ selectedCV }) => {
             )}
           </View>
           <View style={styles.sectionContainer}>
-            <Text style={styles.sectionTitle}>Sobre mí</Text>
+            <Text style={styles.sectionTitle}>Professional Summary</Text>
             <Text style={styles.bodyText}>{selectedCV.introduction}</Text>
           </View>
           <View style={styles.sectionContainer}>
-            <Text style={styles.sectionTitle}>Habilidades</Text>
+            <Text style={styles.sectionTitle}>Technical Skills</Text>
             <View style={styles.subSectionContainer}>
-              <Text style={styles.sectionSubTitle}>Técnicas</Text>
+              <Text style={styles.sectionSubTitle}>Technical Skills</Text>
               <View style={styles.skillsContainer}>
                 {selectedCV.skills.technical.map((skill, index) => (
                   <Chip key={index} label={skill} />
@@ -445,7 +515,7 @@ const CVTemplateSpanish: React.FC<CVTemplateProps> = ({ selectedCV }) => {
               </View>
             </View>
             <View style={styles.subSectionContainer}>
-              <Text style={styles.sectionSubTitle}>Blandas</Text>
+              <Text style={styles.sectionSubTitle}>Soft Skills</Text>
               <View style={styles.skillsContainer}>
                 {selectedCV.skills.soft.map((skill, index) => (
                   <Chip key={index} label={skill} />
@@ -453,10 +523,10 @@ const CVTemplateSpanish: React.FC<CVTemplateProps> = ({ selectedCV }) => {
               </View>
             </View>
             <View style={styles.subSectionContainer}>
-              <Text style={styles.sectionSubTitle}>Otros</Text>
+              <Text style={styles.sectionSubTitle}>Additional Information</Text>
               <View>
-                <Text style={styles.bodyText}>• Ciudadanía USA/Argentina</Text>
-                <Text style={styles.bodyText}>• Inglés/Español Nativo</Text>
+                <Text style={styles.bodyText}>• Dual US-ARG Citizenship</Text>
+                <Text style={styles.bodyText}>• Native English/Spanish</Text>
               </View>
             </View>
           </View>
